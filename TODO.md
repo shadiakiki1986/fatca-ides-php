@@ -5,17 +5,7 @@
  * https://coveralls.io/github/shadiakiki1986/FatcaIdesPhp
 
 2016-06-07
-* convert to php library installable with composer
-* split out sample web-app to subdirectory
-* write dockerfile and push to hub.docker.com
-* correct documentation
-* write proper tests and add travis-ci
-* publish with composer?
-* generate snake-oil certificate and self-signed keys
-
-2016-01-01
-* in var/www/api/transmitter.php I have a format=metadata but I don''t document it in the file header
-* renaming the files for emailing is skipping the xmls?
+* continue fixing tests
 
 2015-01-01
 * test FATCA12, 13, 14, as http://www.irs.gov/pub/irs-pdf/p5124.pdf
