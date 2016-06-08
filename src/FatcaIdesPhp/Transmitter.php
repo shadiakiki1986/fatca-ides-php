@@ -268,20 +268,20 @@ class Transmitter {
 
 
 	function toXmlSigned() {
-		$sm=SigningManager($this->conMan);
-		return $sm->sign($this->dataXml);
+		$sm=new SigningManager($this->conMan);
+		$this->dataXmlSigned = $sm->sign($this->dataXml);
 	}
 
 	function verifyXmlSigned() {
-		$sm=SigningManager($this->conMan);
+		$sm=new SigningManager($this->conMan);
 		return $sm->verify($this->dataXmlSigned);
 	}
 
 	function toCompressed() {
-		$zip = new ZipArchive();
+		$zip = new \ZipArchive();
 		$filename = $this->tf3;
 
-		if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
+		if ($zip->open($filename, \ZipArchive::CREATE)!==TRUE) {
 		    exit("cannot open <$filename>\n");
 		}
 
@@ -354,11 +354,11 @@ class Transmitter {
 	}
 
 	function toZip($includeUnencrypted=false) {
-		$zip = new ZipArchive();
+		$zip = new \ZipArchive();
 		unlink($this->tf4);
 		$filename = $this->tf4;
 
-		if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
+		if ($zip->open($filename, \ZipArchive::CREATE)!==TRUE) {
 		    exit("cannot open <$filename>\n");
 		}
 
@@ -399,16 +399,16 @@ class Transmitter {
     $fnH = Utils::myTempnam('html');
     file_put_contents($fnH,$fca->toHtml());
     $fnX = Utils::myTempnam('xml');
-    file_put_contents($fnX,$diXml2);
+    file_put_contents($fnX,$fca->dataXmlSigned);
     $fnM = Utils::myTempnam('xml');
     file_put_contents($fnM,$fca->getMetadata());
     $fnZ = Utils::myTempnam('zip');
     copy($fca->tf4,$fnZ);
 
     // zip to avoid getting blocked on server
-    $z = new ZipArchive();
+    $z = new \ZipArchive();
     $fnZ2 = Utils::myTempnam('zip');
-    $z->open($fnZ2, ZIPARCHIVE::CREATE);
+    $z->open($fnZ2, \ZIPARCHIVE::CREATE);
     $z->addEmptyDir("IDES data");
     $z->addFile($fnH, "IDES data/data.html");
     $z->addFile($fnX, "IDES data/data.xml");
@@ -438,7 +438,8 @@ class Transmitter {
       $di=Utils::array2shuffledLetters($di,$fieldsNotShuffle); 
     }
 
-    $conMan = new ConfigManager($config);
+    $dm = new Downloader();
+    $conMan = new ConfigManager($config,$dm);
 
     $fca=new Transmitter($di,$shuffle,$corrDocRefId,$taxYear,$conMan);
     $fca->start();
@@ -458,7 +459,7 @@ class Transmitter {
         exit;
     }
 
-    $diXml2=$fca->toXmlSigned();
+    $fca->toXmlSigned();
     if(!$fca->verifyXmlSigned()) die("Verification of signature failed");
 
     $fca->toCompressed();
@@ -466,16 +467,16 @@ class Transmitter {
     $fca->encryptAesKeyFile();
     //	if(!$fca->verifyAesKeyFileEncrypted()) die("Verification of aes key encryption failed");
     $fca->toZip(true);
-    if(array_key_exists($config,"ZipBackupFolder")) {
+    if(array_key_exists("ZipBackupFolder",$config)) {
       $fnDest=$config["ZipBackupFolder"]."/includeUnencrypted_".$fca->file_name;
       copy($fca->tf4,$fnDest);
     }
     $fca->toZip(false);
-    if(array_key_exists($config,"ZipBackupFolder")) {
+    if(array_key_exists("ZipBackupFolder",$config)) {
       $fnDest=$config["ZipBackupFolder"]."/submitted_".$fca->file_name;
       copy($fca->tf4,$fnDest);
     }
 
-    return array("fca"=>$fca,"diXml2"=>$diXml2);
+    return $fca;
   }
 } // end class

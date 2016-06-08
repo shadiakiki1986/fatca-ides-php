@@ -71,13 +71,8 @@ $config = array(
   # public key extracted out of private key above
   "FatcaKeyPublic" => "/var/lib/IDES/keys/institution-fatca-public.pem",
 
-  # some files already downloaded in `INSTALL.md` if instructions were followed
-  # IRS public key
-  "FatcaIrsPublic" => '/var/lib/IDES/downloads/encryption-service_services_irs_gov.crt',
-  # Schema file for main submission xml
-  "FatcaXsd" => "/var/lib/IDES/downloads/FATCA XML Schema v1.1/FatcaXML_v1.1.xsd",
-  # Schema file for metadata xml
-  "MetadataXsd" => '/var/lib/IDES/downloads/SenderMetadatav11/FATCA IDES SENDER FILE METADATA XML LIBRARY/FATCA-IDES-SenderFileMetadata-1.1.xsd',
+  # download folder for IRS public key and schema files
+  "downloadFolder" => '/var/lib/IDES/downloads/',
 
   # Fatca Sender GIIN
   "ffaid": 'A1BBCD.00000.XY.123',
@@ -86,8 +81,9 @@ $config = array(
 
 );
 
-$tmtr["fca"]->getZip();
 
+$fca=Transmitter::shortcut($di,false,null,$taxYear,"zip","",$config);
+$fca->getZip();
 ```
 
 # License
