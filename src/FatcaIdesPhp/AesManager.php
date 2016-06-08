@@ -2,12 +2,35 @@
 
 namespace FatcaIdesPhp;
 
+// some code playing around with MCRYPT_...
+//    $size = mcrypt_get_iv_size(MCRYPT_CAST_256, MCRYPT_MODE_CFB);
+//    $iv = mcrypt_create_iv($size, MCRYPT_RAND);
+//    $this->assertTrue($size==16);
+//    $this->assertTrue(strlen($iv)==$size);
+//
+//    $size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+//    $iv = mcrypt_create_iv($size, MCRYPT_RAND);
+//    $this->assertTrue($size==16);
+//    $this->assertTrue(strlen($iv)==$size);
+//
+//    $size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+//    $iv = mcrypt_create_iv($size, MCRYPT_RAND);
+//    $this->assertTrue($size==32);
+//    $this->assertTrue(strlen($iv)==$size);
+
 class AesManager {
 
 	var $aeskey;
 	var $iv1,$iv2;
 
 	function __construct($key=null) {
+    // some code to play around with openssl random generator
+    //    $x=openssl_random_pseudo_bytes(32);
+    //    $y=unpack("H*",$x);
+    //    $this->assertTrue(count($y)==1);
+    //    $y=array_values($y)[0];
+    //    $this->assertTrue(pack("H*",$y)==$x);
+
 		$key = ($key==null?openssl_random_pseudo_bytes(32):$key);
 		if(strlen($key)!=32) throw new \Exception("Invalid key length");
 		$this->aeskey=$key;

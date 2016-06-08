@@ -82,6 +82,10 @@ class Utils {
     if(!$handle) die("Failed to open file $file");
         $content = fread($handle, $file_size);
         fclose($handle);
+
+        // some code playing around with SHA256 hashes
+        //    $this->assertTrue(base64_encode(hash("sha256", "blablabla",true))=="SS8/ONa108qFlRTiUOJbplk1vN2fT0DBJLdz/lNv7n0=");
+        //    $this->assertTrue(base64_encode(hash("sha256", "blablabla",false))=="NDkyZjNmMzhkNmI1ZDNjYTg1OTUxNGUyNTBlMjViYTY1OTM1YmNkZDlmNGY0MGMxMjRiNzczZmU1MzZmZWU3ZA==");
         $content = chunk_split(base64_encode($content));
 
         $msg .= "--".$uid.PHP_EOL;
