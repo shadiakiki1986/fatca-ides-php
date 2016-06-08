@@ -19,9 +19,9 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
       // below public key extracted manually from certificate above using
       // openssl x509 -pubkey -noout -in mycert.pem  > pubkey.pem
       "FatcaKeyPublic"=>__DIR__."/pubkey.pem",
+      // for repeated testing, this could save some download resources // "downloadFolder"=>"/tmp/downloads",
       "ffaid"=>"A1BBCD.00000.XY.123",
-      "ffaidReceiver"=>"000000.00000.TA.840",
-      "downloadFolder"=>"/tmp/downloads"
+      "ffaidReceiver"=>"000000.00000.TA.840"
     );
   }
 
