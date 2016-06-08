@@ -29,7 +29,7 @@ class ConfigManager {
     $shouldExist = array("FatcaXsd","MetadataXsd","FatcaCrt");
     foreach($shouldExist as $x) {
       if(!file_exists($this->config[$x])) {
-        throw new \Exception(sprintf("Missing file defined in config: '%s'",$x));
+        throw new \Exception(sprintf("Missing file defined in config: '%s', '%s'",$x,$this->config[$x]));
       }
     }
   }
