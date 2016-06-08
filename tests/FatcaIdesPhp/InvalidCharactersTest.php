@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class InvalidCharactersTest extends PHPUnit_Framework_TestCase {
+class InvalidCharactersTest extends \PHPUnit_Framework_TestCase {
 
   public function test() {
     $this->assertTrue(str_replace("#","","bla#bla")=="blabla");

@@ -9,7 +9,7 @@ class AesManager {
 
 	function __construct($key=null) {
 		$key = ($key==null?openssl_random_pseudo_bytes(32):$key);
-		if(strlen($key)!=32) throw new Exception("Invalid key length");
+		if(strlen($key)!=32) throw new \Exception("Invalid key length");
 		$this->aeskey=$key;
 
 		$td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_ECB, '');

@@ -11,8 +11,8 @@ class Utils {
 #
 # Example: var_dump(array2shuffledLetters(array(array('bla'=>'bla','bli'=>'bli'))));
 
-    if(!is_array($di)) throw new Exception("Only arrays of arrays supported");
-    array_map(function($x) { if(!is_array($x)) throw new Exception("Only arrays of arrays supported"); }, $di);
+    if(!is_array($di)) throw new \Exception("Only arrays of arrays supported");
+    array_map(function($x) { if(!is_array($x)) throw new \Exception("Only arrays of arrays supported"); }, $di);
 
     return array_map(function($x) use($exceptFields) {
       $k=array_keys($x);
@@ -22,22 +22,6 @@ class Utils {
       }
       return $x;
     }, $di);
-  }
-
-  public static function checkConfig($config) {
-    $compulsory = array("FatcaKeyPrivate","FatcaXsd","MetadataXsd","ffaid","ffaidReceiver","FatcaCrt");
-    foreach($compulsory as $x) {
-      if(!array_key_exists($config,$x)) {
-        throw new Exception(sprintf("Missing key in config: '%s'",$x));
-      }
-    }
-
-    $shouldExist = array("FatcaXsd","MetadataXsd","FatcaCrt");
-    foreach($shouldExist as $x) {
-      if(!file_exists($config[$x])) {
-        throw new Exception(sprintf("Missing file defined in config: '%s'",$x));
-      }
-    }
   }
 
   public static function libxml_display_error($error) {
@@ -73,7 +57,7 @@ class Utils {
 
   // From http://stackoverflow.com/a/13459244
   public static function mail_attachment($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
-    if(!is_array($files)) throw new Exception("Please pass an array for files");
+    if(!is_array($files)) throw new \Exception("Please pass an array for files");
     $uid = md5(uniqid(time()));
     
     $header = "From: ".$from_name." <".$from_mail.">".PHP_EOL;

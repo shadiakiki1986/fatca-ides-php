@@ -1,3 +1,7 @@
+2016-06-08
+* should be able to extract the public key from the certificate instead of requiring the user to do
+ * `openssl x509 -pubkey -noout -in cert.pem  > pubkey.pem`
+
 2016-06-07
 * convert to php library installable with composer
 * split out sample web-app to subdirectory

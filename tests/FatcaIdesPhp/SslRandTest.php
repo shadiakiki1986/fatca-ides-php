@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class SslRandTest extends PHPUnit_Framework_TestCase {
+class SslRandTest extends \PHPUnit_Framework_TestCase {
 
   public function test() {
     $x=openssl_random_pseudo_bytes(32);

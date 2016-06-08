@@ -2,8 +2,6 @@
 
 namespace FatcaIdesPhp;
 
-require_once dirname(__FILE__).'/../config.php';
-
 class Transmitter {
 
 	var $data; // php data with fatca information
@@ -27,12 +25,14 @@ class Transmitter {
 	var $taxYear;
 	var $guidManager;
 
-	function __construct($dd,$isTest,$corrDocRefId,$taxYear,$config) {
+	function __construct($dd,$isTest,$corrDocRefId,$taxYear,$conMan) {
 	// dd: 2d array with fatca-relevant fields
 	// isTest: true|false whether the data is test data. This will only help set the DocTypeIndic field in the XML file
 	// corrDocRefId: false|message ID. If this is a correction of a previous message, pass the message ID in subject, otherwise just pass false
 
-    $this->confiig=$config;
+    assert($conMan instanceOf ConfigManager);
+    $this->conMan=$conMan;
+
 		$this->data=$dd;
 		$this->corrDocRefId=$corrDocRefId;
 		$this->isTest=$isTest;
@@ -40,16 +40,16 @@ class Transmitter {
   }
 
   function start() {
+    $this->conMan->check();
 
-    Utils::checkConfig($this->config);
-		$this->docType=sprintf("FATCA%s%s",$isTest?"1":"",$corrDocRefId?"2":"1");
+		$this->docType=sprintf("FATCA%s%s",$this->isTest?"1":"",$this->corrDocRefId?"2":"1");
 
 		// Sanity check
 		// docType: described in xsd for DocRefId
 		// FATCA1: New Data, FATCA2: Corrected Data, FATCA3: Void Data, FATCA4: Amended Data
 		// FATCA11: New Test Data, FATCA12: Corrected Test Data, FATCA13: Void Test Data, FATCA14: Amended Test Data
 		$docTypeValid=array("FATCA11","FATCA12","FATCA13","FATCA14","FATCA1","FATCA2","FATCA3","FATCA4");
-		if(!in_array($this->docType,$docTypeValid)) throw new Exception("Unsupported docType. Please use: ".implode(", ",$docTypeValid));
+		if(!in_array($this->docType,$docTypeValid)) throw new \Exception("Unsupported docType. Please use: ".implode(", ",$docTypeValid));
 
 
 		// following http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schema-Best-Practices-for-Form-8966
@@ -122,7 +122,7 @@ class Transmitter {
 		$html2 = sprintf("<table border=1>%s%s</table>\n",$th,$body);
 
     // pretty print html
-    $doc = new DOMDocument();
+    $doc = new \DOMDocument();
     $doc->preserveWhiteSpace = true;
     $doc->formatOutput = true;//false;
     $doc->loadHTML($html2);
@@ -143,7 +143,7 @@ class Transmitter {
 		    xmlns:sfa='urn:oecd:ties:stffatcatypes:v1'
 		    xmlns:ftc='urn:oecd:ties:fatca:v1'>
 		    <ftc:MessageSpec>
-			<sfa:SendingCompanyIN>".$this->config["ffaid"]."</sfa:SendingCompanyIN>
+			<sfa:SendingCompanyIN>".$this->conMan->config["ffaid"]."</sfa:SendingCompanyIN>
 			<sfa:TransmittingCountry>LB</sfa:TransmittingCountry>
 			<sfa:ReceivingCountry>US</sfa:ReceivingCountry>
 			<sfa:MessageType>FATCA</sfa:MessageType>
@@ -227,7 +227,7 @@ class Transmitter {
 		// drop all spaces ... 
 		// This is probably unnecessary, but I had thought that the security threat alert we were receiving was because of this
 		// I later learned that this was not the reason, but I'm leaving it anyway
-		$doc = new DOMDocument();
+		$doc = new \DOMDocument();
 		$doc->preserveWhiteSpace = false;
 		$doc->formatOutput = true;//false;
 		$doc->loadXML($diXml);
@@ -244,32 +244,30 @@ class Transmitter {
 		switch($whch) {
 		case "payload":
 			$xml=$this->dataXml;
-			$xsd=$this->config["FatcaXsd"];
+			$xsd=$this->conMan->config["FatcaXsd"];
 			break;
 		case "metadata":
 			$xml=$this->getMetadata();
-			$xsd=$this->config["MetadataXsd"];
+			$xsd=$this->conMan->config["MetadataXsd"];
 			break;
-		default: throw new Exception("Invalid xml file to validate");
+		default: throw new \Exception("Invalid xml file to validate");
 		}
 
-    $doc = new DOMDocument();
+    $doc = new \DOMDocument();
 		$xmlDom=$doc->loadXML($xml);
-    if(!$xmlDom) throw new Exception(sprintf("Invalid XML: %s",$xml));
+    if(!$xmlDom) throw new \Exception(sprintf("Invalid XML: %s",$xml));
 		return $doc->schemaValidate($xsd);
 	}
 
 
 	function toXmlSigned() {
-		$sm=new SigningManager();
-		$this->dataXmlSigned = $sm->sign($this->dataXml);
-		return $this->dataXmlSigned;
+		$sm=SigningManager($this->conMan);
+		return $sm->sign($this->dataXml);
 	}
 
 	function verifyXmlSigned() {
-		$sm=new SigningManager();
-    $vx=$sm->verify($this->dataXmlSigned);
-		return $vx==1;
+		$sm=SigningManager($this->conMan);
+		return $sm->verify($this->dataXmlSigned);
 	}
 
 	function toCompressed() {
@@ -280,7 +278,7 @@ class Transmitter {
 		    exit("cannot open <$filename>\n");
 		}
 
-		$zip->addFromString($this->config["ffaid"]."_Payload.xml", $this->dataXmlSigned);
+		$zip->addFromString($this->conMan->config["ffaid"]."_Payload.xml", $this->dataXmlSigned);
 		$zip->close();
 
 		$this->dataCompressed=file_get_contents($this->tf3);
@@ -293,7 +291,7 @@ class Transmitter {
 	}
 
 	function readIrsPublicKey($returnResource=true) {
-	  $fp=fopen($this->config["FatcaIrsPublic"],"r");
+	  $fp=fopen($this->conMan->config["FatcaIrsPublic"],"r");
 	  $pub_key_string=fread($fp,8192);
 	  fclose($fp);
 	  if($returnResource) {
@@ -308,28 +306,28 @@ class Transmitter {
 	function encryptAesKeyFile() {
 		$this->aesEncrypted="";
 		if(!openssl_public_encrypt ( $this->aeskey , $this->aesEncrypted , $this->readIrsPublicKey() )) {
-      throw new Exception("Did not encrypt aes key");
+      throw new \Exception("Did not encrypt aes key");
     }
-		if($this->aesEncrypted=="") throw new Exception("Failed to encrypt AES key");
+		if($this->aesEncrypted=="") throw new \Exception("Failed to encrypt AES key");
 	}
 
 	function verifyAesKeyFileEncrypted() {
 		$pubk=$this->readIrsPublicKey(true);
 		$decrypted="";
-		if(!openssl_public_decrypt( $this->aesEncrypted , $decrypted , $pubk )) throw new Exception("Failed to decrypt aes key for verification purposes");
+		if(!openssl_public_decrypt( $this->aesEncrypted , $decrypted , $pubk )) throw new \Exception("Failed to decrypt aes key for verification purposes");
 		return($decrypted==$this->aeskey);
 	}
 
 	function getMetadata() {
-		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->ts)."_".$this->config["ffaid"].".zip";
+		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->ts)."_".$this->conMan->config["ffaid"].".zip";
 
 		/*
 		// This is probably unnecessary
 		$md='<?xml version="1.0" encoding="utf-8"?>
 		*/
 		$md='<FATCAIDESSenderFileMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:fatca:idessenderfilemetadata">
-			<FATCAEntitySenderId>'.$this->config["ffaid"].'</FATCAEntitySenderId>
-			<FATCAEntityReceiverId>'.$this->config["ffaidReceiver"].'</FATCAEntityReceiverId>
+			<FATCAEntitySenderId>'.$this->conMan->config["ffaid"].'</FATCAEntitySenderId>
+			<FATCAEntityReceiverId>'.$this->conMan->config["ffaidReceiver"].'</FATCAEntityReceiverId>
 			<FATCAEntCommunicationTypeCd>RPT</FATCAEntCommunicationTypeCd>
 			<SenderFileId>'.rand(1,9999999).'</SenderFileId>
 			<FileCreateTs>'.$this->ts2.'</FileCreateTs>
@@ -339,7 +337,7 @@ class Transmitter {
 
 		// drop all spaces
 		// This is probably unnecessary
-		$doc = new DOMDocument();
+		$doc = new \DOMDocument();
 		$doc->preserveWhiteSpace = false;
 		$doc->formatOutput = false;
 		$doc->loadXML($md);
@@ -358,18 +356,18 @@ class Transmitter {
 		}
 
 		$zip->addFromString(
-      $this->config["ffaid"]."_Payload",
+      $this->conMan->config["ffaid"]."_Payload",
       $this->dataEncrypted);
 		$zip->addFromString(
-      $this->config["ffaidReceiver"]."_Key",
+      $this->conMan->config["ffaidReceiver"]."_Key",
       $this->aesEncrypted);
 		$zip->addFromString(
-      $this->config["ffaid"]."_Metadata.xml",
+      $this->conMan->config["ffaid"]."_Metadata.xml",
       $this->getMetadata());
 
 		if($includeUnencrypted) {
 			$zip->addFromString(
-        $this->config["ffaid"]."_Payload_unencrypted.xml",
+        $this->conMan->config["ffaid"]."_Payload_unencrypted.xml",
         $this->dataXmlSigned);
 		}
 
@@ -422,26 +420,28 @@ class Transmitter {
       $emailReply, // reply to
       $subj, 
       "Attached: html, xml, metadata, zip formats"
-    )) throw new Exception("Failed to send email");
+    )) throw new \Exception("Failed to send email");
   }
 
-  public static function shortcut($di,$shuffle,$corrDocRefId,$taxYear,$format,$config) {
-    if(count($di)==0) throw new Exception("No data");
+  public static function shortcut($di,$shuffle,$corrDocRefId,$taxYear,$format,$emailTo,$config) {
+    if(count($di)==0) throw new \Exception("No data");
     if($shuffle) {
       // shuffle all fields except these... ,"Compte"
-      $fieldsNotShuffle = array("ResidenceCountry","posCur","cur")
+      $fieldsNotShuffle = array("ResidenceCountry","posCur","cur");
       $di=Utils::array2shuffledLetters($di,$fieldsNotShuffle); 
     }
 
-    $fca=new Transmitter($di,$shuffle,$corrDocRefId,$taxYear,$config);
+    $conMan = new ConfigManager($config);
+
+    $fca=new Transmitter($di,$shuffle,$corrDocRefId,$taxYear,$conMan);
     $fca->start();
     $fca->toXml(); # convert to xml 
 
     if(!$fca->validateXml("payload")) {# validate
       print 'Payload xml did not pass its xsd validation';
       Utils::libxml_display_errors();
-      $exitCond=in_array($_GET['format'],array("xml","zip"));
-      $exitCond=$exitCond||array_key_exists("emailTo",$_GET);
+      $exitCond=in_array($format,array("xml","zip"));
+      $exitCond=$exitCond||$emailTo;
       if($exitCond) exit;
     }
 

@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class TimestampTest extends PHPUnit_Framework_TestCase {
+class TimestampTest extends \PHPUnit_Framework_TestCase {
 
   public function test() {
     date_default_timezone_set('UTC');

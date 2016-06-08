@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class AesManagerTest extends PHPUnit_Framework_TestCase {
+class AesManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testNoDuplicates() {
 	$gm=new AesManager();

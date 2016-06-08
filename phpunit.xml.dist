@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- copied from https://github.com/Seldaek/monolog/blob/master/phpunit.xml.dist -->
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="FatcaIdesPhp Test Suite">
+            <directory>tests/FatcaIdesPhp/</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/FatcaIdesPhp/</directory>
+        </whitelist>
+    </filter>
+</phpunit>

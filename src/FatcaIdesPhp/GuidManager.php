@@ -15,7 +15,7 @@ function __construct($N=100) {
 }
 
 function get() {
-	if($this->guidCount>=count($this->guidPrepd)) throw new Exception("Ran out of GUID");
+	if($this->guidCount>=count($this->guidPrepd)) throw new \Exception("Ran out of GUID");
 
 	$o=$this->guidPrepd[$this->guidCount];
 	$this->guidCount++;

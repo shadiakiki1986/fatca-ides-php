@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class GuidManagerTest extends PHPUnit_Framework_TestCase {
+class GuidManagerTest extends \PHPUnit_Framework_TestCase {
 
     public function testNoDuplicates() {
 	$gm=new GuidManager();
@@ -22,7 +22,7 @@ class GuidManagerTest extends PHPUnit_Framework_TestCase {
 	try {
 		$x2=$gm->get();
 		$this->assertTrue(false); // should not get here
-	} catch(Exception $e) {
+	} catch(\Exception $e) {
 		$this->assertTrue($e->getMessage()=="Ran out of GUID");
 	}
     }

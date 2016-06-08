@@ -24,13 +24,14 @@ var $to;
 
 // config: php array
 // tf4: temp file?
-function __construct($config=array(),$tf4=false) {
+function __construct($conMan,$tf4=false) {
   $this->tf4=$tf4;
-  $this->config=$config;
+  assert($conMan instanceOf ConfigManager);
+  $this->conMan=$conMan;
 }
 
 function start() {
-  Utils::checkConfig($this->config);
+  $this->conMan->check();
   
 	if(!$this->tf4) {
 		$this->tf4=sys_get_temp_dir();
@@ -40,7 +41,7 @@ function start() {
 		$this->tf4=$temp_file;
 	} else {
     if(!file_exists($this->tf4)) {
-      throw new Exception(sprintf("Passed folder inexistant: '%s'",$this->tf4));
+      throw new \Exception(sprintf("Passed folder inexistant: '%s'",$this->tf4));
     }
   }
 
@@ -58,7 +59,7 @@ function fromZip($filename) {
 	    $zip->extractTo($this->tf4);
 	    $zip->close();
 	} else {
-	    throw new Exception(sprintf("failed to open archive: '%s'",$filename));
+	    throw new \Exception(sprintf("failed to open archive: '%s'",$filename));
 	}
 
 	$xx=scandir($this->tf4);
@@ -76,12 +77,12 @@ function fromZip($filename) {
 
 	function decryptAesKey() {
 		$this->aeskey="";
-		if(!openssl_private_decrypt( $this->aesEncrypted , $this->aeskey , $this->readFfaPrivateKey() )) throw new Exception("Could not decrypt aes key");
-		if($this->aeskey=="") throw new Exception("Failed to decrypt AES key");
+		if(!openssl_private_decrypt( $this->aesEncrypted , $this->aeskey , $this->readFfaPrivateKey() )) throw new \Exception("Could not decrypt aes key");
+		if($this->aeskey=="") throw new \Exception("Failed to decrypt AES key");
 	}
 
 	function readFfaPrivateKey($returnResource=true) {
-	  $kk=($this->from==$this->config["ffaidReceiver"]?$this->config["FatcaKeyPrivate"]:($this->config["ffaid"]?$this->config["FatcaIrsPublic"]:die("WTF")));
+	  $kk=($this->from==$this->conMan->config["ffaidReceiver"]?$this->conMan->config["FatcaKeyPrivate"]:($this->conMan->config["ffaid"]?$this->conMan->config["FatcaIrsPublic"]:die("WTF")));
 	  $fp=fopen($kk,"r");
 	  $priv_key_string=fread($fp,8192);
 	  fclose($fp);
@@ -96,7 +97,7 @@ function fromZip($filename) {
 
 	function fromEncrypted() {
 		$key_size =  strlen($this->aeskey);
-		if($key_size!=32) throw new Exception("Invalid key size ".$key_size);
+		if($key_size!=32) throw new \Exception("Invalid key size ".$key_size);
 
 		$fp=fopen($this->tf4."/".$this->files["payload"],"r");
 		$this->dataEncrypted=fread($fp,8192);
@@ -114,12 +115,13 @@ function fromZip($filename) {
 			$this->dataXmlSigned=$zip->getFromIndex(0);
 			$zip->close();
 		} else {
-		    throw new Exception('failed to read compressed data');
+		    throw new \Exception('failed to read compressed data');
 		}
 	}
 
   public static function shortcut($config,$zipFn) {
-    $rx=new Receiver($config);
+    $cm = new ConfigManager($config);
+    $rx=new Receiver($cm);
     $rx->start();
     $rx->fromZip($zipFn);
     $rx->decryptAesKey();

@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class EncryptionIvTest extends PHPUnit_Framework_TestCase {
+class EncryptionIvTest extends \PHPUnit_Framework_TestCase {
 
   public function test() {
     $size = mcrypt_get_iv_size(MCRYPT_CAST_256, MCRYPT_MODE_CFB);
