@@ -1,3 +1,7 @@
+2016-06-08
+* moving code out of (IDES-Data-Preparation-Php)[https://github.com/shadiakiki1986/IDES-Data-Preparation-Php] to here
+ * check there for earlier repo commits
+
 2016-06-07
 * converting the whole folder to a proper php package installable via composer
 * splitting the sample web app into its own folder

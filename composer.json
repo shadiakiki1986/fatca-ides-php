@@ -1,16 +1,16 @@
 {
-    "name":"shadiakiki1986/IDES-Data-Preparation-Php",
-    "description":"PHP package for generation of FATCA IDES submission files",
-    "keywords":["FATCA","IDES","Encryption"],
+    "name":"shadiakiki1986/FatcaIdesPhp",
+    "description":"PHP library for generation of FATCA IDES submission files",
+    "keywords":["FATCA","IDES","Encryption","Decryption"],
     "type":"library",
     "license":"CC0 1.0 Universal",
+    "homepage": "https://github.com/shadiakiki1986/FatcaIdesPhp",
     "authors":[
         {
             "name":"Shadi Akiki",
             "email":"s.akiki@ffaprivatebank.com"
         }
     ],
-    "homepage": "https://github.com/shadiakiki1986/IDES-Data-Preparation-Php",
     "minimum-stability": "stable",
     "require":{
         "php":">=5.3.5",
