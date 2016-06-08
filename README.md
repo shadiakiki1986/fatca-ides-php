@@ -42,9 +42,8 @@ For other language implementations, please check the [IRS github page](https://g
     [sudo] service apache2 restart
 ```
 
-4. Download Fatca XML schema file, Sender metadata stylesheet, and IRS public key
- * links available at [IRS website](http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-and-Business-Rules-for-Form-8966)
-5. Download the remaining files indicated above in the Pre-Requisites section
+4. Download the financial institution's ssl certificate, private key, and public key
+ * Note that the public key can be extracted from the certificate (on the TODO to be implied without the need for the user to specify it)
 
 # Examples
 For a complete example of how to use this library, please check [IDES-Data-Preparation-Php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php). Here I just list an example of how to generate a FATCA zip file for submission on the IDES gateway
