@@ -2,6 +2,8 @@
 
 namespace FatcaIdesPhp;
 
+use Monolog\Logger;
+
 class Transmitter {
 
 	var $data; // php data with fatca information
@@ -430,7 +432,7 @@ class Transmitter {
     )) throw new \Exception("Failed to send email");
   }
 
-  public static function shortcut($di,$shuffle,$corrDocRefId,$taxYear,$format,$emailTo,$config) {
+  public static function shortcut($di,$shuffle,$corrDocRefId,$taxYear,$format,$emailTo,$config,$LOG_LEVEL=Logger::WARNING) {
     if(count($di)==0) throw new \Exception("No data");
     if($shuffle) {
       // shuffle all fields except these... ,"Compte"
@@ -438,8 +440,8 @@ class Transmitter {
       $di=Utils::array2shuffledLetters($di,$fieldsNotShuffle); 
     }
 
-    $dm = new Downloader();
-    $conMan = new ConfigManager($config,$dm);
+    $dm = new Downloader(null,$LOG_LEVEL);
+    $conMan = new ConfigManager($config,$dm,$LOG_LEVEL);
 
     $fca=new Transmitter($di,$shuffle,$corrDocRefId,$taxYear,$conMan);
     $fca->start();
