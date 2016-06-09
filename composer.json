@@ -1,10 +1,10 @@
 {
-    "name":"shadiakiki1986/FatcaIdesPhp",
+    "name":"shadiakiki1986/fatca-ides-php",
     "description":"PHP library for generation of FATCA IDES submission files",
     "keywords":["FATCA","IDES","Encryption","Decryption"],
     "type":"library",
     "license":"CC0 1.0 Universal",
-    "homepage": "https://github.com/shadiakiki1986/FatcaIdesPhp",
+    "homepage": "https://github.com/shadiakiki1986/fatca-ides-php",
     "authors":[
         {
             "name":"Shadi Akiki",
