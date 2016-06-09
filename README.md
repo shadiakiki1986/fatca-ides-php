@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/shadiakiki1986/fatca-ides-php.svg?branch=master)](http://travis-ci.org/shadiakiki1986/fatca-ides-php)
 
+[packagist](https://packagist.org/packages/shadiakiki1986/fatca-ides-php)
+
 This is a PHP library that converts bank client data to FATCA files submittable via the IDES gateway.
 If you find in this library any code that is specific to the Financial Institution for which I did this work,
 do not hesitate to point them out to me by opening an [issue](https://github.com/shadiakiki1986/fatca-ides-php/issues).
@@ -18,28 +20,16 @@ For other language implementations, please check the [IRS github page](https://g
 * Private and public keys used to get the SSL certificate
 
 # Installation instructions
-1. Add the following to your composer.json file
-to have composer install this library from
-[packagist](https://packagist.org/packages/shadiakiki1986/fatca-ides-php)
-
-```php
-{
-  "require": {
-    "shadiakiki1986/fatca-ides-php": "dev-default"
-  }
-}
-```
-
-2. Run `composer install`
-3. Enable the `mcrypt` extension in php
 ```bash
-    [sudo] apt-get install php5-mcrypt
-    [sudo] php5enmod mcrypt
-    [sudo] service apache2 restart
+composer require shadiakiki1986/fatca-ides-php
+composer install
+[sudo] apt-get install php5-mcrypt
+[sudo] php5enmod mcrypt
+[sudo] service apache2 restart # needed for web applications served with apache
 ```
 
-4. Download the financial institution's ssl certificate, private key, and public key
- * Note that the public key can be extracted from the certificate (on the TODO to be implied without the need for the user to specify it)
+Next, download the financial institution's ssl certificate, private key, and public key.
+Note that the public key can be extracted from the certificate (on the TODO to be implied without the need for the user to specify it)
 
 # Examples
 For a complete example of how to use this library, please check [IDES-Data-Preparation-Php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php). Here I just list an example of how to generate a FATCA zip file for submission on the IDES gateway
