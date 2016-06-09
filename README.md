@@ -1,10 +1,10 @@
-# FatcaIdesPhp
+# fatca-ides-php
 
-[![Build Status](https://travis-ci.org/shadiakiki1986/FatcaIdesPhp.svg?branch=master)](http://travis-ci.org/shadiakiki1986/FatcaIdesPhp)
+[![Build Status](https://travis-ci.org/shadiakiki1986/fatca-ides-php.svg?branch=master)](http://travis-ci.org/shadiakiki1986/fatca-ides-php)
 
 This is a PHP library that converts bank client data to FATCA files submittable via the IDES gateway.
 If you find in this library any code that is specific to the Financial Institution for which I did this work,
-do not hesitate to point them out to me by opening an [issue](https://github.com/shadiakiki1986/FatcaIdesPhp/issues).
+do not hesitate to point them out to me by opening an [issue](https://github.com/shadiakiki1986/fatca-ides-php/issues).
 
 For more information check the [IRS FATCA IDES Technical FAQs](http://www.irs.gov/Businesses/Corporations/FATCA-IDES-Technical-FAQs)
 
@@ -24,12 +24,12 @@ For other language implementations, please check the [IRS github page](https://g
 {
   "repositories": [
     {
-      "url": "https://github.com/shadiakiki1986/FatcaIdesPhp",
+      "url": "https://github.com/shadiakiki1986/fatca-ides-php",
       "type": "git"
     }
   ],
   "require": {
-    "shadiakiki1986/FatcaIdesPhp": "dev-default"
+    "shadiakiki1986/fatca-ides-php": "dev-default"
   }
 }
 ```
