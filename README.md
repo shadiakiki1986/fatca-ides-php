@@ -19,15 +19,11 @@ For other language implementations, please check the [IRS github page](https://g
 
 # Installation instructions
 1. Add the following to your composer.json file
+to have composer install this library from
+[packagist](https://packagist.org/packages/shadiakiki1986/fatca-ides-php)
 
 ```php
 {
-  "repositories": [
-    {
-      "url": "https://github.com/shadiakiki1986/fatca-ides-php",
-      "type": "git"
-    }
-  ],
   "require": {
     "shadiakiki1986/fatca-ides-php": "dev-default"
   }
