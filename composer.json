@@ -15,6 +15,7 @@
     "require":{
         "php":">=5.3.5",
         "monolog/monolog": "^1.19",
+        "phpseclib/phpseclib": "*",
         "robrichards/xmlseclibs":"*"
     },
     "require-dev": {
