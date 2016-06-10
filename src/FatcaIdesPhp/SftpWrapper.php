@@ -39,19 +39,20 @@ class SftpWrapper {
   function login($username,$password) {
     $this->log->info("Connecting to sftp");
     if(!$this->sftp->login($username, $password)) {
-      throw new \Exception('Login Failed for '.$username);
+      return 'Login Failed for '.$username.' to upload zip file';
     }
     $this->log->info("Logged in");
+    return false;
   }
 
   function put($zipfile) {
     assert($this->sftp->isAuthenticated(),"sftp session is authenticated test");
-    if(!file_exists($zipfile)) throw new \Exception("Zip file inexistant '".$zipfile."'");
+    if(!file_exists($zipfile)) return("Zip file inexistant '".$zipfile."'");
 
     // check that this is a zip file
     // http://stackoverflow.com/a/10368236/4126114
     $ext = pathinfo($zipfile, PATHINFO_EXTENSION);
-    if($ext!="zip") throw new \Exception("Only zip files accepted. Rejecting '".$zipfile."'");
+    if($ext!="zip") return "Only zip files accepted. Rejecting '".$zipfile."'";
 
     // puts an x-byte file named filename.remote on the SFTP server,
     // where x is the size of filename.local
@@ -64,11 +65,13 @@ class SftpWrapper {
 
     // verify that it is uploaded
     $nl = $this->sftp->nlist(".");
-    if(!in_array("Outbox",$nl)) throw new \Exception("/Outbox not available on sft server");
+    if(!in_array("Outbox",$nl)) return "/Outbox not available on sftp server";
     $nl = $this->sftp->nlist("Outbox");
-    if(!in_array("840",$nl)) throw new \Exception("/Outbox/840 not available on sft server");
+    if(!in_array("840",$nl)) return "/Outbox/840 not available on sftp server";
     $nl = $this->sftp->nlist("Outbox/840");
-    if(!in_array(basename($zipfile),$nl)) throw new \Exception("/Outbox/840/".basename($zipfile)." not available on sft server");
+    if(!in_array(basename($zipfile),$nl)) return "/Outbox/840/".basename($zipfile)." not available on sftp server";
+
+    return false;
   }
 
 

@@ -126,4 +126,21 @@ class Utils {
     return $fnH;
   }
 
+  public static function mail_wrapper( $emailTo, $emailFrom, $emailName, $emailReply, $subj, $err) {
+    assert(!!$err);
+
+    if(!Utils::mail_attachment(
+      array(),
+      $emailTo,
+      $emailFrom, // from email
+      $emailName, // from name
+      $emailReply, // reply to
+      $subj." (upload error file)", 
+      $err
+    )) {
+      return "Failed to send upload error email about: ".$err;
+    }
+    return $err.'. Alerted by email to '.$emailTo;
+  }
+
 } // end class

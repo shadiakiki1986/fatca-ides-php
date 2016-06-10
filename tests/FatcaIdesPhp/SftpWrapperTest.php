@@ -29,8 +29,8 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testLogin() {
-      $this->gm->login("user","pass");
-      $this->assertTrue(true);
+      $this->assertTrue(
+        !$this->gm->login("user","pass"));
     }
 
     public function testGetSFTP() {
@@ -41,17 +41,11 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
       $fn="/tmp/foo.zip";
       if(!file_exists($fn)) file_put_contents($fn,"bla");
       $this->assertTrue(file_exists($fn));
-      $this->gm->put($fn);
-      $this->assertTrue(true);
+      $this->assertTrue(!$this->gm->put($fn));
     }
 
     public function assertPutFail($fn) {
-      try {
-        $this->gm->put($fn);
-        $this->assertTrue(false);
-      } catch(\Exception $e) {
-        $this->assertTrue(true);
-      }
+      $this->assertTrue(!!$this->gm->put($fn));
     }
 
     public function testPutFail() {

@@ -396,7 +396,9 @@ class Transmitter {
 		readfile($yourfile);
 	}
 
-  public static function toEmail($fca,$emailTo,$emailFrom,$emailName,$emailReply) {
+  public static function toEmail($fca,$emailTo,$emailFrom,$emailName,$emailReply,$upload=null) {
+    if(!!$upload) assert(is_array($upload) && array_key_exists("username",$upload) && array_key_exists("password",$upload));
+
     // save to files
     $fnH = Utils::myTempnam('html');
     file_put_contents($fnH,$fca->toHtml());
@@ -404,8 +406,8 @@ class Transmitter {
     file_put_contents($fnX,$fca->dataXmlSigned);
     $fnM = Utils::myTempnam('xml');
     file_put_contents($fnM,$fca->getMetadata());
-    $fnZ = Utils::myTempnam('zip');
-    copy($fca->tf4,$fnZ);
+    $fnZ1 = Utils::myTempnam('zip');
+    copy($fca->tf4,$fnZ1);
 
     // zip to avoid getting blocked on server
     $z = new \ZipArchive();
@@ -415,7 +417,7 @@ class Transmitter {
     $z->addFile($fnH, "IDES data/data.html");
     $z->addFile($fnX, "IDES data/data.xml");
     $z->addFile($fnM, "IDES data/metadata.xml");
-    $z->addFile($fnZ, "IDES data/data.zip");
+    $z->addFile($fnZ1, "IDES data/data.zip");
     $z->close(); 
 
     // send email
@@ -427,10 +429,38 @@ class Transmitter {
       $emailFrom, // from email
       $emailName, // from name
       $emailReply, // reply to
-      $subj, 
+      $subj." (attachment)", 
       "Attached: html, xml, metadata, zip formats"
-    )) throw new \Exception("Failed to send email");
+    )) {
+      throw new \Exception("Failed to send attachment email.".!!$upload?" Will also not upload.":"");
+    } else {
+      $sftp = SftpWrapper::getSFTP($fca->isTest?"test":"live");
+      $sw = new SftpWrapper($sftp);
+
+      $err = $sw->login($upload["username"],$upload["password"]);
+      if(!!$err) {
+        throw new \Exception(
+          Utils::mail_wrapper(
+            $emailTo, $emailFrom, $emailName, $emailReply, 
+            $subj." (upload error login)", $err));
+      }
+
+      $err = $sw->put($fnz1);
+      if(!!$err) {
+        throw new \Exception(
+          Utils::mail_wrapper(
+            $emailTo, $emailFrom, $emailName, $emailReply, 
+            $subj." (upload error file)", $err));
+      }
+
+      echo(Utils::mail_wrapper(
+        $emailTo, $emailFrom, $emailName, $emailReply, 
+        $subj." (upload success)",
+        "Succeeded in uploading zip file"));
+
+    }
   }
+
 
   public static function shortcut($di,$shuffle,$corrDocRefId,$taxYear,$format,$emailTo,$config,$LOG_LEVEL=Logger::WARNING) {
     if(count($di)==0) throw new \Exception("No data");
