@@ -434,6 +434,8 @@ class Transmitter {
     )) {
       throw new \Exception("Failed to send attachment email.".!!$upload?" Will also not upload.":"");
     } else {
+      if(is_null($upload)) return;
+
       $sftp = SftpWrapper::getSFTP($fca->isTest?"test":"live");
       $sw = new SftpWrapper($sftp);
 

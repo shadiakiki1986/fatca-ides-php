@@ -45,4 +45,8 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
     Transmitter::shortcut($this->di,false,null,2014,"html","",$this->conMan->config);
   }
 
+  public function testToEmail() {
+    $this->markTestIncomplete("TBD");
+  }
+
 }
