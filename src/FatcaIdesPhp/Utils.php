@@ -59,7 +59,7 @@ class Utils {
   }
 
   public static function mail_attachment_swiftmailer($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
-    if(!class_exists(\Swift_Message)) throw new Exception("Email support not installed on server. Aborting");
+    if(!class_exists("\Swift_Message")) throw new Exception("Email support not installed on server. Aborting");
 
     $message = \Swift_Message::newInstance()
         ->setSubject($subject)
