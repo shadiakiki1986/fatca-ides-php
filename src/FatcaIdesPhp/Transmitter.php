@@ -100,7 +100,9 @@ class Transmitter {
 
 	function toHtml() {
 		$dv=array_values($this->data);
-    $headers=array("ENT_LASTNAME","ENT_FIRSTNAME","ENT_FATCA_ID","ENT_ADDRESS","ResidenceCountry","ENT_COD","posCur","Compte","cur","dvdCur","intCur");
+    $headers=array(
+      "ENT_TYPE","ENT_LASTNAME","ENT_FIRSTNAME","ENT_FATCA_ID","ENT_ADDRESS",
+      "ResidenceCountry","ENT_COD","posCur","Compte","cur","dvdCur","intCur");
 
     // assert that there no keys more than those defined above
     array_map(function($x) use($headers) {
