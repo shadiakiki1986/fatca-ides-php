@@ -22,11 +22,14 @@ For other language implementations, please check the [IRS github page](https://g
 # Installation instructions
 ```bash
 composer require shadiakiki1986/fatca-ides-php
+composer require swiftmailer/swiftmailer # To enable sending emails
 composer install
 [sudo] apt-get install php5-mcrypt
 [sudo] php5enmod mcrypt
 [sudo] service apache2 restart # needed for web applications served with apache
 ```
+
+If emails are enabled, set up your `app/config/config.yml` file as described [here](http://symfony.com/doc/current/cookbook/email/email.html#configuration)
 
 Next, download the financial institution's ssl certificate, private key, and public key.
 Note that the public key can be extracted from the certificate (on the TODO to be implied without the need for the user to specify it)

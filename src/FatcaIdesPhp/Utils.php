@@ -54,9 +54,33 @@ class Utils {
       libxml_clear_errors();
   }
 
+  public static function mail_attachment($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
+    return Utils::mail_attachment_swiftmailer($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message);
+  }
+
+  public static function mail_attachment_swiftmailer($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
+    if(!class_exists(\Swift_Message)) throw new Exception("Email support not installed on server. Aborting");
+
+    $message = \Swift_Message::newInstance()
+        ->setSubject($subject)
+        ->setFrom(array($from_mail=>$from_name))
+        ->setReplyTo($replyto)
+        ->setTo($mailto)
+        ->setBody($message)
+    ;
+    foreach($files as $fi) {
+      # TODO support change filename http://swiftmailer.org/docs/messages.html#setting-the-filename
+      $message->attach(\Swift_Attachment::fromPath($fi));
+    }
+
+    $transport = \Swift_MailTransport::newInstance();
+    $mailer = \Swift_Mailer::newInstance($transport);
+    return $mailer->send($message);
+  }
+
 
   // From http://stackoverflow.com/a/13459244
-  public static function mail_attachment($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
+  public static function mail_attachment_local($files, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
     if(!is_array($files)) throw new \Exception("Please pass an array for files");
     $uid = md5(uniqid(time()));
     
