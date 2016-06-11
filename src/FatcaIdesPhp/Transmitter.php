@@ -447,7 +447,8 @@ class Transmitter {
             $subj." (upload error login)", $err));
       }
 
-      $err = $sw->put($fnz1);
+      #$err = $sw->put($fnz1);
+      $err = "Uploading currently disabled";
       if(!!$err) {
         throw new \Exception(
           Utils::mail_wrapper(

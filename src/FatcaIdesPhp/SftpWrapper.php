@@ -39,7 +39,7 @@ class SftpWrapper {
   function login($username,$password) {
     $this->log->info("Connecting to sftp");
     if(!$this->sftp->login($username, $password)) {
-      return 'Login Failed for '.$username.' to upload zip file';
+      return 'Login Failed for '.$username.' on '.$this->sftp->host.':'.$this->sftp->port.' to upload zip file';
     }
     $this->log->info("Logged in");
     return false;

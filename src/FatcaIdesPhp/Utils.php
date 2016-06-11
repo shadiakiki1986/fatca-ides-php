@@ -135,7 +135,7 @@ class Utils {
       $emailFrom, // from email
       $emailName, // from name
       $emailReply, // reply to
-      $subj." (upload error file)", 
+      $subj, 
       $err
     )) {
       return "Failed to send upload error email about: ".$err;
