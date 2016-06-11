@@ -399,7 +399,7 @@ class Transmitter {
 		readfile($yourfile);
 	}
 
-  public static function toEmail($fca,$emailTo,$emailFrom,$emailName,$emailReply,$upload=null) {
+  public static function toEmail($fca,$emailTo,$emailFrom,$emailName,$emailReply,$upload=null,$swiftmailerConfig=array()) {
     if(!!$upload) assert(is_array($upload) && array_key_exists("username",$upload) && array_key_exists("password",$upload));
 
     // save to files
@@ -433,7 +433,8 @@ class Transmitter {
       $emailName, // from name
       $emailReply, // reply to
       $subj." (attachment)", 
-      "Attached: html, xml, metadata, zip formats"
+      "Attached: html, xml, metadata, zip formats",
+      $swiftmailerConfig
     )) {
       throw new \Exception("Failed to send attachment email.".!!$upload?" Will also not upload.":"");
     } else {
@@ -447,7 +448,8 @@ class Transmitter {
         throw new \Exception(
           Utils::mail_wrapper(
             $emailTo, $emailFrom, $emailName, $emailReply, 
-            $subj." (upload error login)", $err));
+            $subj." (upload error login)", $err,
+            $swiftmailerConfig));
       }
 
       #$err = $sw->put($fnz1);
@@ -456,13 +458,14 @@ class Transmitter {
         throw new \Exception(
           Utils::mail_wrapper(
             $emailTo, $emailFrom, $emailName, $emailReply, 
-            $subj." (upload error file)", $err));
+            $subj." (upload error file)", $err,
+            $swiftmailerConfig));
       }
 
       echo(Utils::mail_wrapper(
         $emailTo, $emailFrom, $emailName, $emailReply, 
-        $subj." (upload success)",
-        "Succeeded in uploading zip file"));
+        $subj." (upload success)", "Succeeded in uploading zip file",
+        $swiftmailerConfig));
 
     }
   }
