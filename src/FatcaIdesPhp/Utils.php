@@ -82,7 +82,7 @@ class Utils {
     # https://www.sitepoint.com/sending-email-with-swift-mailer/
     # http://swiftmailer.org/docs/sending.html
     # http://stackoverflow.com/a/26256177/4126114
-    $transport = Swift_SmtpTransport::newInstance($config["host"],$config["port"])
+    $transport = \Swift_SmtpTransport::newInstance($config["host"],$config["port"])
         ->setUsername($config["username"])
         ->setPassword($config["password"]);
     $mailer = \Swift_Mailer::newInstance($transport);
