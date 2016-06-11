@@ -29,7 +29,7 @@ composer install
 [sudo] service apache2 restart # needed for web applications served with apache
 ```
 
-If emails are enabled, set up your `app/config/config.yml` file as described [here](http://symfony.com/doc/current/cookbook/email/email.html#configuration)
+If emails are enabled, pass your config (similar to [this](http://symfony.com/doc/current/cookbook/email/email.html#configuration) ) to the `toEmail` function of `Transmitter` class (check example below)
 
 Next, download the financial institution's ssl certificate, private key, and public key.
 Note that the public key can be extracted from the certificate (on the TODO to be implied without the need for the user to specify it)
@@ -53,7 +53,7 @@ $di=array(
 // config with paths to files downloaded
 $config = array(
   # SSL certificate bought using the private key
-  "FatcaCrt" => "/var/lib/IDES/keys/ssl_certificate.crt"),
+  "FatcaCrt" => "/var/lib/IDES/keys/ssl_certificate.crt",
   # Private key used to get the SSL certificate
   "FatcaKeyPrivate" => "/var/lib/IDES/keys/institution-fatca-private.pem",
   # public key extracted out of private key above
@@ -63,9 +63,16 @@ $config = array(
   "downloadFolder" => '/var/lib/IDES/downloads/',
 
   # Fatca Sender GIIN
-  "ffaid": 'A1BBCD.00000.XY.123',
+  "ffaid" => 'A1BBCD.00000.XY.123',
   # Fatca Receiver GIIN, e.g. IRS
-  "ffaidReceiver": '000000.00000.TA.840'
+  "ffaidReceiver" => '000000.00000.TA.840',
+
+  # email configuration if Transmitter::toEmail is used
+  "swiftmailer" => array(
+    "host" => "my.host.com",
+    "port" => 12345,
+    "username" => "myusername",
+    "password" => "mypassword")
 
 );
 
