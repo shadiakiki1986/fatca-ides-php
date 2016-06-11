@@ -33,10 +33,6 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
         !$this->gm->login("user","pass"));
     }
 
-    public function testGetSFTP() {
-      $this->markTestIncomplete("TBD");
-    }
-
     public function testPutOk() {
       $fn="/tmp/foo.zip";
       if(!file_exists($fn)) file_put_contents($fn,"bla");
@@ -60,6 +56,16 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
 
     public function testPutInexistant() {
       $this->assertPutFail("/path/to/file.zip");
+    }
+
+    public function testGetSFTP() {
+      foreach(array("test","live") as $hostType) {
+        $sftp = SftpWrapper::getSFTP($hostType);
+        $sftp->_connect();
+        $this->assertTrue( $sftp->isConnected());
+        $sftp->disconnect();
+        $this->assertTrue(!$sftp->isConnected());
+      }
     }
 
 }

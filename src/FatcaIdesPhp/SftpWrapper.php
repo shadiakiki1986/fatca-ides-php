@@ -32,7 +32,7 @@ class SftpWrapper {
     if(!array_key_exists($hostType,$hosts)) throw new \Exception("Invalid host type passed '".$hostType."'. Please use 'live' or 'test'");
 
     $hi = $hosts[$hostType];
-    $sftp = new SFTP($hi["host"],$hi["port"]);
+    $sftp = new \phpseclib\Net\SFTP($hi["host"],$hi["port"]);
     return $sftp;
   }
 
