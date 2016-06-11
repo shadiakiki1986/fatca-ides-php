@@ -25,13 +25,13 @@ class SftpWrapper {
   }
 
   public static function getSFTP($hostType) {
-    $this->hosts = array(
+    $hosts = array(
       "live"=>array("host"=>"www.idesgateway.com","port"=>4022),
       "test"=>array("host"=>"wwwpse.idesgateway.com","port"=>4022)
     );
-    if(!array_key_exists($hostType,$this->hosts)) throw new \Exception("Invalid host type passed '".$hostType."'. Please use 'live' or 'test'");
+    if(!array_key_exists($hostType,$hosts)) throw new \Exception("Invalid host type passed '".$hostType."'. Please use 'live' or 'test'");
 
-    $hi = $this->hosts[$this->hostType];
+    $hi = $hosts[$hostType];
     $sftp = new SFTP($hi["host"],$hi["port"]);
     return $sftp;
   }
