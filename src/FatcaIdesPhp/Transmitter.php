@@ -104,7 +104,8 @@ class Transmitter {
 
     // assert that there no keys more than those defined above
     array_map(function($x) use($headers) {
-      assert(count(array_diff(array_keys($x),$headers))==0);
+      $ad=array_diff(array_keys($x),$headers);
+      assert(count($ad)==0,"Test no extra headers failed. Found: ".implode(", ",$ad));
     }, $this->data);
 
 	  $th=implode(array_map(function($x) { return "<th>".$x."</th>"; },$headers));
