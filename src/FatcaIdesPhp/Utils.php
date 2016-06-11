@@ -73,6 +73,7 @@ class Utils {
       $message->attach(\Swift_Attachment::fromPath($fi));
     }
 
+    # Ref: https://www.sitepoint.com/sending-email-with-swift-mailer/
     $transport = \Swift_MailTransport::newInstance();
     $mailer = \Swift_Mailer::newInstance($transport);
     return $mailer->send($message);
