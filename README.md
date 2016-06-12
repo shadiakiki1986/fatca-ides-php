@@ -95,8 +95,9 @@ composer run-script test
 * It is generateid automatically after a `composer install`
 * I moderate the updates and commit them to the repo if suitable
 
-Note:
+Open issues:
+* I currently fix the below issues manually after the update
 * There seems to be a problem in `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/Address_Type.php` by having two AddressFree fields
-* Also `@xmlNamespace urn:oecd:ties:fatca:v1` is missing from `src/FatcaXsdPhp/FATCA_OECD` pending https://github.com/moyarada/XSD-to-PHP/issues/36
-* I currently fix these 2 issues manually after the update
-
+* `@xmlNamespace urn:oecd:ties:fatca:v1` is missing from `src/FatcaXsdPhp/FATCA_OECD` pending https://github.com/moyarada/XSD-to-PHP/issues/36
+* The AddressFree field has the wrong namespace: should be urn:oecd:ties:stffatcatypes:v1 instead of `urn:oecd:ties:fatca:v1`
+* ReportingGroup.php is not generated + its `@var` is missing

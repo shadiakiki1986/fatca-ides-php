@@ -24,6 +24,7 @@ class Fatca_Type
 	 * @xmlNamespace urn:oecd:ties:fatca:v1
 	 * @xmlMaxOccurs unbounded
 	 * @xmlName ReportingGroup
+	 * @var oecd\ties\fatca\v1\ReportingGroup
 	 */
 	public $ReportingGroup;
 

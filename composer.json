@@ -50,7 +50,7 @@
             "parallel-lint . --exclude vendor",
             "phpunit"
         ],
-        "updateXsd": [
+        "post-install-cmd": [
            "php updateXsd.php"
         ]
     }

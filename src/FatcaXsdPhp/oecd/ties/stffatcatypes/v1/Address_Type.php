@@ -23,7 +23,7 @@ class Address_Type
 	public $CountryCode;
 	/**
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
+	 * @xmlNamespace urn:oecd:ties:stffatcatypes:v1
 	 * @xmlName AddressFree
 	 * @var string
 	 */
