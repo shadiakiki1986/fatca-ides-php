@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "02c401499ca2ff3c6f3b80bb1c4b644d",
+    "hash": "c2874c86acb0556031cfb798346aad22",
     "content-hash": "d9d5c87d933103d352d853148e901efa",
     "packages": [
         {
@@ -1315,7 +1315,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shadiakiki1986/XSD-to-PHP",
-                "reference": "c888ca03d18282f10d37a6f8fa6a5dd27459927d"
+                "reference": "79d0ba1a496c3d8cd681f86941eb3a833101fefd"
             },
             "require": {
                 "zendframework/zend-console": "*"
@@ -1341,12 +1341,12 @@
             },
             "scripts": {
                 "test": [
-                    "parallel-lint . --exclude vendor",
+                    "parallel-lint . --exclude vendor --exclude resources --exclude test/data",
                     "phpunit -c test/phpunit.xml"
                 ]
             },
             "description": "Legko XML: compile XSD schema to PHP, XML marshalling/unmashalling http://mikebevz.com/xsd-to-php-tool/",
-            "time": "2016-06-12 11:38:01"
+            "time": "2016-06-12 17:08:42"
         },
         {
             "name": "symfony/yaml",
