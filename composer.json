@@ -12,6 +12,12 @@
         }
     ],
     "minimum-stability": "stable",
+    "repositories": [
+      { 
+        "url": "https://github.com/shadiakiki1986/XSD-to-PHP",
+        "type": "git"
+      }
+    ],
     "require":{
         "php":">=5.3.5",
         "monolog/monolog": "^1.19",
@@ -20,13 +26,17 @@
     },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "jakub-onderka/php-parallel-lint": "^0.9"
+        "jakub-onderka/php-parallel-lint": "^0.9",
+        "shadiakiki1986/XSD-to-PHP": "dev-master"
     },
     "suggest": {
         "swiftmailer/swiftmailer": "php library for sending emails"
     },
     "autoload": {
-        "psr-4" : { "FatcaIdesPhp\\" : "src/FatcaIdesPhp" }
+        "psr-4" : {
+           "FatcaIdesPhp\\" : "src/FatcaIdesPhp",
+           "FatcaXsdPhp\\"  : "src/FatcaXsdPhp"
+         }
     },
     "autoload-dev": {
         "psr-4" : { "FatcaIdesPhp\\" : "tests/FatcaIdesPhp" }
@@ -35,6 +45,9 @@
         "test": [
             "parallel-lint . --exclude vendor",
             "phpunit"
+        ],
+        "updateXsd": [
+           "php updateXsd.php"
         ]
     }
 }

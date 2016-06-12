@@ -90,3 +90,6 @@ composer install
 composer run-script test
 ```
 
+# Developer notes
+`src/FatcaXsdPhp` is the PHP-equivalent of the Fatca main schema.
+It is updated manually by generating it automatically by running `composer run-script updateXsd`
