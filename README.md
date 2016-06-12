@@ -92,7 +92,7 @@ composer run-script test
 
 # Developer notes
 `src/FatcaXsdPhp` is the PHP-equivalent of the Fatca main schema.
-* It is generateid automatically after a `composer install`
+* It is generateid after a `composer run-script updateXsd`
 * I moderate the updates and commit them to the repo if suitable
 
 Open issues:
