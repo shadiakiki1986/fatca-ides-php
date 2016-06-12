@@ -92,7 +92,11 @@ composer run-script test
 
 # Developer notes
 `src/FatcaXsdPhp` is the PHP-equivalent of the Fatca main schema.
-It is updated manually by generating it automatically by running `composer run-script updateXsd`
+* It is generateid automatically after a `composer install`
+* I moderate the updates and commit them to the repo if suitable
+
 Note:
-* There seems to be a problem in `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/Address_Type.php` by having two AddressFree fields.
-* I currently fix this manually after the update
+* There seems to be a problem in `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/Address_Type.php` by having two AddressFree fields
+* Also `@xmlNamespace urn:oecd:ties:fatca:v1` is missing from `src/FatcaXsdPhp/FATCA_OECD` pending https://github.com/moyarada/XSD-to-PHP/issues/36
+* I currently fix these 2 issues manually after the update
+
