@@ -1,7 +1,7 @@
 <?php namespace FatcaXsdPhp;
 
 /**
- * @xmlNamespace 
+ * @xmlNamespace urn:oecd:ties:fatca:v1
  * @xmlType 
  * @xmlName FATCA_OECD
  * @var FATCA_OECD
