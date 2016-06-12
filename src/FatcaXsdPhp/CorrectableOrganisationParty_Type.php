@@ -1,4 +1,4 @@
-<?php
+<?php namespace FatcaXsdPhp;
 
 use oecd\ties\stffatcatypes\v1;
 /**
