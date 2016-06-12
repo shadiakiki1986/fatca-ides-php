@@ -36,14 +36,6 @@ class Address_Type
 	 */
 	public $AddressFix;
 	/**
-	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
-	 * @xmlMinOccurs 0
-	 * @xmlName AddressFree
-	 * @var string
-	 */
-	public $AddressFree;
-	/**
 	 * @xmlType attribute
 	 * @xmlName legalAddressType
 	 * @var oecd\ties\stf\v4\OECDLegalAddressType_EnumType
