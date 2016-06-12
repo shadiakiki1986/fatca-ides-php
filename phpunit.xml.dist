@@ -6,11 +6,15 @@
         <testsuite name="FatcaIdesPhp Test Suite">
             <directory>tests/FatcaIdesPhp/</directory>
         </testsuite>
+        <testsuite name="FatcaXsdPhp Test Suite">
+            <directory>tests/FatcaXsdPhp/</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
             <directory suffix=".php">src/FatcaIdesPhp/</directory>
+            <directory suffix=".php">src/FatcaXsdPhp/</directory>
         </whitelist>
     </filter>
 </phpunit>

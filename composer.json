@@ -35,11 +35,15 @@
     "autoload": {
         "psr-4" : {
            "FatcaIdesPhp\\" : "src/FatcaIdesPhp",
-           "FatcaXsdPhp\\"  : "src/FatcaXsdPhp"
+           "FatcaXsdPhp\\"  : "src/FatcaXsdPhp",
+           "oecd\\ties\\": "src/FatcaXsdPhp/oecd/ties/"
          }
     },
     "autoload-dev": {
-        "psr-4" : { "FatcaIdesPhp\\" : "tests/FatcaIdesPhp" }
+        "psr-4" : {
+          "FatcaIdesPhp\\" : "tests/FatcaIdesPhp",
+          "FatcaXsdPhp\\" : "tests/FatcaXsdPhp"
+         }
     },
     "scripts": {
         "test": [
