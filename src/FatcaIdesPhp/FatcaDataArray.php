@@ -7,7 +7,6 @@ class FatcaDataArray implements FatcaDataInterface {
 
 	var $data; // php data with fatca information
 	var $ts;
-	var $ts2;
 	var $ts3;
 	var $docType;
 	var $corrDocRefId;
@@ -67,12 +66,6 @@ class FatcaDataArray implements FatcaDataInterface {
     //    $this->assertTrue($tz=="UTC");
 		date_default_timezone_set('UTC');
 		$this->ts=time();
-		// ts2 is xsd:dateTime
-		// http://www.datypic.com/sc/xsd/t-xsd_dateTime.html
-		// Even though the xsd:dateTime supports dates without a timezone,
-		// dropping the Z from here causes the metadata file not to pass the schema
-		// (and a RC004 to be received instead of RC001)
-		$this->ts2=strftime("%Y-%m-%dT%H:%M:%SZ",$this->ts); 
 		$this->ts3=strftime("%Y-%m-%dT%H:%M:%S", $this->ts); 
 
 		// prepare guids to use
@@ -233,30 +226,13 @@ class FatcaDataArray implements FatcaDataInterface {
 
   function getGiinSender() { return $this->conMan->config["ffaid"]; }
 
-  function getGiinReceiver() { return $this->conMan->config["ffaidReceiver"]; }
-
-  function getMetadata() {
-    /*
-    // This is probably unnecessary
-    $md='<?xml version="1.0" encoding="utf-8"?>
-    */
-    $md='<FATCAIDESSenderFileMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:fatca:idessenderfilemetadata">
-      <FATCAEntitySenderId>'.$this->conMan->config["ffaid"].'</FATCAEntitySenderId>
-      <FATCAEntityReceiverId>'.$this->conMan->config["ffaidReceiver"].'</FATCAEntityReceiverId>
-      <FATCAEntCommunicationTypeCd>RPT</FATCAEntCommunicationTypeCd>
-      <SenderFileId>'.rand(1,9999999).'</SenderFileId>
-      <FileCreateTs>'.$this->ts2.'</FileCreateTs>
-      <TaxYear>'.$this->taxYear.'</TaxYear>
-      <FileRevisionInd>false</FileRevisionInd>
-    </FATCAIDESSenderFileMetadata>';
-    // drop all spaces
-    // This is probably unnecessary
-    $doc = new \DOMDocument();
-    $doc->preserveWhiteSpace = false;
-    $doc->formatOutput = false;
-    $doc->loadXML($md);
-    $md=$doc->saveXML();
-    return $md;
+  function getTaxYear() {
+    return $this->taxYear;
   }
+
+  function getTsBase() {
+    return $this->ts;
+  }
+
 
 } // end class

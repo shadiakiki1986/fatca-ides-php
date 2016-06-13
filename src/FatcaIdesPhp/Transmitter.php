@@ -16,9 +16,6 @@ class Transmitter {
 	var $tf3;
 	var $tf4;
 	var $aesEncrypted;
-	var $ts;
-	var $ts2;
-	var $ts3;
 	var $file_name;
 
 	function __construct($fdi,$conMan) {
@@ -132,8 +129,37 @@ class Transmitter {
 	}
 
 	function getMetadata() {
-		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->ts)."_".$this->fdi->getGiinSender().".zip";
-    return $this->fdi->getMetadata();
+		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
+
+		// ts2 is xsd:dateTime
+		// http://www.datypic.com/sc/xsd/t-xsd_dateTime.html
+		// Even though the xsd:dateTime supports dates without a timezone,
+		// dropping the Z from here causes the metadata file not to pass the schema
+		// (and a RC004 to be received instead of RC001)
+    $ts2=strftime("%Y-%m-%dT%H:%M:%SZ",$this->fdi->getTsBase());
+
+    /*
+    // This is probably unnecessary
+    $md='<?xml version="1.0" encoding="utf-8"?>
+    */
+    $md='<FATCAIDESSenderFileMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:fatca:idessenderfilemetadata">
+      <FATCAEntitySenderId>'.$this->fdi->getGiinSender().'</FATCAEntitySenderId>
+      <FATCAEntityReceiverId>'.$this->getGiinReceiver().'</FATCAEntityReceiverId>
+      <FATCAEntCommunicationTypeCd>RPT</FATCAEntCommunicationTypeCd>
+      <SenderFileId>'.rand(1,9999999).'</SenderFileId>
+      <FileCreateTs>'.$ts2.'</FileCreateTs>
+      <TaxYear>'.$this->fdi->getTaxYear().'</TaxYear>
+      <FileRevisionInd>false</FileRevisionInd>
+    </FATCAIDESSenderFileMetadata>';
+    // drop all spaces
+    // This is probably unnecessary
+    $doc = new \DOMDocument();
+    $doc->preserveWhiteSpace = false;
+    $doc->formatOutput = false;
+    $doc->loadXML($md);
+    $md=$doc->saveXML();
+
+    return $md;
 	}
 
 	function toZip($includeUnencrypted=false) {
@@ -149,7 +175,7 @@ class Transmitter {
       $this->fdi->getGiinSender()."_Payload",
       $this->dataEncrypted);
 		$zip->addFromString(
-      $this->fdi->getGiinReceiver()."_Key",
+      $this->getGiinReceiver()."_Key",
       $this->aesEncrypted);
 		$zip->addFromString(
       $this->fdi->getGiinSender()."_Metadata.xml",
@@ -293,4 +319,7 @@ class Transmitter {
 
     return $tmtr;
   }
+
+  function getGiinReceiver() { return $this->conMan->config["ffaidReceiver"]; }
+
 } // end class
