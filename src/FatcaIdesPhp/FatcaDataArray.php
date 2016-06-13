@@ -118,11 +118,9 @@ class FatcaDataArray implements FatcaDataInterface {
 
 	function toXml($utf8=false) {
 	    $di=$this->data; # $di: output of getFatcaClients
-	    $docType=$this->docType;
 
 	    # convert to xml 
 	    #        xsi:schemaLocation='urn:oecd:ties:fatca:v1 FatcaXML_v1.1.xsd'
-	    $gm=$this->guidManager;
 	    $diXml=sprintf("
 		<ftc:FATCA_OECD version='1.1'
 		    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
@@ -157,12 +155,12 @@ class FatcaDataArray implements FatcaDataInterface {
 		    </ftc:FATCA>
 		</ftc:FATCA_OECD>",
 		$this->guidManager->guidPrepd[0], // specifically indexing guidPrepd instead of using the get function so as to get the same ID if I run this function twice
-		$docType, // not sure about this versus the same entry below
+		$this->docType, // not sure about this versus the same entry below
 		//sprintf("%s.%s",ffaid,$this->guidManager->guidPrepd[1]), // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
 		$this->guidManager->guidPrepd[2],
 		!$this->corrDocRefId?"":sprintf("<ftc:CorrDocRefId>%s</ftc:CorrDocRefId>",$this->corrDocRefId), 
 		implode(array_map(
-		    function($x) use($docType,$gm) {
+		    function($x) {
 			// TIN default  issuedBy='US'
 			return sprintf("
 			    <ftc:AccountReport>
@@ -189,9 +187,9 @@ class FatcaDataArray implements FatcaDataInterface {
           %s
 			    </ftc:AccountReport>
 			",
-			$docType, // check the xsd
-			//sprintf("%s.%s",ffaid,$gm->guidPrepd[3]), // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
-			$gm->guidPrepd[4],
+			$this->docType, // check the xsd
+			//sprintf("%s.%s",ffaid,$this->guidManager->guidPrepd[3]), // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
+			$this->guidManager->guidPrepd[4],
 			$x['Compte'],
 			$x['ENT_FATCA_ID'],
 			$x['ENT_FIRSTNAME'],
