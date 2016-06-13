@@ -17,47 +17,35 @@ class FatcaDataOecd implements FatcaDataInterface {
 	}
 
 	function toHtml() {
-		$dv=array_values($this->data);
-    $headers=array(
-      "ENT_TYPE","ENT_LASTNAME","ENT_FIRSTNAME","ENT_FATCA_ID","ENT_ADDRESS",
-      "ResidenceCountry","ENT_COD","posCur","Compte","cur","dvdCur","intCur");
+    $dom = new \DOMDocument('1.0', 'utf-8');
+    $table = $dom->createElement('table');
 
-    // assert that there no keys more than those defined above
-    array_map(function($x) use($headers) {
-      $ad=array_diff(array_keys($x),$headers);
-      assert(count($ad)==0,"Test no extra headers failed. Found: ".implode(", ",$ad));
-    }, $this->data);
+    $border = $dom->createAttribute('border');
+    $border->value=1;
+    $table->appendChild($border);
 
-	  $th=implode(array_map(function($x) { return "<th>".$x."</th>"; },$headers));
-    $body=array();
-    foreach($this->data as $y) {
-      $row=array();
-      foreach($headers as $x1) {
-        if(array_key_exists($x1,$y)) {
-          $x2=$y[$x1];
-          if(!is_array($x2)) {
-            array_push($row, "<td>".$x2."</td>");
-          } else {
-            die("arrays here No longer supported");
-          }
-        } else {
-          array_push($row,"<td>&nbsp;</td>");
-        }
+    if(!!$this->oecd->FATCA->ReportingGroup->AccountReport &&
+         is_array($this->oecd->FATCA->ReportingGroup->AccountReport)
+      ) {
+      foreach($this->oecd->FATCA->ReportingGroup->AccountReport as $ar) {
+        $row = $dom->createElement('tr');
+        $row->appendChild($dom->createElement('td',$ar->AccountNumber));
+        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->TIN));
+        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Name->FirstName));
+        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Name->LastName));
+        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Address->CountryCode));
+        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Address->AddressFree));
+        $table->appendChild($row);
       }
-      $row=implode($row);
-      array_push($body, "<tr>".$row."</tr>");
     }
-    $body=implode($body);
 
-		$html2 = sprintf("<table border=1>%s%s</table>\n",$th,$body);
+    $dom->appendChild($table);
 
     // pretty print html
-    $doc = new \DOMDocument();
-    $doc->preserveWhiteSpace = true;
-    $doc->formatOutput = true;//false;
-    $doc->loadHTML($html2);
-    $html3=$doc->saveHTML();
-    return $html3;
+    $dom->preserveWhiteSpace = true;
+    $dom->formatOutput = true;//false;
+    $html=$dom->saveHTML();
+    return $html;
 	}
 
 	function toXml($utf8=false) {

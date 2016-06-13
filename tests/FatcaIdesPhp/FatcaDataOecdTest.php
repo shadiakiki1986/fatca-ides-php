@@ -17,5 +17,12 @@ class FatcaDataOecdTest extends \FatcaXsdPhp\FATCA_OECDTest {
     //file_put_contents("/home/shadi/Development/f2.xml",$diXml2);
   }
 
+  public function testToHtml() {
+    $fdo=new FatcaDataOecd($this->oecd);
+    $fdo->start();
+    $html=$fdo->toHtml();
+    $this->assertTrue(!!$html);
+  }
+
 
 }

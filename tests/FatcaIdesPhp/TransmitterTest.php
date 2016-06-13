@@ -9,7 +9,8 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
     $fdat->setUp();
     $fda=new FatcaDataArray($fdat->di,false,"",2014,$fdat->conMan);
 
-    Transmitter::shortcut($fda,"html","",$fdat->conMan->config);
+    $tmtr=Transmitter::shortcut($fda,"html","",$fdat->conMan->config);
+    $this->assertTrue(true);
   }
 
   public function testShortcutOecd() {
@@ -20,7 +21,8 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
     $fdot->setUp();
     $fdo=new FatcaDataOecd($fdot->oecd);
 
-    Transmitter::shortcut($fdo,"html","",$fdat->conMan->config);
+    $tmtr=Transmitter::shortcut($fdo,"html","",$fdat->conMan->config);
+    $this->assertTrue(true);
   }
 
   public function testToEmail() {
