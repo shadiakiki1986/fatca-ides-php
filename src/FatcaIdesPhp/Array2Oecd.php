@@ -49,7 +49,7 @@ class Array2Oecd {
           $ah->Organisation = $this->getOrganisation($x);
           break;
         default:
-          throw new Exception("Unsupported ENT_TYPE '".$x["ENT_TYPE"]."'");
+          throw new \Exception("Unsupported ENT_TYPE '".$x["ENT_TYPE"]."'");
       }
       return $ah;
   }
