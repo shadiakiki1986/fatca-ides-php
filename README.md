@@ -101,3 +101,8 @@ Open issues:
 * `@xmlNamespace urn:oecd:ties:fatca:v1` is missing from `src/FatcaXsdPhp/FATCA_OECD` pending https://github.com/moyarada/XSD-to-PHP/issues/36
 * The AddressFree field has the wrong namespace: should be urn:oecd:ties:stffatcatypes:v1 instead of `urn:oecd:ties:fatca:v1`
 * ReportingGroup.php is not generated + its `@var` is missing
+* `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/NamePerson_Type.php`
+ * @xmlNamespace urn:oecd:ties:fatca:v1
+ * changed manually to
+ * @xmlNamespace urn:oecd:ties:stffatcatypes:v1
+
