@@ -5,10 +5,7 @@ namespace FatcaIdesPhp;
 class FatcaDataArrayTest extends \PHPUnit_Framework_TestCase {
 
   public function setUp() {
-    $this->di = array(
-      array("Compte"=>"1234","ENT_FIRSTNAME"=>"Clyde","ENT_LASTNAME"=>"Barrow","ENT_FATCA_ID"=>"123-1234-123","ENT_ADDRESS"=>"Some street somewhere","ResidenceCountry"=>"US","posCur"=>100000000,"cur"=>"USD"),
-      array("Compte"=>"5678","ENT_FIRSTNAME"=>"Bonnie","ENT_LASTNAME"=>"Parker","ENT_FATCA_ID"=>"456-1234-123","ENT_ADDRESS"=>"Dallas, Texas","ResidenceCountry"=>"US","posCur"=>100,"cur"=>"LBP")
-    );
+    $this->di=yaml_parse_file(__DIR__.'/fdatIndividual.yml');
 
     $this->conMan = $this->getMockBuilder('\FatcaIdesPhp\ConfigManager')
                    ->disableOriginalConstructor()
@@ -38,5 +35,23 @@ class FatcaDataArrayTest extends \PHPUnit_Framework_TestCase {
     //file_put_contents("/home/shadi/Development/f2.xml",$diXml2);
   }
 
+  public function testToHtml() {
+    $fda=new FatcaDataArray($this->di,false,"",2014,$this->conMan);
+    $fda->start();
+    $html=$fda->toHtml();
+    $this->assertTrue(true);
+  }
+
+  public function testOrganisation() {
+    $di=yaml_parse_file(__DIR__.'/fdatOrganisation.yml');
+    $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
+    $fda->start();
+    try {
+      $html=$fda->toHtml();
+      $this->assertTrue(false);
+    } catch(\Exception $e) {
+      $this->assertTrue(true);
+    }
+  }
 
 }

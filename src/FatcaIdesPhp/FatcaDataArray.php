@@ -43,6 +43,7 @@ class FatcaDataArray implements FatcaDataInterface {
 		// following http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schema-Best-Practices-for-Form-8966
 		// the hash in an address should be replaced
 		$this->data=array_map(function($x) {
+      if($x["ENT_TYPE"]!="Individual") return $x;
 			$reps=array(":","#",",","-",".","--","/");
 			$x['ENT_ADDRESS']=str_replace($reps," ",$x['ENT_ADDRESS']);
 			$x['ENT_ADDRESS']=preg_replace('/\s\s+/',' ',$x['ENT_ADDRESS']);
@@ -72,8 +73,21 @@ class FatcaDataArray implements FatcaDataInterface {
 		$this->guidManager=new GuidManager();
 	}
 
+  function filterIndividuals() {
+		$o = array_filter(
+      $this->data,
+      function($x) {
+        return $x["ENT_TYPE"]=="Individual";
+      });
+    if(count($o)<count($this->data)) {
+      trigger_error("FatcaDataArray is not suitable for entries that have type!=Individual. Filtering and dropping ".(count($this->data)-count($o))." entries. Please use FatcaDataOecd instead", E_USER_WARNING);
+    }
+    return $o;
+  }
+
 	function toHtml() {
-		$dv=array_values($this->data);
+		$dv=$this->filterIndividuals();
+		$dv=array_values($dv);
     $headers=array(
       "ENT_TYPE","ENT_LASTNAME","ENT_FIRSTNAME","ENT_FATCA_ID","ENT_ADDRESS",
       "ResidenceCountry","ENT_COD","posCur","Compte","cur","dvdCur","intCur");
@@ -82,11 +96,11 @@ class FatcaDataArray implements FatcaDataInterface {
     array_map(function($x) use($headers) {
       $ad=array_diff(array_keys($x),$headers);
       assert(count($ad)==0,"Test no extra headers failed. Found: ".implode(", ",$ad));
-    }, $this->data);
+    }, $dv);
 
 	  $th=implode(array_map(function($x) { return "<th>".$x."</th>"; },$headers));
     $body=array();
-    foreach($this->data as $y) {
+    foreach($dv as $y) {
       $row=array();
       foreach($headers as $x1) {
         if(array_key_exists($x1,$y)) {
@@ -117,7 +131,7 @@ class FatcaDataArray implements FatcaDataInterface {
 	}
 
 	function toXml($utf8=false) {
-	    $di=$this->data; # $di: output of getFatcaClients
+  		$di=$this->filterIndividuals();
 
 	    # convert to xml 
 	    #        xsi:schemaLocation='urn:oecd:ties:fatca:v1 FatcaXML_v1.1.xsd'

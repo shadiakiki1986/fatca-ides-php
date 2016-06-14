@@ -41,15 +41,38 @@ class Array2Oecd {
 
   function getAccountHolder($x) {
       $ah = new \FatcaXsdPhp\AccountHolder_Type();
-      $ah->Individual = new \oecd\ties\stffatcatypes\v1\PersonParty_Type();
-      $ah->Individual->TIN = $x['ENT_FATCA_ID'];
-      $ah->Individual->Name = new \oecd\ties\stffatcatypes\v1\NamePerson_Type();
-      $ah->Individual->Name->FirstName = $x['ENT_FIRSTNAME'];
-      $ah->Individual->Name->LastName = $x['ENT_LASTNAME'];
-      $ah->Individual->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
-      $ah->Individual->Address->CountryCode = $x['ResidenceCountry'];
-      $ah->Individual->Address->AddressFree = $x['ENT_ADDRESS'];
+      switch($x["ENT_TYPE"]) {
+        case "Individual":
+          $ah->Individual = $this->getIndividual($x);
+          break;
+        case "Corporate":
+          $ah->Organisation = $this->getOrganisation($x);
+          break;
+        default:
+          throw new Exception("Unsupported ENT_TYPE '".$x["ENT_TYPE"]."'");
+      }
       return $ah;
+  }
+
+  function getIndividual($x) {
+    $ind = new \oecd\ties\stffatcatypes\v1\PersonParty_Type();
+    $ind->TIN = $x['ENT_FATCA_ID'];
+    $ind->Name = new \oecd\ties\stffatcatypes\v1\NamePerson_Type();
+    $ind->Name->FirstName = $x['ENT_FIRSTNAME'];
+    $ind->Name->LastName = $x['ENT_LASTNAME'];
+    $ind->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
+    $ind->Address->CountryCode = $x['ResidenceCountry'];
+    $ind->Address->AddressFree = $x['ENT_ADDRESS'];
+    return $ind;
+  }
+
+  function getOrganisation($x) {
+    $org = new \oecd\ties\stffatcatypes\v1\OrganisationParty_Type();
+    $org->Name = $x['ENT_FIRSTNAME'];
+    $org->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
+    $org->Address->CountryCode = $x['ResidenceCountry'];
+    $org->Address->AddressFree = $x['ENT_ADDRESS'];
+    return $org;
   }
 
   function getPayments($x) {
@@ -97,6 +120,17 @@ class Array2Oecd {
       $ar->AccountNumber = $x['Compte'];
 
       $ar->AccountHolder = $this->getAccountHolder($x);
+
+      if(array_key_exists("SubstantialOwner",$x)) {
+        if($x["ENT_TYPE"]!="Corporate") throw new Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
+
+        $substOwns = array();
+        foreach($x["SubstantialOwner"] as $so) {
+          array_push($substOwns,$this->getIndividual($so));
+        }
+        if(count($substOwns)>0) $ar->SubstantialOwner = $substOwns;
+      }
+
 
       $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
       $ar->AccountBalance->currCode = $x['cur'];
