@@ -5,7 +5,7 @@ namespace FatcaIdesPhp;
 class FatcaDataArrayTest extends \PHPUnit_Framework_TestCase {
 
   public function setUp() {
-    $this->di=yaml_parse_file(__DIR__.'/fdatIndividual.yml');
+    $this->di=\yaml_parse_file(__DIR__.'/fdatIndividual.yml');
 
     $this->conMan = $this->getMockBuilder('\FatcaIdesPhp\ConfigManager')
                    ->disableOriginalConstructor()
@@ -43,7 +43,7 @@ class FatcaDataArrayTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function testOrganisation() {
-    $di=yaml_parse_file(__DIR__.'/fdatOrganisation.yml');
+    $di=\yaml_parse_file(__DIR__.'/fdatOrganisation.yml');
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
     $fda->start();
     try {
