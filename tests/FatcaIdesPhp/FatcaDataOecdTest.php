@@ -34,7 +34,7 @@ class FatcaDataOecdTest extends \PHPUnit_Framework_TestCase {
   }
 
   function getYmlFdo($ymlfn) {
-    $di=yaml_parse_file($ymlfn);
+    $di=\yaml_parse_file($ymlfn);
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
     $fda->start();
     $a2o = new Array2Oecd($fda);
