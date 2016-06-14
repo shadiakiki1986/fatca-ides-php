@@ -22,12 +22,12 @@
         "php":">=5.3.5",
         "monolog/monolog": "^1.19",
         "phpseclib/phpseclib": "*",
-        "robrichards/xmlseclibs":"*"
+        "robrichards/xmlseclibs":"*",
+        "shadiakiki1986/XSD-to-PHP": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "jakub-onderka/php-parallel-lint": "^0.9",
-        "shadiakiki1986/XSD-to-PHP": "dev-master"
+        "jakub-onderka/php-parallel-lint": "^0.9"
     },
     "suggest": {
         "swiftmailer/swiftmailer": "php library for sending emails"
