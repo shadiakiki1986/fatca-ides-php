@@ -46,6 +46,8 @@ class Array2Oecd {
           $ah->Individual = $this->getIndividual($x);
           break;
         case "Corporate":
+          $ah->AcctHolderType = new \FatcaXsdPhp\FatcaAcctHolderType_EnumType();
+          $ah->AcctHolderType->value = "FATCA102";
           $ah->Organisation = $this->getOrganisation($x);
           break;
         default:

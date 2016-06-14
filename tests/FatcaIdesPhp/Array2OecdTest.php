@@ -10,6 +10,13 @@ class Array2OecdTest extends \PHPUnit_Framework_TestCase {
     $this->conMan = $fdat->conMan;
   }
 
+  function assertSchemaValidate($xml) {
+    $xsd=__DIR__."/../../cache/FATCA XML Schema v1.1/FatcaXML_v1.1.xsd";
+    $doc = new \DOMDocument();
+    $xmlDom=$doc->loadXML($xml);
+    $this->assertTrue($doc->schemaValidate($xsd));
+  }
+
   public function testIndividual() {
     $di=yaml_parse_file(__DIR__.'/fdatIndividual.yml');
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
@@ -17,7 +24,7 @@ class Array2OecdTest extends \PHPUnit_Framework_TestCase {
 
     $a2o = new Array2Oecd($fda);
     $a2o->convert();
-    $this->assertTrue(true);
+    $this->assertSchemaValidate($a2o->fdo->toXml());
   }
 
   public function testOrganisationOk() {
@@ -27,7 +34,7 @@ class Array2OecdTest extends \PHPUnit_Framework_TestCase {
 
     $a2o = new Array2Oecd($fda);
     $a2o->convert();
-    $this->assertTrue(true);
+    $this->assertSchemaValidate($a2o->fdo->toXml());
   }
 
   public function testWrongType() {
