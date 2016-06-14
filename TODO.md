@@ -1,3 +1,6 @@
+2016-06-14
+* FatcaDataOecd/toHtml: instead of php code, write up a xsl stylesheet and pass the toXml() output through it to get html
+
 2016-06-08
 * should be able to extract the public key from the certificate instead of requiring the user to do
  * `openssl x509 -pubkey -noout -in cert.pem  > pubkey.pem`

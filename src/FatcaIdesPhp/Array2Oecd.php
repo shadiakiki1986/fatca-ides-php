@@ -70,7 +70,8 @@ class Array2Oecd {
 
   function getOrganisation($x) {
     $org = new \oecd\ties\stffatcatypes\v1\OrganisationParty_Type();
-    $org->Name = $x['ENT_FIRSTNAME'];
+    $org->Name = new \oecd\ties\stffatcatypes\v1\NameOrganisation_Type();
+    $org->Name->value = $x['ENT_FIRSTNAME'];
     $org->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
     $org->Address->CountryCode = $x['ResidenceCountry'];
     $org->Address->AddressFree = $x['ENT_ADDRESS'];

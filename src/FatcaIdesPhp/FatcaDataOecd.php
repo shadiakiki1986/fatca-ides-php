@@ -16,6 +16,18 @@ class FatcaDataOecd implements FatcaDataInterface {
     ; // do nothing
 	}
 
+  public static function toHtmlIndividual($row,$dom,$ind) {
+    $row->appendChild($dom->createElement('td',$ind->TIN));
+    $row->appendChild($dom->createElement('td',$ind->Name->FirstName));
+    $row->appendChild($dom->createElement('td',$ind->Name->LastName));
+    $row->appendChild($dom->createElement('td',"N/A"));
+
+    $row->appendChild($dom->createElement('td',$ind->Address->CountryCode));
+    $row->appendChild($dom->createElement('td',$ind->Address->AddressFree));
+
+    return $row;
+  }
+
 	function toHtml() {
     $dom = new \DOMDocument('1.0', 'utf-8');
     $table = $dom->createElement('table');
@@ -30,12 +42,36 @@ class FatcaDataOecd implements FatcaDataInterface {
       foreach($this->oecd->FATCA->ReportingGroup->AccountReport as $ar) {
         $row = $dom->createElement('tr');
         $row->appendChild($dom->createElement('td',$ar->AccountNumber));
-        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->TIN));
-        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Name->FirstName));
-        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Name->LastName));
-        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Address->CountryCode));
-        $row->appendChild($dom->createElement('td',$ar->AccountHolder->Individual->Address->AddressFree));
+
+        if(!!$ar->AccountHolder->Individual) {
+          $row = FatcaDataOecd::toHtmlIndividual(
+            $row,
+            $dom,
+            $ar->AccountHolder->Individual);
+        }
+
+        if(!!$ar->AccountHolder->Organisation) {
+          $row->appendChild($dom->createElement('td',"N/A"));
+          $row->appendChild(
+            $dom->createElement('td',$ar->AccountHolder->Organisation->Name->value));
+          $row->appendChild($dom->createElement('td',"N/A"));
+          $row->appendChild($dom->createElement('td',$ar->AccountHolder->AcctHolderType->value));
+
+          $row->appendChild($dom->createElement('td',$ar->AccountHolder->Organisation->Address->CountryCode));
+          $row->appendChild($dom->createElement('td',$ar->AccountHolder->Organisation->Address->AddressFree));
+        }
+
         $table->appendChild($row);
+
+        if(!!$ar->SubstantialOwner) {
+          foreach($ar->SubstantialOwner as $so) {
+            $row = $dom->createElement('tr');
+            $row->appendChild($dom->createElement('td',$ar->AccountNumber));
+            $row = FatcaDataOecd::toHtmlIndividual($row,$dom,$so);
+            $table->appendChild($row);
+          }
+        }
+
       }
     }
 
