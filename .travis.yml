@@ -6,7 +6,4 @@ before_install:
 script:
   - composer run-script test
 sudo: false
-addons:
-  apt:
-    packages:
-      - libyaml-dev
+
