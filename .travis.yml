@@ -1,5 +1,6 @@
 language: php
 before_script:
+  - pecl install yaml
   - composer install
 script:
   - composer run-script test
