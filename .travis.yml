@@ -1,7 +1,7 @@
 language: php
 before_install:
   - pecl channel-update pecl.php.net
-  - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null &)
+  - (CFLAGS="-O1 -g3 -fno-strict-aliasing"; pecl install yaml < /dev/null)
   - composer install
 script:
   - composer run-script test
