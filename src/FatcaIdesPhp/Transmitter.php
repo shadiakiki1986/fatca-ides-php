@@ -3,6 +3,7 @@
 namespace FatcaIdesPhp;
 
 use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class Transmitter {
 
@@ -18,7 +19,7 @@ class Transmitter {
 	var $aesEncrypted;
 	var $file_name;
 
-	function __construct($fdi,$conMan) {
+	function __construct($fdi,$conMan,$LOG_LEVEL=Logger::WARNING) {
 	// fdi: object of type implementing FatcaDataInterface
   // conMan: object of type ConfigManager
 
@@ -36,6 +37,11 @@ class Transmitter {
 		// reserving some filenames
 		$this->tf3=tempnam("/tmp","");
 		$this->tf4=tempnam("/tmp","");
+
+    $this->log = new Logger('Transmitter');
+    // http://stackoverflow.com/a/25787259/4126114
+    $this->log->pushHandler(new StreamHandler('php://stdout', $LOG_LEVEL)); // <<< uses a stream
+    $this->LOG_LEVEL=$LOG_LEVEL;
   }
 
   function start() {
@@ -231,6 +237,7 @@ class Transmitter {
     // send email
     $subj=sprintf("IDES data: %s",date("Y-m-d H:i:s"));
 
+    $tmtr->log->debug("Sending attachment email");
     if(!Utils::mail_attachment(
       array($fnZ2),
       $emailTo,
@@ -245,8 +252,8 @@ class Transmitter {
     } else {
       if(is_null($upload)) return;
 
-      $sftp = SftpWrapper::getSFTP($tmtr->fdi->getIsTest?"test":"live");
-      $sw = new SftpWrapper($sftp);
+      $sftp = SftpWrapper::getSFTP($tmtr->fdi->getIsTest()?"test":"live");
+      $sw = new SftpWrapper($sftp,$this->LOG_LEVEL);
 
       $err = $sw->login($upload["username"],$upload["password"]);
       if(!!$err) {
@@ -281,7 +288,7 @@ class Transmitter {
     $dm = new Downloader(null,$LOG_LEVEL);
     $conMan = new ConfigManager($config,$dm,$LOG_LEVEL);
 
-    $tmtr=new Transmitter($fdi,$conMan);
+    $tmtr=new Transmitter($fdi,$conMan,$LOG_LEVEL);
     $tmtr->start();
     $tmtr->toXml(); # convert to xml 
 
