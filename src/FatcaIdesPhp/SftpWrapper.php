@@ -58,8 +58,8 @@ class SftpWrapper {
     // where x is the size of filename.local
     $this->log->info("Uploading file '".$zipfile."'");
     $this->sftp->put(
-      $zipfile, 
       "Outbox/840/".basename($zipfile), 
+      $zipfile, 
       \phpseclib\Net\SFTP::SOURCE_LOCAL_FILE);
     $this->log->info("Uploaded");
 
