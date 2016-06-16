@@ -253,7 +253,7 @@ class Transmitter {
       if(is_null($upload)) return;
 
       $sftp = SftpWrapper::getSFTP($tmtr->fdi->getIsTest()?"test":"live");
-      $sw = new SftpWrapper($sftp,$this->LOG_LEVEL);
+      $sw = new SftpWrapper($sftp,$tmtr->LOG_LEVEL);
 
       $err = $sw->login($upload["username"],$upload["password"]);
       if(!!$err) {
