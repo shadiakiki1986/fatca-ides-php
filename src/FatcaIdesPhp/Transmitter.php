@@ -13,13 +13,12 @@ class Transmitter {
 	var $dataCompressed;
 	var $dataEncrypted;
 	var $diDigest;
-	var $aeskey;
 	var $tf3;
 	var $tf4;
 	var $aesEncrypted;
 	var $file_name;
 
-	function __construct($fdi,$conMan,$LOG_LEVEL=Logger::WARNING) {
+	function __construct($fdi,$conMan,$am,$LOG_LEVEL=Logger::WARNING) {
 	// fdi: object of type implementing FatcaDataInterface
   // conMan: object of type ConfigManager
 
@@ -33,6 +32,9 @@ class Transmitter {
 
     assert($conMan instanceOf ConfigManager);
     $this->conMan=$conMan;
+
+    assert($am instanceOf AesManager);
+    $this->am=$am;
 
 		// reserving some filenames
 		$this->tf3=tempnam("/tmp","");
@@ -103,9 +105,7 @@ class Transmitter {
 	}
 
 	function toEncrypted() {
-		$am=new AesManager();
-		$this->aeskey = $am->aeskey;
-		$this->dataEncrypted=$am->encrypt($this->dataCompressed);
+		$this->dataEncrypted=$this->am->encrypt($this->dataCompressed);
 	}
 
 	function readIrsPublicKey($returnResource=true) {
@@ -123,7 +123,10 @@ class Transmitter {
 
 	function encryptAesKeyFile() {
 		$this->aesEncrypted="";
-		if(!openssl_public_encrypt ( $this->aeskey , $this->aesEncrypted , $this->readIrsPublicKey() )) {
+		if(!openssl_public_encrypt (
+        $this->am->aeskey.$this->am->iv ,
+        $this->aesEncrypted,
+        $this->readIrsPublicKey() )) {
       throw new \Exception("Did not encrypt aes key");
     }
 		if($this->aesEncrypted=="") throw new \Exception("Failed to encrypt AES key");
@@ -133,7 +136,7 @@ class Transmitter {
 		$pubk=$this->readIrsPublicKey(true);
 		$decrypted="";
 		if(!openssl_public_decrypt( $this->aesEncrypted , $decrypted , $pubk )) throw new \Exception("Failed to decrypt aes key for verification purposes");
-		return($decrypted==$this->aeskey);
+		return($decrypted==$this->am->aeskey.$this->am->iv);
 	}
 
 	function getMetadata() {
@@ -296,8 +299,9 @@ class Transmitter {
   public static function shortcut($fdi,$format,$emailTo,$config,$LOG_LEVEL=Logger::WARNING) {
     $dm = new Downloader(null,$LOG_LEVEL);
     $conMan = new ConfigManager($config,$dm,$LOG_LEVEL);
+		$am=new AesManager();
 
-    $tmtr=new Transmitter($fdi,$conMan,$LOG_LEVEL);
+    $tmtr=new Transmitter($fdi,$conMan,$am,$LOG_LEVEL);
     $tmtr->start();
     $tmtr->toXml(); # convert to xml 
 

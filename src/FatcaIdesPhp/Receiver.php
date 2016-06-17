@@ -11,7 +11,6 @@ var $dataXmlSigned;
 var $dataCompressed;
 var $dataEncrypted;
 var $diDigest;
-var $aeskey;
 var $tf1;
 var $tf2;
 var $tf3;
@@ -25,10 +24,12 @@ var $to;
 
 // config: php array
 // tf4: temp file?
-function __construct($conMan,$tf4=false) {
+function __construct($conMan,$am,$tf4=false) {
   $this->tf4=$tf4;
   assert($conMan instanceOf ConfigManager);
   $this->conMan=$conMan;
+  assert($am instanceOf AesManager);
+  $this->am=$am;
 }
 
 function start() {
@@ -77,9 +78,19 @@ function fromZip($filename) {
 }
 
 	function decryptAesKey() {
-		$this->aeskey="";
-		if(!openssl_private_decrypt( $this->aesEncrypted , $this->aeskey , $this->readFfaPrivateKey() )) throw new \Exception("Could not decrypt aes key");
-		if($this->aeskey=="") throw new \Exception("Failed to decrypt AES key");
+		$aeskey="";
+		if(!openssl_private_decrypt( $this->aesEncrypted , $aeskey , $this->readFfaPrivateKey() )) throw new \Exception("Could not decrypt aes key");
+		if($aeskey=="") throw new \Exception("Failed to decrypt AES key");
+
+    // split aeskey entry into aeskey + iv
+    // Reference: https://www.irs.gov/businesses/corporations/fatca-ides-technical-faqs#EncryptionE21
+    $iv = substr($aeskey,32,16);
+    $aeskey = substr($aeskey,0,32);
+    $key_size =  strlen($aeskey);
+		if($key_size!=32) throw new \Exception("Invalid key size ".$key_size);
+
+    $this->am->aeskey = $aeskey;
+    $this->am->iv = $iv;
 	}
 
 	function readFfaPrivateKey($returnResource=true) {
@@ -97,18 +108,11 @@ function fromZip($filename) {
 	}
 
 	function fromEncrypted() {
-    // split aeskey entry into aeskey + iv
-    // Reference: https://www.irs.gov/businesses/corporations/fatca-ides-technical-faqs#EncryptionE21
-    $iv = substr($this->aeskey,32,16);
-    $aeskey = substr($this->aeskey,0,32);
-    $key_size =  strlen($aeskey);
-		if($key_size!=32) throw new \Exception("Invalid key size ".$key_size);
-
 		$fp=fopen($this->tf4."/".$this->files["payload"],"r");
 		$this->dataEncrypted=fread($fp,8192);
 		fclose($fp);
 
-		$this->dataCompressed = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $aeskey, $this->dataEncrypted, "cbc", $iv);
+    $this->dataCompressed = $this->am->decrypt($this->dataEncrypted);
 	}
 
 	function fromCompressed() {
@@ -130,6 +134,7 @@ function fromZip($filename) {
 
     $dm = new Downloader(null,$LOG_LEVEL);
     $cm = new ConfigManager($config,$dm,$LOG_LEVEL);
+		$am=new AesManager();
 
     if(is_null($zipFn)) {
       assert(is_array($credentials) && array_key_exists("username",$credentials) && array_key_exists("password",$credentials));
@@ -156,7 +161,7 @@ function fromZip($filename) {
 
     }
 
-    $rx=new Receiver($cm);
+    $rx=new Receiver($cm,$am);
     $rx->start();
     $rx->fromZip($zipFn);
     $rx->decryptAesKey();
