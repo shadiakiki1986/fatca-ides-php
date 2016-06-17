@@ -17,7 +17,7 @@ class GuidManagerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetRanOut() {
-	$gm=new GuidManager(10);
+	$gm=new GuidManager("",10);
 	for($i=0;$i<10;$i++) $gm->get();
 	try {
 		$x2=$gm->get();
