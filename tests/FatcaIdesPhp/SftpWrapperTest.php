@@ -31,10 +31,8 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
       $z = new \ZipArchive();
       $this->fnZ2 = Utils::myTempnam('zip');
       $z->open($this->fnZ2, \ZIPARCHIVE::CREATE);
+      $z->addFromString("bla","bla");
       $z->close(); 
-
-      $sftp->method('get')
-           ->willReturn($this->fnZ2);
     }
 
     public function testLogin() {
@@ -81,10 +79,16 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
       }
     }
 
-    public function testGetLatestOk() {
-      $zf = $this->gm->getLatest();
-      $this->assertTrue(file_exists($zf),"sftp download file inexistant");
-      $this->assertTrue(Utils::isZip($zf),"sftp download file not zip");
+    public function testListLatestOk() {
+      $zf = $this->gm->listLatest();
+      $this->assertTrue(!!$zf);
+    }
+
+    public function testGetOk() {
+      $local=$this->fnZ2;
+      $this->gm->get("f1.zip",$local);
+      $this->assertTrue(file_exists($local),"sftp download file inexistant");
+      $this->assertTrue(Utils::isZip($local),"sftp download file not zip");
     }
 
 }
