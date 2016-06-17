@@ -267,7 +267,7 @@ class Transmitter {
       throw new \Exception($err);
     }
 
-    $err = $sw->put($fnZ1,$this->file_name);
+    $err = $sw->put($this->tf4,$this->file_name);
     #$err = "Uploading currently disabled";
     if(!!$err) {
       if(!is_null($swiftmailerConfig)) {

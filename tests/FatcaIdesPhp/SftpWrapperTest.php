@@ -33,11 +33,25 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
         !$this->gm->login("user","pass"));
     }
 
-    public function testPutOk() {
+    public function testPutNotRealZip() {
       $fn="/tmp/foo.zip";
       if(!file_exists($fn)) file_put_contents($fn,"bla");
       $this->assertTrue(file_exists($fn));
-      $this->assertTrue(!$this->gm->put($fn));
+      $this->assertTrue(!!$this->gm->put($fn));
+    }
+
+    public function testPutOk() {
+      $fnT = Utils::myTempnam('txt');
+      file_put_contents($fnT,"bla");
+
+      $z = new \ZipArchive();
+      $fnZ2 = Utils::myTempnam('zip');
+      $z->open($fnZ2, \ZIPARCHIVE::CREATE);
+      $z->addFile($fnT, "bla.txt");
+      $z->close(); 
+
+      $err = $this->gm->put($fnZ2,"foo.zip");
+      $this->assertTrue(!$err,"sftp upload failed: ".$err);
     }
 
     public function assertPutFail($fn) {

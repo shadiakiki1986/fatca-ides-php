@@ -51,9 +51,19 @@ class SftpWrapper {
     if(!file_exists($zipfile)) return("Zip file inexistant '".$zipfile."'");
 
     // check that this is a zip file
+    //
+    // Method 1: using extension
     // http://stackoverflow.com/a/10368236/4126114
-    $ext = pathinfo($zipfile, PATHINFO_EXTENSION);
-    if($ext!="zip") return "Only zip files accepted. Rejecting '".$zipfile."'";
+    // $ext = pathinfo($zipfile, PATHINFO_EXTENSION);
+    // if($ext!="zip") return "Only zip files accepted. Rejecting '".$zipfile."'";
+    //
+    // Method 2: check if readable zip
+    // http://stackoverflow.com/a/9098864/4126114
+    if(is_resource($zip = zip_open($zipfile))) {
+      zip_close($zip);
+    } else {
+      return "Only zip files accepted. Rejecting '".$zipfile."'";
+    }
 
     // puts an x-byte file named filename.remote on the SFTP server,
     // where x is the size of filename.local
