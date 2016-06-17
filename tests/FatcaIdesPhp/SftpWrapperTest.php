@@ -22,10 +22,19 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
                if($x==".") return array("Outbox");
                if($x=="Outbox") return array("840");
                if($x=="Outbox/840") return array("foo.zip");
+               if($x=="Inbox/840") return array("f1.zip","f2.zip");
                return array();
            }));
 
       $this->gm=new SftpWrapper($sftp);
+
+      $z = new \ZipArchive();
+      $this->fnZ2 = Utils::myTempnam('zip');
+      $z->open($this->fnZ2, \ZIPARCHIVE::CREATE);
+      $z->close(); 
+
+      $sftp->method('get')
+           ->willReturn($this->fnZ2);
     }
 
     public function testLogin() {
@@ -34,23 +43,13 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPutNotRealZip() {
-      $fn="/tmp/foo.zip";
-      if(!file_exists($fn)) file_put_contents($fn,"bla");
-      $this->assertTrue(file_exists($fn));
+      $fn=Utils::myTempnam("zip");
+      file_put_contents($fn,"bla");
       $this->assertTrue(!!$this->gm->put($fn));
     }
 
     public function testPutOk() {
-      $fnT = Utils::myTempnam('txt');
-      file_put_contents($fnT,"bla");
-
-      $z = new \ZipArchive();
-      $fnZ2 = Utils::myTempnam('zip');
-      $z->open($fnZ2, \ZIPARCHIVE::CREATE);
-      $z->addFile($fnT, "bla.txt");
-      $z->close(); 
-
-      $err = $this->gm->put($fnZ2,"foo.zip");
+      $err = $this->gm->put($this->fnZ2,"foo.zip");
       $this->assertTrue(!$err,"sftp upload failed: ".$err);
     }
 
@@ -80,6 +79,12 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
         $sftp->disconnect();
         $this->assertTrue(!$sftp->isConnected());
       }
+    }
+
+    public function testGetLatestOk() {
+      $zf = $this->gm->getLatest();
+      $this->assertTrue(file_exists($zf),"sftp download file inexistant");
+      $this->assertTrue(Utils::isZip($zf),"sftp download file not zip");
     }
 
 }

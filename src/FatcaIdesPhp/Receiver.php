@@ -1,6 +1,7 @@
 <?php
 
 namespace FatcaIdesPhp;
+use Monolog\Logger;
 
 class Receiver {
 
@@ -119,8 +120,24 @@ function fromZip($filename) {
 		}
 	}
 
-  public static function shortcut($config,$zipFn) {
-    $cm = new ConfigManager($config);
+  public static function shortcut($config,$zipFn=null,$credentials=null,$idesServer=null,$LOG_LEVEL=Logger::WARNING) {
+
+    assert(is_null($zipFn) xor is_null($credentials));
+
+    if(is_null($zipFn)) {
+      assert(is_array($credentials) && array_key_exists("username",$credentials) && array_key_exists("password",$credentials));
+      assert(!is_null($idesServer) && in_array($idesServer,array("live","test")));
+      $sftp = SftpWrapper::getSFTP($idesServer);
+      $sw = new SftpWrapper($sftp,$LOG_LEVEL);
+
+      $err = $sw->login($upload["username"],$upload["password"]);
+      if(!!$err) throw new \Exception($err);
+
+      $zipFn = $sw->getLatest();
+    }
+
+    $dm = new Downloader(null,$LOG_LEVEL);
+    $cm = new ConfigManager($config,$dm,$LOG_LEVEL);
     $rx=new Receiver($cm);
     $rx->start();
     $rx->fromZip($zipFn);

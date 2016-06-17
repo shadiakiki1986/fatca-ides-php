@@ -179,4 +179,23 @@ class Utils {
     return $err.'. Alerted by email to '.$emailTo;
   }
 
+  // check that this is a zip file
+  //
+  // Method 1: using extension
+  // http://stackoverflow.com/a/10368236/4126114
+  // $ext = pathinfo($zipfile, PATHINFO_EXTENSION);
+  // if($ext!="zip") return "Only zip files accepted. Rejecting '".$zipfile."'";
+  //
+  // Method 2: check if readable zip
+  // http://stackoverflow.com/a/9098864/4126114
+  // check that this is a zip file
+  public static function isZip($zipfile) {
+    if(is_resource($zip = zip_open($zipfile))) {
+      zip_close($zip);
+      return true;
+    }
+    return false;
+  }
+
+
 } // end class

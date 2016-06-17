@@ -51,17 +51,7 @@ class SftpWrapper {
     if(!file_exists($zipfile)) return("Zip file inexistant '".$zipfile."'");
 
     // check that this is a zip file
-    //
-    // Method 1: using extension
-    // http://stackoverflow.com/a/10368236/4126114
-    // $ext = pathinfo($zipfile, PATHINFO_EXTENSION);
-    // if($ext!="zip") return "Only zip files accepted. Rejecting '".$zipfile."'";
-    //
-    // Method 2: check if readable zip
-    // http://stackoverflow.com/a/9098864/4126114
-    if(is_resource($zip = zip_open($zipfile))) {
-      zip_close($zip);
-    } else {
+    if(!Utils::isZip($zipfile)) {
       return "Only zip files accepted. Rejecting '".$zipfile."'";
     }
 
@@ -90,6 +80,38 @@ class SftpWrapper {
     }
 
     return false;
+  }
+
+  function getLatest() {
+    assert($this->sftp->isAuthenticated(),"sftp session is authenticated test");
+
+    // list files
+    $this->log->info("Listing inbox files");
+    $prefix="Inbox/840";
+    $nl = $this->sftp->nlist($prefix);
+    if(count($nl)==0) throw new Exception("No files in inbox");
+
+    // destination temp file
+    $zipfile = tempnam("/tmp","");
+
+    // puts an x-byte file named filename.remote on the SFTP server,
+    // where x is the size of filename.local
+    $this->log->info("Found the following files in inbox/840: '".implode(", ",$nl)."'");
+    $this->log->info("Downloading file '".$nl[0]);
+    $this->sftp->get(
+      $prefix."/".$nl[0],
+      $zipfile);
+    $this->log->info("Downloaded");
+
+    if(!file_exists($zipfile)) throw new \Exception("Error downloading latest file '".$zipfile."'");
+
+    // check that this is a zip file
+    if(!Utils::isZip($zipfile)) {
+      throw new Exception("Only zip files accepted. Rejecting '".$zipfile."'");
+    }
+
+    $this->log->info("Downloaded file '".$zipfile."'");
+    return $zipfile;
   }
 
 
