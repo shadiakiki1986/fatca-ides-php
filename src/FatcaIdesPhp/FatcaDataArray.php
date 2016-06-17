@@ -71,7 +71,7 @@ class FatcaDataArray implements FatcaDataInterface {
 
 		// prepare guids to use
 		$this->guidManager=new GuidManager(
-      $this->confMan->config["ffaid"].".");
+      $this->conMan->config["ffaid"].".");
 	}
 
   function filterIndividuals() {
