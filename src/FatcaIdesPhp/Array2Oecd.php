@@ -30,8 +30,11 @@ class Array2Oecd {
     $rfi->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
     $rfi->Address->CountryCode = new \oecd\ties\isofatcatypes\v1\CountryCode_Type();
     $rfi->Address->CountryCode->value = "LB";
-
     $rfi->Address->AddressFree = "Foch street";
+    $rfi->TIN = new \oecd\ties\stffatcatypes\v1\TIN_Type();
+    $rfi->TIN->value=$this->fda->conMan->config["ffaid"];
+    $rfi->TIN->issuedBy="US";
+
     $rfi->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
     $rfi->DocSpec->DocTypeIndic=$this->fda->docType;
     $rfi->DocSpec->DocRefId=$this->fda->guidManager->get();
