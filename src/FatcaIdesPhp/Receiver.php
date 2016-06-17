@@ -55,7 +55,7 @@ function start() {
 }
 
 function fromZip($filename) {
-	$zip = new ZipArchive();
+	$zip = new \ZipArchive();
 	if ($zip->open($filename) === TRUE) {
 	    $zip->extractTo($this->tf4);
 	    $zip->close();
@@ -83,7 +83,7 @@ function fromZip($filename) {
 	}
 
 	function readFfaPrivateKey($returnResource=true) {
-	  $kk=($this->from==$this->conMan->config["ffaidReceiver"]?$this->conMan->config["FatcaKeyPrivate"]:($this->conMan->config["ffaid"]?$this->conMan->config["FatcaIrsPublic"]:die("WTF")));
+	  $kk=($this->from==$this->conMan->config["ffaidReceiver"]?$this->conMan->config["FatcaKeyPrivate"]:($this->from==$this->conMan->config["ffaid"]?$this->conMan->config["FatcaIrsPublic"]:die("WTF")));
 	  $fp=fopen($kk,"r");
 	  $priv_key_string=fread($fp,8192);
 	  fclose($fp);
@@ -111,7 +111,7 @@ function fromZip($filename) {
 		$tf3=tempnam("/tmp","");
 		file_put_contents($tf3,$this->dataCompressed);
 
-		$zip = new ZipArchive();
+		$zip = new \ZipArchive();
 		if ($zip->open($tf3) === TRUE) {
 			$this->dataXmlSigned=$zip->getFromIndex(0);
 			$zip->close();
