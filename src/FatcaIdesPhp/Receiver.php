@@ -130,7 +130,7 @@ function fromZip($filename) {
       $sftp = SftpWrapper::getSFTP($idesServer);
       $sw = new SftpWrapper($sftp,$LOG_LEVEL);
 
-      $err = $sw->login($upload["username"],$upload["password"]);
+      $err = $sw->login($credentials["username"],$credentials["password"]);
       if(!!$err) throw new \Exception($err);
 
       $zipFn = $sw->getLatest();
