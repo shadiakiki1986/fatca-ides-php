@@ -190,6 +190,7 @@ class Utils {
   // http://stackoverflow.com/a/9098864/4126114
   // check that this is a zip file
   public static function isZip($zipfile) {
+    if(filesize($zipfile)==0) return false;
     if(is_resource($zip = zip_open($zipfile))) {
       zip_close($zip);
       return true;

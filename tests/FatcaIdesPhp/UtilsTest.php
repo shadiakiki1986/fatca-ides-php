@@ -12,5 +12,21 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue(count($ge)==0);
   }
 
+  public function testIsZipOk() {
+    $z = new \ZipArchive();
+    $fnZ2 = Utils::myTempnam('zip');
+    $z->open($fnZ2, \ZIPARCHIVE::CREATE);
+    $z->addFromString("bla","bli");
+    $z->close(); 
+    $this->assertTrue(Utils::isZip($fnZ2));
+  }
+
+  public function testIsZipFail() {
+    $fnZ2 = Utils::myTempnam('zip');
+    $this->assertTrue(!Utils::isZip($fnZ2));
+    file_put_contents($fnZ2,'bla');
+    $this->assertTrue(!Utils::isZip($fnZ2));
+  }
+
 }
 
