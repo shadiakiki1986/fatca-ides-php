@@ -16,7 +16,7 @@ class Array2Oecd {
     $ms->TransmittingCountry = "LB";
     $ms->ReceivingCountry = "US";
     $ms->MessageType = "FATCA";
-    $ms->MessageRefId = $this->fda->guidManager->guidPrepd[0]; // specifically indexing guidPrepd instead of using the get function so as to get the same ID if I run this function twice
+    $ms->MessageRefId = $this->fda->guidManager->get();
 
     $ms->ReportingPeriod = sprintf("%s-12-31",$this->fda->taxYear);
     $ms->Timestamp = $this->fda->ts3;
@@ -34,7 +34,7 @@ class Array2Oecd {
     $rfi->Address->AddressFree = "Foch street";
     $rfi->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
     $rfi->DocSpec->DocTypeIndic=$this->fda->docType;
-    $rfi->DocSpec->DocRefId=$this->fda->guidManager->guidPrepd[2];
+    $rfi->DocSpec->DocRefId=$this->fda->guidManager->get();
     // corrDocRefId ...
     return $rfi;
   }
@@ -118,7 +118,7 @@ class Array2Oecd {
       $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
       $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
       $ar->DocSpec->DocTypeIndic=$this->fda->docType;
-      $ar->DocSpec->DocRefId=$this->fda->guidManager->guidPrepd[4];
+      $ar->DocSpec->DocRefId=$this->fda->guidManager->get();
 
       $ar->AccountNumber = $x['Compte'];
 
