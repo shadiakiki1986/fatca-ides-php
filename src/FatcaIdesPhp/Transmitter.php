@@ -42,6 +42,8 @@ class Transmitter {
     // http://stackoverflow.com/a/25787259/4126114
     $this->log->pushHandler(new StreamHandler('php://stdout', $LOG_LEVEL)); // <<< uses a stream
     $this->LOG_LEVEL=$LOG_LEVEL;
+
+		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
   }
 
   function start() {
@@ -135,8 +137,6 @@ class Transmitter {
 	}
 
 	function getMetadata() {
-		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
-
 		// ts2 is xsd:dateTime
 		// http://www.datypic.com/sc/xsd/t-xsd_dateTime.html
 		// Even though the xsd:dateTime supports dates without a timezone,
@@ -209,19 +209,16 @@ class Transmitter {
 		readfile($yourfile);
 	}
 
-  public static function toEmail($tmtr,$emailTo,$emailFrom,$emailName,$emailReply,$upload=null,$swiftmailerConfig=array()) {
-    if(!!$upload) assert(is_array($upload) && array_key_exists("username",$upload) && array_key_exists("password",$upload));
-    assert($tmtr instanceof Transmitter);
-
+  public function toEmail($emailTo,$emailFrom,$emailName,$emailReply,$swiftmailerConfig=array()) {
     // save to files
     $fnH = Utils::myTempnam('html');
-    file_put_contents($fnH,$tmtr->fdi->toHtml());
+    file_put_contents($fnH,$this->fdi->toHtml());
     $fnX = Utils::myTempnam('xml');
-    file_put_contents($fnX,$tmtr->dataXmlSigned);
+    file_put_contents($fnX,$this->dataXmlSigned);
     $fnM = Utils::myTempnam('xml');
-    file_put_contents($fnM,$tmtr->getMetadata());
+    file_put_contents($fnM,$this->getMetadata());
     $fnZ1 = Utils::myTempnam('zip');
-    copy($tmtr->tf4,$fnZ1);
+    copy($this->tf4,$fnZ1);
 
     // zip to avoid getting blocked on server
     $z = new \ZipArchive();
@@ -237,8 +234,8 @@ class Transmitter {
     // send email
     $subj=sprintf("IDES data: %s",date("Y-m-d H:i:s"));
 
-    $tmtr->log->debug("Sending attachment email");
-    if(!Utils::mail_attachment(
+    $this->log->debug("Sending attachment email");
+    $res = Utils::mail_attachment(
       array($fnZ2),
       $emailTo,
       $emailFrom, // from email
@@ -247,39 +244,51 @@ class Transmitter {
       $subj." (attachment)", 
       "Attached: html, xml, metadata, zip formats",
       $swiftmailerConfig
-    )) {
-      throw new \Exception("Failed to send attachment email.".!!$upload?" Will also not upload.":"");
-    } else {
-      if(is_null($upload)) return;
+    );
+    if(!$res) throw new \Exception("Failed to send attachment email. Aborting.");
+    $this->log->debug("Done emailing");
+  } // end function toEmail
 
-      $sftp = SftpWrapper::getSFTP($tmtr->fdi->getIsTest()?"test":"live");
-      $sw = new SftpWrapper($sftp,$tmtr->LOG_LEVEL);
+  public function toUpload($upload,$swiftmailerConfig=null) {
+    if(is_null($upload)) return;
+    assert(is_array($upload) && array_key_exists("username",$upload) && array_key_exists("password",$upload));
 
-      $err = $sw->login($upload["username"],$upload["password"]);
-      if(!!$err) {
-        throw new \Exception(
-          Utils::mail_wrapper(
-            $emailTo, $emailFrom, $emailName, $emailReply, 
-            $subj." (upload error login)", $err,
-            $swiftmailerConfig));
+    $sftp = SftpWrapper::getSFTP($this->fdi->getIsTest()?"test":"live");
+    $sw = new SftpWrapper($sftp,$this->LOG_LEVEL);
+
+    $err = $sw->login($upload["username"],$upload["password"]);
+    if(!!$err) {
+      if(!is_null($swiftmailerConfig)) {
+        Utils::mail_wrapper(
+          $emailTo, $emailFrom, $emailName, $emailReply, 
+          $subj." (upload error login)", $err,
+          $swiftmailerConfig);
       }
-
-      $err = $sw->put($fnz1);
-      #$err = "Uploading currently disabled";
-      if(!!$err) {
-        throw new \Exception(
-          Utils::mail_wrapper(
-            $emailTo, $emailFrom, $emailName, $emailReply, 
-            $subj." (upload error file)", $err,
-            $swiftmailerConfig));
-      }
-
-      echo(Utils::mail_wrapper(
-        $emailTo, $emailFrom, $emailName, $emailReply, 
-        $subj." (upload success)", "Succeeded in uploading zip file",
-        $swiftmailerConfig));
-
+      throw new \Exception($err);
     }
+
+    $err = $sw->put($fnZ1,$this->file_name);
+    #$err = "Uploading currently disabled";
+    if(!!$err) {
+      if(!is_null($swiftmailerConfig)) {
+        Utils::mail_wrapper(
+          $emailTo, $emailFrom, $emailName, $emailReply, 
+          $subj." (upload error file)",
+          $err,
+          $swiftmailerConfig);
+      }
+      throw new \Exception($err);
+    }
+
+    $msg = "Succeeded in uploading zip file";
+    if(!is_null($swiftmailerConfig)) {
+      Utils::mail_wrapper(
+        $emailTo, $emailFrom, $emailName, $emailReply, 
+        $subj." (upload success)",
+        $msg,
+        $swiftmailerConfig);
+    }
+    $this->log->info($msg);
   }
 
 

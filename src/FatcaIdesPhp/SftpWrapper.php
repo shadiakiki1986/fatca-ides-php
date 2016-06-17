@@ -45,7 +45,8 @@ class SftpWrapper {
     return false;
   }
 
-  function put($zipfile) {
+  function put($zipfile,$destName=null) {
+    if(is_null($destName)) $destName=basename($zipfile);
     assert($this->sftp->isAuthenticated(),"sftp session is authenticated test");
     if(!file_exists($zipfile)) return("Zip file inexistant '".$zipfile."'");
 
@@ -56,20 +57,20 @@ class SftpWrapper {
 
     // puts an x-byte file named filename.remote on the SFTP server,
     // where x is the size of filename.local
-    $this->log->info("Uploading file '".$zipfile."'");
+    $this->log->info("Uploading file '".$zipfile."' as '".$destName."'");
     $this->sftp->put(
-      "Outbox/840/".basename($zipfile), 
+      "Outbox/840/".$destName,
       $zipfile, 
       \phpseclib\Net\SFTP::SOURCE_LOCAL_FILE);
     $this->log->info("Uploaded");
 
     // verify that it is uploaded
-    $nl = $this->sftp->nlist(".");
-    if(!in_array("Outbox",$nl)) return "/Outbox not available on sftp server";
-    $nl = $this->sftp->nlist("Outbox");
-    if(!in_array("840",$nl)) return "/Outbox/840 not available on sftp server";
+//    $nl = $this->sftp->nlist(".");
+//    if(!in_array("Outbox",$nl)) return "/Outbox not available on sftp server";
+//    $nl = $this->sftp->nlist("Outbox");
+//    if(!in_array("840",$nl)) return "/Outbox/840 not available on sftp server";
     $nl = $this->sftp->nlist("Outbox/840");
-    if(!in_array(basename($zipfile),$nl)) return "/Outbox/840/".basename($zipfile)." not available on sftp server";
+    if(!in_array($destName,$nl)) return "/Outbox/840/".$destName." not available on sftp server";
 
     return false;
   }
