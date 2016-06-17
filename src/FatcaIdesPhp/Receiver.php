@@ -124,6 +124,9 @@ function fromZip($filename) {
 
     assert(is_null($zipFn) xor is_null($credentials));
 
+    $dm = new Downloader(null,$LOG_LEVEL);
+    $cm = new ConfigManager($config,$dm,$LOG_LEVEL);
+
     if(is_null($zipFn)) {
       assert(is_array($credentials) && array_key_exists("username",$credentials) && array_key_exists("password",$credentials));
       assert(!is_null($idesServer) && in_array($idesServer,array("live","test")));
@@ -133,11 +136,22 @@ function fromZip($filename) {
       $err = $sw->login($credentials["username"],$credentials["password"]);
       if(!!$err) throw new \Exception($err);
 
-      $zipFn = $sw->getLatest();
+      $remote = $sw->listLatest();
+      if(array_key_exists("ZipBackupFolder",$cm->config)) {
+        $zipFn=$cm->config["ZipBackupFolder"]."/".$remote;
+      } else {
+        $zipFn = Utils::myTempnam("zip");
+        unlink($zipFn);
+      }
+
+      if(!file_exists($zipFn)) {
+        $sw->get($remote,$zipFn);
+      } else {
+        echo "Using cached file '".$zipFn."'\n";
+      }
+
     }
 
-    $dm = new Downloader(null,$LOG_LEVEL);
-    $cm = new ConfigManager($config,$dm,$LOG_LEVEL);
     $rx=new Receiver($cm);
     $rx->start();
     $rx->fromZip($zipFn);
