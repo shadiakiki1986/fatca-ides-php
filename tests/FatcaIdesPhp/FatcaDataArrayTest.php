@@ -27,6 +27,7 @@ class FatcaDataArrayTest extends \PHPUnit_Framework_TestCase {
     $fda=new FatcaDataArray($this->di,false,"",2014,$this->conMan);
     $fda->start();
     $diXml1=$fda->toXml(false); # convert to xml 
+    $fda->guidManager->guidCount=0;
     $diXml2=$fda->toXml(true); # use utf8
 
     $this->assertTrue($diXml1==$diXml2); # else print 'UTF8 changed';

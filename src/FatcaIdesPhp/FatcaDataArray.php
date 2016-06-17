@@ -70,7 +70,8 @@ class FatcaDataArray implements FatcaDataInterface {
 		$this->ts3=strftime("%Y-%m-%dT%H:%M:%S", $this->ts); 
 
 		// prepare guids to use
-		$this->guidManager=new GuidManager();
+		$this->guidManager=new GuidManager(
+      $this->confMan->config["ffaid"].".");
 	}
 
   function filterIndividuals() {
@@ -168,10 +169,11 @@ class FatcaDataArray implements FatcaDataInterface {
 		    </ftc:ReportingGroup>
 		    </ftc:FATCA>
 		</ftc:FATCA_OECD>",
-		$this->guidManager->guidPrepd[0], // specifically indexing guidPrepd instead of using the get function so as to get the same ID if I run this function twice
+		$this->guidManager->get(),
 		$this->docType, // not sure about this versus the same entry below
-		//sprintf("%s.%s",ffaid,$this->guidManager->guidPrepd[1]), // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
-		$this->guidManager->guidPrepd[2],
+    // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
+    // as of June 2016, I can no longer just do this: 		$this->guidManager->guidPrepd[2],
+		$this->guidManager->get(), 
 		!$this->corrDocRefId?"":sprintf("<ftc:CorrDocRefId>%s</ftc:CorrDocRefId>",$this->corrDocRefId), 
 		implode(array_map(
 		    function($x) {
@@ -202,8 +204,9 @@ class FatcaDataArray implements FatcaDataInterface {
 			    </ftc:AccountReport>
 			",
 			$this->docType, // check the xsd
-			//sprintf("%s.%s",ffaid,$this->guidManager->guidPrepd[3]), // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
-			$this->guidManager->guidPrepd[4],
+      // based on http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schemas-Best-Practices-for-Form-8966-DocRefID
+      // as of June 2016, I can no longer just do this: $this->guidManager->guidPrepd[4],
+			$this->guidManager->get(), 
 			$x['Compte'],
 			$x['ENT_FATCA_ID'],
 			$x['ENT_FIRSTNAME'],
