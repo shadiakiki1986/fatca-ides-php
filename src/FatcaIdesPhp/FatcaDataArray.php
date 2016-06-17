@@ -45,16 +45,8 @@ class FatcaDataArray implements FatcaDataInterface {
 		$this->data=array_map(function($x) {
       if($x["ENT_TYPE"]!="Individual") return $x;
 			$reps=array(":","#",",","-",".","--","/");
-			$x['ENT_ADDRESS']=str_replace($reps," ",$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=preg_replace('/\s\s+/',' ',$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=str_replace("1st","First",$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=str_replace("9th","Ninth",$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=str_replace("6th","Sixth",$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=str_replace("6TH","Sixth",$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=str_replace("3rd","Third",$x['ENT_ADDRESS']);
-			$x['ENT_ADDRESS']=str_replace("8TH","Eighth",$x['ENT_ADDRESS']);
-			$x['ENT_FATCA_ID']=str_replace($reps," ",$x['ENT_FATCA_ID']);
-			$x['ENT_FATCA_ID']=str_replace(array("S","N"," "),"",$x['ENT_FATCA_ID']);
+			$x['ENT_ADDRESS']=Utils::cleanAddress($x['ENT_ADDRESS']);
+			$x['ENT_FATCA_ID']=Utils::cleanTin($x['ENT_FATCA_ID']);
 			return $x;
 		}, $this->data);
 

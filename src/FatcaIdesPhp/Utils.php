@@ -198,5 +198,24 @@ class Utils {
     return false;
   }
 
+  public static $cleanReplaceables = array(":","#",",","-",".","--","/");
+
+  public static function cleanAddress($add) {
+    $add=str_replace(Utils::$cleanReplaceables," ",$add);
+    $add=preg_replace('/\s\s+/',' ',$add);
+    $add=str_replace("1st","First",$add);
+    $add=str_replace("9th","Ninth",$add);
+    $add=str_replace("6th","Sixth",$add);
+    $add=str_replace("6TH","Sixth",$add);
+    $add=str_replace("3rd","Third",$add);
+    $add=str_replace("8TH","Eighth",$add);
+    return $add;
+  }
+
+  public static function cleanTin($tin) {
+    $tin=str_replace(Utils::$cleanReplaceables," ",$tin);
+    $tin=str_replace(array("S","N"," "),"",$tin);
+    return $tin;
+  }
 
 } // end class

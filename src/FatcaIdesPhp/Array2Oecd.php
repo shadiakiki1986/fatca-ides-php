@@ -58,13 +58,13 @@ class Array2Oecd {
 
   function getIndividual($x) {
     $ind = new \oecd\ties\stffatcatypes\v1\PersonParty_Type();
-    $ind->TIN = $x['ENT_FATCA_ID'];
+    $ind->TIN = Utils::cleanTin($x['ENT_FATCA_ID']);
     $ind->Name = new \oecd\ties\stffatcatypes\v1\NamePerson_Type();
     $ind->Name->FirstName = $x['ENT_FIRSTNAME'];
     $ind->Name->LastName = $x['ENT_LASTNAME'];
     $ind->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
     $ind->Address->CountryCode = $x['ResidenceCountry'];
-    $ind->Address->AddressFree = $x['ENT_ADDRESS'];
+    $ind->Address->AddressFree = Utils::cleanAddress($x['ENT_ADDRESS']);
     return $ind;
   }
 
@@ -74,7 +74,7 @@ class Array2Oecd {
     $org->Name->value = $x['ENT_FIRSTNAME'];
     $org->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
     $org->Address->CountryCode = $x['ResidenceCountry'];
-    $org->Address->AddressFree = $x['ENT_ADDRESS'];
+    $org->Address->AddressFree = Utils::cleanAddress($x['ENT_ADDRESS']);
     return $org;
   }
 

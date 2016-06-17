@@ -28,5 +28,17 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue(!Utils::isZip($fnZ2));
   }
 
+  public function testCleanAddress() {
+    $this->assertEquals(
+      Utils::cleanAddress("some street on 1st road"),
+      "some street on First road");
+  }
+
+  public function testCleanTin() {
+    $this->assertEquals(
+      Utils::cleanTin("SSN 123-45"),
+      "12345");
+  }
+
 }
 
