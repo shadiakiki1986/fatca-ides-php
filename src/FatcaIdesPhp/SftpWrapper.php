@@ -92,7 +92,17 @@ class SftpWrapper {
     $nl = array_values(array_diff($nl,array(".","..")));
     if(count($nl)==0) throw new \Exception("No files in inbox");
     $this->log->info("Found the following files in inbox/840: '".implode(", ",$nl)."'");
-    return $nl[0];
+
+    // determine most recent
+    $ls=array();
+    foreach($nl as $fi) {
+      $ls[$fi]=$this->sftp->lstat($prefix."/".$fi)["mtime"];
+    }
+    $maxMtime=max($ls);
+    $maxFile = array_filter($ls,function($x) use($maxMtime) { return $x==$maxMtime; });
+
+    // return
+    return array_keys($maxFile)[0];
   }
 
   function get($remote,$local) {
