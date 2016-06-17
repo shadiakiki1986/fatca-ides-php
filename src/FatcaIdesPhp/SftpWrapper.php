@@ -80,7 +80,14 @@ class SftpWrapper {
 //    $nl = $this->sftp->nlist("Outbox");
 //    if(!in_array("840",$nl)) return "/Outbox/840 not available on sftp server";
     $nl = $this->sftp->nlist("Outbox/840");
-    if(!in_array($destName,$nl)) return "/Outbox/840/".$destName." not available on sftp server";
+    $destName2 = $destName.".antivirus.scanning";
+    if(!in_array($destName,$nl)) {
+      if(in_array($destName2,$nl)) {
+        $this->log->info("Uploaded file already being scanned by antivirus on sftp server");
+      } else {
+        return "/Outbox/840/".$destName." not available on sftp server";
+      }
+    }
 
     return false;
   }
