@@ -97,14 +97,18 @@ function fromZip($filename) {
 	}
 
 	function fromEncrypted() {
-		$key_size =  strlen($this->aeskey);
+    // split aeskey entry into aeskey + iv
+    // Reference: https://www.irs.gov/businesses/corporations/fatca-ides-technical-faqs#EncryptionE21
+    $iv = substr($this->aeskey,32,16);
+    $aeskey = substr($this->aeskey,0,32);
+    $key_size =  strlen($aeskey);
 		if($key_size!=32) throw new \Exception("Invalid key size ".$key_size);
 
 		$fp=fopen($this->tf4."/".$this->files["payload"],"r");
 		$this->dataEncrypted=fread($fp,8192);
 		fclose($fp);
 
-		$this->dataCompressed = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $this->aeskey, $this->dataEncrypted, "ecb");
+		$this->dataCompressed = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $aeskey, $this->dataEncrypted, "cbc", $iv);
 	}
 
 	function fromCompressed() {
