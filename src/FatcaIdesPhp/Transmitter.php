@@ -124,7 +124,7 @@ class Transmitter {
 	function encryptAesKeyFile() {
 		$this->aesEncrypted="";
 		if(!openssl_public_encrypt (
-        $this->am->aeskey.$this->am->iv ,
+        $this->am->getAesIv(),
         $this->aesEncrypted,
         $this->readIrsPublicKey() )) {
       throw new \Exception("Did not encrypt aes key");
@@ -136,7 +136,7 @@ class Transmitter {
 		$pubk=$this->readIrsPublicKey(true);
 		$decrypted="";
 		if(!openssl_public_decrypt( $this->aesEncrypted , $decrypted , $pubk )) throw new \Exception("Failed to decrypt aes key for verification purposes");
-		return($decrypted==$this->am->aeskey.$this->am->iv);
+		return($decrypted==$this->am->getAesIv());
 	}
 
 	function getMetadata() {

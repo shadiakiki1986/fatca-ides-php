@@ -78,19 +78,11 @@ function fromZip($filename) {
 }
 
 	function decryptAesKey() {
-		$aeskey="";
-		if(!openssl_private_decrypt( $this->aesEncrypted , $aeskey , $this->readFfaPrivateKey() )) throw new \Exception("Could not decrypt aes key");
-		if($aeskey=="") throw new \Exception("Failed to decrypt AES key");
+		$aesIvConcatenated="";
+		if(!openssl_private_decrypt( $this->aesEncrypted , $aesIvConcatenated , $this->readFfaPrivateKey() )) throw new \Exception("Could not decrypt aes key");
+		if($aesIvConcatenated=="") throw new \Exception("Failed to decrypt AES key");
 
-    // split aeskey entry into aeskey + iv
-    // Reference: https://www.irs.gov/businesses/corporations/fatca-ides-technical-faqs#EncryptionE21
-    $iv = substr($aeskey,32,16);
-    $aeskey = substr($aeskey,0,32);
-    $key_size =  strlen($aeskey);
-		if($key_size!=32) throw new \Exception("Invalid key size ".$key_size);
-
-    $this->am->aeskey = $aeskey;
-    $this->am->iv = $iv;
+    $this->am->setAesIv($aesIvConcatenated);
 	}
 
 	function readFfaPrivateKey($returnResource=true) {

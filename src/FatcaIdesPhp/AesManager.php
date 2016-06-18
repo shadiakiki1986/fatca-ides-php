@@ -20,10 +20,12 @@ namespace FatcaIdesPhp;
 
 class AesManager {
 
-	var $aeskey;
-	var $iv;
+	private $aeskey;
+	private $iv;
+  private $sizeKey;
+  private $sizeIv;
 
-	function __construct($key=null,$iv=null) {
+	function __construct() {
     // some code to play around with openssl random generator
     //    $x=openssl_random_pseudo_bytes(32);
     //    $y=unpack("H*",$x);
@@ -31,27 +33,23 @@ class AesManager {
     //    $y=array_values($y)[0];
     //    $this->assertTrue(pack("H*",$y)==$x);
 
-		$key = ($key==null?openssl_random_pseudo_bytes(32):$key);
-		if(strlen($key)!=32) throw new \Exception("Invalid key length");
-		$this->aeskey=$key;
+    $this->sizeKey = 32;
+		$this->aeskey = openssl_random_pseudo_bytes($this->sizeKey);
 
-    if(is_null($iv)) {
-  		$size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-  		// size will be 16
-      assert($size==16);
-  		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
-    }
-		$this->iv=$iv;
+    $this->sizeIv = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+    // size will be 16
+    assert($this->sizeIv==16);
+    $this->iv = mcrypt_create_iv($this->sizeIv, MCRYPT_RAND);
 	}
 
 	function encrypt($in) {
 		// $this->aeskey = pack('H*', "bcb04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a00a3");
-		$key_size =  strlen($this->aeskey);
-		if($key_size!=32) die("Invalid key size ".$key_size);
+		$key_size = strlen($this->aeskey);
+		if($key_size != $this->sizeKey) throw new \Exception("Invalid key size ".$key_size);
 
 		// add PCKS7 padding
 		// http://php.net/manual/en/function.mcrypt-encrypt.php#47973
-		$block = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, 'ecb');
+		$block = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, 'cbc');
 		$len = strlen($in);
 		$padding = $block - ($len % $block);
 		$in .= str_repeat(chr($padding),$padding);
@@ -70,5 +68,21 @@ class AesManager {
 
 		return $dectext;
 	}
+
+  function setAesIv($concatenated) {
+    // split aeskey entry into aeskey + iv
+    // Reference: https://www.irs.gov/businesses/corporations/fatca-ides-technical-faqs#EncryptionE21
+    // http://stackoverflow.com/a/1289114/4126114
+    $s1 = strlen($concatenated);
+    $s2 = $this->sizeIv+$this->sizeKey;
+		if($s1!=$s2) throw new \Exception("Invalid aes key + iv concatenation size ".$s1." should be ".$s2);
+
+    $this->aeskey = substr($concatenated,0,$this->sizeKey);
+    $this->iv = substr($concatenated,$this->sizeKey,$this->sizeIv);
+  }
+
+  function getAesIv() {
+    return $this->aeskey.$this->iv;
+  }
 
 } // end class
