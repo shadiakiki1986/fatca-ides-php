@@ -17,4 +17,6 @@
   posCur: 100
   cur: LBP
   ENT_TYPE: Individual
+  dvdCur: 100
+  intCur: 100
 ...

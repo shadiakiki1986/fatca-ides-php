@@ -81,23 +81,30 @@ class Array2Oecd {
     return $org;
   }
 
+  function getPayment_Type($type,$currCode,$value) {
+    $pay = new \FatcaXsdPhp\Payment_Type();
+    $pay->Type = $type;
+    $pay->PaymentAmnt = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
+    $pay->PaymentAmnt->currCode = $currCode;
+    $pay->PaymentAmnt->value = $value;
+    return $pay;
+  }
+
   function getPayments($x) {
       $payments=array();
       if(array_key_exists('dvdCur',$x)) {
-        $pay = new \FatcaXsdPhp\Payment_Type();
-        $pay->Type = "FATCA501";
-        $pay->PaymentAmnt = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
-        $pay->PaymentAmnt->currCode = $x['cur'];
-        $pay->PaymentAmnt->value = floor($x['dvdCur']);
+        $pay = $this->getPayment_Type(
+          'FATCA501',
+          $x['cur'],
+          floor($x['dvdCur']));
         array_push($payments,$pay);
       }
 
       if(array_key_exists('intCur',$x)) {
-        $pay = new \FatcaXsdPhp\Payment_Type();
-        $pay->Type = "FATCA502";
-        $pay->PaymentAmnt = new \FatcaXsdPhp\PayentAmnt_Type();
-        $pay->PaymentAmnt->currCode = $x['cur'];
-        $pay->PaymentAmnt->value = floor($x['intCur']);
+        $pay = $this->getPayment_Type(
+          'FATCA502',
+          $x['cur'],
+          floor($x['intCur']));
         array_push($payments,$pay);
       }
       return $payments;
