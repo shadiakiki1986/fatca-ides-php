@@ -305,18 +305,17 @@ class Transmitter {
     $tmtr->start();
     $tmtr->toXml(); # convert to xml 
 
+    $exitCond=in_array($format,array("email","emailAndUpload","upload","zip"));
     if(!$tmtr->validateXml("payload")) {# validate
-      print 'Payload xml did not pass its xsd validation';
+      $msg = 'Payload xml did not pass its xsd validation';
+      if($exitCond) { throw new Exception($msg); } else { print $msg; }
       Utils::libxml_display_errors();
-      $exitCond=in_array($format,array("xml","zip"));
-      $exitCond=$exitCond||$emailTo;
-      if($exitCond) exit;
     }
 
     if(!$tmtr->validateXml("metadata")) {# validate
-        print 'Metadata xml did not pass its xsd validation';
+        $msg = 'Metadata xml did not pass its xsd validation';
+        if($exitCond) { throw new Exception($msg); } else { print $msg; }
         Utils::libxml_display_errors();
-        exit;
     }
 
     $tmtr->toXmlSigned();
