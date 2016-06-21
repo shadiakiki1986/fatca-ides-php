@@ -20,13 +20,23 @@ class FatcaDataOecd implements FatcaDataInterface {
     $row->appendChild($dom->createElement('td',$ind->TIN));
     $row->appendChild($dom->createElement('td',$ind->Name->FirstName));
     $row->appendChild($dom->createElement('td',$ind->Name->LastName));
-    $row->appendChild($dom->createElement('td',"N/A"));
 
     $row->appendChild($dom->createElement('td',$ind->Address->CountryCode));
     $row->appendChild($dom->createElement('td',$ind->Address->AddressFree));
 
     return $row;
   }
+
+  public static function toHtmlOrganisation($row,$dom,$org) {
+    $row->appendChild($dom->createElement('td',"N/A"));
+    $row->appendChild($dom->createElement('td',$org->Name->value));
+    $row->appendChild($dom->createElement('td',"N/A"));
+
+    $row->appendChild($dom->createElement('td',$org->Address->CountryCode));
+    $row->appendChild($dom->createElement('td',$org->Address->AddressFree));
+    return $row;
+  }
+
 
 	function toHtml() {
     $dom = new \DOMDocument('1.0', 'utf-8');
@@ -36,14 +46,15 @@ class FatcaDataOecd implements FatcaDataInterface {
     $border->value=1;
     $table->appendChild($border);
 
-    if(!!$this->oecd->FATCA->ReportingGroup->AccountReport &&
-         is_array($this->oecd->FATCA->ReportingGroup->AccountReport)
-      ) {
-      foreach($this->oecd->FATCA->ReportingGroup->AccountReport as $ar) {
+    if(!!$this->oecd->FATCA->ReportingGroup->AccountReport) {
+      $arar = $this->oecd->FATCA->ReportingGroup->AccountReport;
+      if(!is_array($arar)) $arar=array($arar);
+      foreach($arar as $ar) {
         $row = $dom->createElement('tr');
         $row->appendChild($dom->createElement('td',$ar->AccountNumber));
 
         if(!!$ar->AccountHolder->Individual) {
+          $row->appendChild($dom->createElement('td','{Individual}'));
           $row = FatcaDataOecd::toHtmlIndividual(
             $row,
             $dom,
@@ -51,15 +62,25 @@ class FatcaDataOecd implements FatcaDataInterface {
         }
 
         if(!!$ar->AccountHolder->Organisation) {
-          $row->appendChild($dom->createElement('td',"N/A"));
-          $row->appendChild(
-            $dom->createElement('td',$ar->AccountHolder->Organisation->Name->value));
-          $row->appendChild($dom->createElement('td',"N/A"));
           $row->appendChild($dom->createElement('td',$ar->AccountHolder->AcctHolderType->value));
-
-          $row->appendChild($dom->createElement('td',$ar->AccountHolder->Organisation->Address->CountryCode));
-          $row->appendChild($dom->createElement('td',$ar->AccountHolder->Organisation->Address->AddressFree));
+          $row = FatcaDataOecd::toHtmlOrganisation(
+            $row,
+            $dom,
+            $ar->AccountHolder->Organisation);
         }
+
+        $row->appendChild($dom->createElement('td',$ar->AccountBalance->currCode));
+        $row->appendChild($dom->createElement('td',$ar->AccountBalance->value));
+
+        if(!!$ar->Payment) {
+          $arpay = $ar->Payment;
+          if(!is_array($arpay)) $arpay=array($arpay);
+          foreach($arpay as $pay) {
+            $row->appendChild($dom->createElement('td',$pay->Type));
+            $row->appendChild($dom->createElement('td',$pay->PaymentAmnt->currCode));
+            $row->appendChild($dom->createElement('td',$pay->PaymentAmnt->value));
+          }
+        }// end if ar->payment
 
         $table->appendChild($row);
 
