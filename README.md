@@ -72,7 +72,9 @@ $config = array(
     "host" => "my.host.com",
     "port" => 12345,
     "username" => "myusername",
-    "password" => "mypassword")
+    "password" => "mypassword",
+    "name" => "My Name",
+    "reply" => "myemail@host.com")
 
 );
 
