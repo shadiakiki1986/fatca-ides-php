@@ -212,7 +212,19 @@ class Transmitter {
 		readfile($yourfile);
 	}
 
-  public function toEmail($emailTo,$emailFrom,$emailName,$emailReply,$swiftmailerConfig=array()) {
+  public static function verifySwiftmailerConfig($smc) {        
+    assert(is_array($smc)); 
+    $fields = array("host","port","username","password","name","reply");
+    foreach($fields as $fx) assert(array_key_exists($fx,$smc),"swiftmailer field in config missing field: ".$fx); 
+  }
+
+  public function toEmail($emailTo,$swiftmailerConfig) {
+    Transmitter::verifySwiftmailerConfig($swiftmailerConfig);
+
+    $emailFrom = $swiftmailerConfig["reply"];                   
+    $emailName = $swiftmailerConfig["name"];                    
+    $emailReply =$swiftmailerConfig["reply"];                   
+
     // save to files
     $fnH = Utils::myTempnam('html');
     file_put_contents($fnH,$this->fdi->toHtml());
@@ -252,9 +264,22 @@ class Transmitter {
     $this->log->debug("Done emailing");
   } // end function toEmail
 
-  public function toUpload($upload,$swiftmailerConfig=null) {
+  public function toUpload($upload,$emailTo=null,$swiftmailerConfig=null) {
     if(is_null($upload)) return;
     assert(is_array($upload) && array_key_exists("username",$upload) && array_key_exists("password",$upload));
+    assert(!(is_null($emailTo) xor is_null($swiftmailerConfig)));
+
+    $emailFrom = "";
+    $emailName = "";
+    $emailReply = "";
+
+    if(!is_null($swiftmailerConfig)) {
+      Transmitter::verifySwiftmailerConfig($swiftmailerConfig);
+
+      $emailFrom = $swiftmailerConfig["reply"];                   
+      $emailName = $swiftmailerConfig["name"];                    
+      $emailReply =$swiftmailerConfig["reply"];                   
+    }
 
     $sftp = SftpWrapper::getSFTP($this->fdi->getIsTest()?"test":"live");
     $sw = new SftpWrapper($sftp,$this->LOG_LEVEL);
@@ -262,6 +287,7 @@ class Transmitter {
     $err = $sw->login($upload["username"],$upload["password"]);
     if(!!$err) {
       if(!is_null($swiftmailerConfig)) {
+        $subj=sprintf("IDES data: %s",date("Y-m-d H:i:s"));
         Utils::mail_wrapper(
           $emailTo, $emailFrom, $emailName, $emailReply, 
           $subj." (upload error login)", $err,
