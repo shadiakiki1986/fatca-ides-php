@@ -62,7 +62,7 @@ class Array2Oecd {
 
   function getTin($tin,$issuer) {
     $TIN = new \oecd\ties\stffatcatypes\v1\TIN_Type();
-    $TIN->value=Utils::cleanTin($tin);
+    $TIN->value=$tin;
     $TIN->issuedBy=is_null($issuer)?"US":$issuer;
     return $TIN;
   }
