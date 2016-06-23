@@ -7,7 +7,12 @@ use Monolog\Handler\StreamHandler;
 
 class Downloader {
 
-	function __construct($dlFolder=null,$LOG_LEVEL=Logger::WARNING) {
+	function __construct($dlFolder=null,$LOG_LEVEL=Logger::WARNING,$uo = null) {
+
+    if(is_null($uo)) $uo = new UrlOpener();
+    assert($uo instanceof UrlOpener);
+    $this->uo = $uo;
+
     $this->setDlFolder($dlFolder);
     $this->links = array(
       "schema_main"=>array(
@@ -53,7 +58,7 @@ class Downloader {
 
       if(!$v["exists"]) {
         // http://stackoverflow.com/a/3938551/4126114
-        file_put_contents($v["cache"],fopen($v["url"], 'r'));
+        $this->uo->download($v["cache"],$v["url"]);
         $this->log->debug("Downloading ".$v["url"]." to ".$v["cache"]);
         // for zip files, extract contents
         // http://stackoverflow.com/a/10368236/4126114
@@ -65,7 +70,7 @@ class Downloader {
             $zip->extractTo($this->downloadFolder);
             $zip->close();
           } else {
-            throw new Exception("Failed to extract zip file ".$v["cache"]);
+            throw new \Exception("Failed to extract zip file ".$v["cache"]);
           }
         }
       }

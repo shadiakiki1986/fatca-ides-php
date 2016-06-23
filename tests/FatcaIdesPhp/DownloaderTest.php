@@ -5,7 +5,17 @@ namespace FatcaIdesPhp;
 class DownloaderTest extends \PHPUnit_Framework_TestCase {
 
     public function setUp() {
-      $this->gm=new Downloader();
+      $uo = $this->getMockBuilder('\FatcaIdesPhp\UrlOpener')
+                   ->disableOriginalConstructor()
+                   ->getMock();
+      $uo->method('download')
+         ->will($this->returnCallback(function($cache,$url) {
+            $z = new \ZipArchive();
+            $z->open($cache, \ZIPARCHIVE::CREATE);
+            $z->addFromString("bla","bla");
+            $z->close();
+         }));
+      $this->gm=new Downloader(null,\Monolog\Logger::WARNING,$uo);
     }
 
     public function testTempdir() {

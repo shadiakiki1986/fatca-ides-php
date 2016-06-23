@@ -148,7 +148,7 @@ function fromZip($filename) {
       if(!file_exists($zipFn)) {
         $sw->get($remote,$zipFn);
       } else {
-        echo "Using cached file '".$zipFn."'\n";
+        $sw->log->debug("Using cached file '".$zipFn."'");
       }
 
     }
