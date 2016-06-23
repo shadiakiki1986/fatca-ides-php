@@ -336,13 +336,13 @@ class Transmitter {
       $exitCond=in_array($format,array("email","emailAndUpload","upload","zip"));
       if(!$tmtr->validateXml("payload")) {# validate
         $msg = 'Payload xml did not pass its xsd validation';
-        if($exitCond) { throw new Exception($msg); } else { print $msg; }
+        if($exitCond) { throw new \Exception($msg); } else { print $msg; }
         Utils::libxml_display_errors();
       }
 
       if(!$tmtr->validateXml("metadata")) {# validate
           $msg = 'Metadata xml did not pass its xsd validation';
-          if($exitCond) { throw new Exception($msg); } else { print $msg; }
+          if($exitCond) { throw new \Exception($msg); } else { print $msg; }
           Utils::libxml_display_errors();
       }
     }
