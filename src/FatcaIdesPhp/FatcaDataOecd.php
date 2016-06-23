@@ -17,7 +17,9 @@ class FatcaDataOecd implements FatcaDataInterface {
 	}
 
   public static function toHtmlIndividual($row,$dom,$ind) {
-    $row->appendChild($dom->createElement('td',$ind->TIN));
+    $row->appendChild($dom->createElement('td',$ind->TIN->value));
+    $row->appendChild($dom->createElement('td',$ind->TIN->issuedBy));
+
     $row->appendChild($dom->createElement('td',$ind->Name->FirstName));
     $row->appendChild($dom->createElement('td',$ind->Name->LastName));
 
@@ -28,7 +30,8 @@ class FatcaDataOecd implements FatcaDataInterface {
   }
 
   public static function toHtmlOrganisation($row,$dom,$org) {
-    $row->appendChild($dom->createElement('td',"N/A"));
+    $row->appendChild($dom->createElement('td',$org->TIN->value));
+    $row->appendChild($dom->createElement('td',$org->TIN->issuedBy));
     $row->appendChild($dom->createElement('td',$org->Name->value));
     $row->appendChild($dom->createElement('td',"N/A"));
 

@@ -25,6 +25,8 @@
   posCur: 100
   cur: LBP
   ENT_TYPE: Corporate
+  ENT_FATCA_ID: 99999
+  ENT_FATCA_ID_ISSUER: LB
   SubstantialOwner:
     - ENT_FIRSTNAME: Clark
       ENT_LASTNAME: Kent

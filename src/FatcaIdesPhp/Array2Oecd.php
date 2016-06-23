@@ -31,9 +31,10 @@ class Array2Oecd {
     $rfi->Address->CountryCode = new \oecd\ties\isofatcatypes\v1\CountryCode_Type();
     $rfi->Address->CountryCode->value = "LB";
     $rfi->Address->AddressFree = "Foch street";
-    $rfi->TIN = new \oecd\ties\stffatcatypes\v1\TIN_Type();
-    $rfi->TIN->value=$this->fda->conMan->config["ffaid"];
-    $rfi->TIN->issuedBy="US";
+
+    $rfi->TIN = $this->getTin(
+      $this->fda->conMan->config["ffaid"],
+      "US");
 
     $rfi->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
     $rfi->DocSpec->DocTypeIndic=$this->fda->docType;
@@ -59,9 +60,23 @@ class Array2Oecd {
       return $ah;
   }
 
+  function getTin($tin,$issuer) {
+    $TIN = new \oecd\ties\stffatcatypes\v1\TIN_Type();
+    $TIN->value=Utils::cleanTin($tin);
+    $TIN->issuedBy=is_null($issuer)?"US":$issuer;
+    return $TIN;
+  }
+
+  function getTinWrapper($x) {
+    return $this->getTin(
+      Utils::cleanTin($x['ENT_FATCA_ID']),
+      array_key_exists("ENT_FATCA_ID_ISSUER",$x)?$x["ENT_FATCA_ID_ISSUER"]:null);
+  }
+
   function getIndividual($x) {
     $ind = new \oecd\ties\stffatcatypes\v1\PersonParty_Type();
-    $ind->TIN = Utils::cleanTin($x['ENT_FATCA_ID']);
+    $ind->TIN = $this->getTinWrapper($x);
+
     $ind->Name = new \oecd\ties\stffatcatypes\v1\NamePerson_Type();
     $ind->Name->FirstName = $x['ENT_FIRSTNAME'];
     $ind->Name->LastName = $x['ENT_LASTNAME'];
@@ -78,6 +93,8 @@ class Array2Oecd {
     $org->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
     $org->Address->CountryCode = $x['ResidenceCountry'];
     $org->Address->AddressFree = Utils::cleanAddress($x['ENT_ADDRESS']);
+    $org->TIN = $this->getTinWrapper($x);
+
     return $org;
   }
 
