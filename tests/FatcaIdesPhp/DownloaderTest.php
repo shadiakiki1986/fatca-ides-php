@@ -10,10 +10,25 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase {
                    ->getMock();
       $uo->method('download')
          ->will($this->returnCallback(function($cache,$url) {
-            $z = new \ZipArchive();
-            $z->open($cache, \ZIPARCHIVE::CREATE);
-            $z->addFromString("bla","bla");
-            $z->close();
+           switch($url) {
+             case "https://www.irs.gov/pub/fatca/FATCAXMLSchemav1.zip":
+                $z = new \ZipArchive();
+                $z->open($cache, \ZIPARCHIVE::CREATE);
+                $z->addFromString("FATCA XML Schema v1.1/FatcaXML_v1.1.xsd","bla");
+                $z->close();
+                break;
+             case "https://ides-support.com/Downloads/encryption-service_services_irs_gov.crt":
+               file_put_contents($cache,"test");
+               break;
+             case "https://www.irs.gov/pub/fatca/SenderMetadatav1.1.zip":
+                $z = new \ZipArchive();
+                $z->open($cache, \ZIPARCHIVE::CREATE);
+                $z->addFromString("FATCA IDES SENDER FILE METADATA XML LIBRARY/FATCA-IDES-SenderFileMetadata-1.1.xsd","bla");
+                $z->close();
+               break;
+             default:
+               throw new Exception("Define url in mock url opener: ".$url);
+           }
          }));
       $this->gm=new Downloader(null,\Monolog\Logger::WARNING,$uo);
     }
