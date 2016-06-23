@@ -13,11 +13,23 @@ class ConfigManager {
     $this->msgs=array();
     assert($dlm instanceof Downloader);
     $this->dlm = $dlm;
-    $this->shouldExist = array("FatcaXsd","MetadataXsd","FatcaCrt");
+    $this->shouldExist = array("FatcaXsd","MetadataXsd","FatcaCrt","ZipBackupFolder");
 
     $this->log = new Logger('ConfigManager');
     // http://stackoverflow.com/a/25787259/4126114
     $this->log->pushHandler(new StreamHandler('php://stdout', $LOG_LEVEL)); // <<< uses a stream
+  }
+
+  function prefixIfNeeded($prefix) {
+    // if path strings do not start with "/", then prefix with ROOT_IDES_DATA/
+    $keysToPrefix=array("FatcaCrt","FatcaKeyPrivate","FatcaKeyPublic","downloadFolder","ZipBackupFolder");
+    $keysToPrefix=array_intersect(array_keys($this->config),$keysToPrefix);
+    $keysToPrefix=array_filter($keysToPrefix,function($x) {
+      return !preg_match("/^\//",$this->config[$x]);
+    });
+    foreach($keysToPrefix as $ktp) {
+      $this->config[$ktp]=$prefix."/".$this->config[$ktp];
+    }
   }
 
   function check() {
@@ -58,9 +70,11 @@ class ConfigManager {
 
   function checkExist() {
     foreach($this->shouldExist as $x) {
-      if(!file_exists($this->config[$x])) {
-        $m=sprintf("Missing files defined in config: '%s', '%s'",$x,$this->config[$x]);
-        array_push($this->msgs,$m);
+      if(array_key_exists($x,$this->config)) {
+        if(!file_exists($this->config[$x])) {
+          $m=sprintf("Missing files defined in config: '%s', '%s'",$x,$this->config[$x]);
+          array_push($this->msgs,$m);
+        }
       }
     }
   }
