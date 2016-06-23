@@ -69,16 +69,6 @@ class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
       $this->assertPutFail("/path/to/file.zip");
     }
 
-    public function testGetSFTP() {
-      foreach(array("test","live") as $hostType) {
-        $sftp = SftpWrapper::getSFTP($hostType);
-        $sftp->_connect();
-        $this->assertTrue( $sftp->isConnected());
-        $sftp->disconnect();
-        $this->assertTrue(!$sftp->isConnected());
-      }
-    }
-
     public function testListLatestOk() {
       $zf = $this->gm->listLatest();
       $this->assertTrue(!!$zf);
