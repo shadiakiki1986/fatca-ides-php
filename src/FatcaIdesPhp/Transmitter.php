@@ -284,10 +284,11 @@ class Transmitter {
     $sftp = SftpWrapper::getSFTP($this->fdi->getIsTest()?"test":"live");
     $sw = new SftpWrapper($sftp,$this->LOG_LEVEL);
 
+    $subj=sprintf("IDES data: %s",date("Y-m-d H:i:s"));
+
     $err = $sw->login($upload["username"],$upload["password"]);
     if(!!$err) {
       if(!is_null($swiftmailerConfig)) {
-        $subj=sprintf("IDES data: %s",date("Y-m-d H:i:s"));
         Utils::mail_wrapper(
           $emailTo, $emailFrom, $emailName, $emailReply, 
           $subj." (upload error login)", $err,
