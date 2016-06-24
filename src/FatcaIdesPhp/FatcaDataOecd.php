@@ -91,6 +91,7 @@ class FatcaDataOecd implements FatcaDataInterface {
           foreach($ar->SubstantialOwner as $so) {
             $row = $dom->createElement('tr');
             $row->appendChild($dom->createElement('td',$ar->AccountNumber));
+            $row->appendChild($dom->createElement('td','{Substantial Owner}'));
             $row = FatcaDataOecd::toHtmlIndividual($row,$dom,$so);
             $table->appendChild($row);
           }
