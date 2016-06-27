@@ -112,7 +112,12 @@ class AesManager {
   }
 
   function getAesIv() {
-    return $this->aeskey.$this->iv;
+    switch($this->algoS) {
+      case "CBC":
+        return $this->aeskey.$this->iv;
+      case "ECB":
+        return $this->aeskey;
+    }
   }
 
 } // end class
