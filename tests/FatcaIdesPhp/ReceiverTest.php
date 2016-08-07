@@ -30,17 +30,12 @@ class ReceiverTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function testWorkflow() {
-    $fn="/home/shadi/samplefilefromides.zip";
-    if(!file_exists($fn)) {
-      $this->markTestSkipped("Zip file '%s' not available for testing",$fn);
-      return;
-    }
-    $rx=new Receiver();
-    $rx->start();
-    $rx->fromZip($fn);
-    $rx->decryptAesKey();
-    $rx->fromEncrypted();
-    $rx->fromCompressed();
+    $fn=__DIR__."/data/testMocked_array.zip";
+    $fdat = new FatcaDataArrayTest();
+    $fdat->setUp();
+
+    var_dump($fdat->conMan->config,$fn);
+    $rx=Receiver::shortcut($fdat->conMan->config,$fn);
 
     echo "From: ".$rx->from."\n";
     echo "To: ".$rx->to."\n";
