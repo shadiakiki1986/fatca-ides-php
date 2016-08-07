@@ -13,10 +13,14 @@ class FatcaDataArray implements FatcaDataInterface {
 	var $taxYear;
 	var $guidManager;
 
-	function __construct($dd,$isTest,$corrDocRefId,$taxYear,$conMan) {
-	// dd: 2d array with fatca-relevant fields
-	// isTest: true|false whether the data is test data. This will only help set the DocTypeIndic field in the XML file
-	// corrDocRefId: false|message ID. If this is a correction of a previous message, pass the message ID in subject, otherwise just pass false
+  /*
+	 * dd: 2d array with fatca-relevant fields
+	 * isTest: true|false whether the data is test data. This will only help set the DocTypeIndic field in the XML file
+	 * corrDocRefId: false|message ID. If this is a correction of a previous message, pass the message ID in subject, otherwise just pass false
+   * guidMan: instance of GuidManager
+   */
+
+	function __construct($dd,$isTest,$corrDocRefId,$taxYear,$conMan,$guidMan=null) {
 
     assert($conMan instanceOf ConfigManager);
     $this->conMan=$conMan;
@@ -25,6 +29,18 @@ class FatcaDataArray implements FatcaDataInterface {
 		$this->corrDocRefId=$corrDocRefId;
 		$this->isTest=$isTest;
 		$this->taxYear=$taxYear;
+
+    date_default_timezone_set('UTC');
+    $this->ts=time();
+
+    if(is_null($guidMan)) {
+      // prepare guids to use
+      $this->guidManager=new GuidManager(
+        $this->conMan->config["ffaid"].".");
+    } else {
+      assert($guidMan instanceOf GuidManager);
+      $this->guidManager=$guidMan;
+    }
   }
 
   function start() {
@@ -57,13 +73,7 @@ class FatcaDataArray implements FatcaDataInterface {
     //    $tz=date_default_timezone_get();
     //    #var_dump($ts1,$ts2,$tz);
     //    $this->assertTrue($tz=="UTC");
-		date_default_timezone_set('UTC');
-		$this->ts=time();
 		$this->ts3=strftime("%Y-%m-%dT%H:%M:%S", $this->ts); 
-
-		// prepare guids to use
-		$this->guidManager=new GuidManager(
-      $this->conMan->config["ffaid"].".");
 	}
 
   function filterIndividuals() {
