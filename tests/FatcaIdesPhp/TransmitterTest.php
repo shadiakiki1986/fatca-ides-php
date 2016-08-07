@@ -4,25 +4,24 @@ namespace FatcaIdesPhp;
 
 class TransmitterTest extends \PHPUnit_Framework_TestCase {
 
-  public function testShortcutArray() {
+  public function testMocked() {
     $fdat = new FatcaDataArrayTest();
     $fdat->setUp();
+
     $fda=new FatcaDataArray($fdat->di,false,"",2014,$fdat->conMan);
-
-    $tmtr=Transmitter::shortcut($fda,"html","",$fdat->conMan->config);
-    $this->assertTrue(true);
-  }
-
-  public function testShortcutOecd() {
-    $fdat = new FatcaDataArrayTest();
-    $fdat->setUp();
 
     $fdot = new FatcaDataOecdTest();
     $fdot->setUp();
     $fdo=new FatcaDataOecd($fdot->oecd);
 
-    $tmtr=Transmitter::shortcut($fdo,"html","",$fdat->conMan->config);
-    $this->assertTrue(true);
+    $input = array("array"=>$fda,"oecd"=>$fdo);
+    foreach($input as $k=>$v) {
+
+      $tmtr=Transmitter::shortcut($v,"html","",$fdat->conMan->config);
+      $expected=__DIR__."/data/testMocked_$k.zip";
+      copy($tmtr->tf4,$expected);
+      $this->assertEquals(md5_file($tmtr->tf4),md5_file($expected));
+    }
   }
 
   public function testToEmail() {
