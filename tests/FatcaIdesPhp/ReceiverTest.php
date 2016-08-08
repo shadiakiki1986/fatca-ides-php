@@ -53,9 +53,14 @@ class ReceiverTest extends \PHPUnit_Framework_TestCase {
 
     $rx=Receiver::shortcut($fdot->conMan->config,$zip);
 
+    $this->assertEquals("CBC",$rx->rm->am->algoS);
+    $this->assertEquals(256,strlen($rx->rm->aesEncrypted));
+    $this->assertEquals("amfWen1oChoLGXU8Qk+Ad80b9a7Dn53B1lFqVxELoKOd7vuTZYvtLlkjqmpgzyrc/cpuqdTDxAtpWIyMjXc1D07wK7CMpzhM0MemG+74D1M1zL5MhWME8mz0s+ninYjaeahhohV6iQVlnZ61axs8RPHtow0duP1QyRJiZSPE1qe4p9m2eoCqvsU4VczxSOiXgqppiYbW1SW0I0lj69UWEjlnCRr8FT83DRVExoAx39mPvIf5M7R+SEOjxv2+AhyaMOZmNDU4lRzUxGmM7KviGwXy8k2ZW1p6jjPid0ga109LvSvBAHPzPhLgyAUBmJCQtSOzvC+zMBnSCfG8DtjZ1A==",base64_encode($rx->rm->aesEncrypted));
+    $this->assertEquals(48,strlen($rx->rm->am->getAesIv()));
+    $this->assertEquals("tnFoqXIhAQ3V8+NomTb593QC1hN8IbAVCm7VQ3f5sH24fGO9oDRz7jG9lfZRhvTX",base64_encode($rx->rm->am->getAesIv()));
+
 //    echo "From: ".$rx->rm->from."\n";
 //    echo "To: ".$rx->rm->to."\n";
-//    //echo "Key: ".$rx->aeskey."\n";
 //    //echo "Payload encrypted: ".$rx->dataEncrypted."\n";
 //    //echo "Payload decrypted: ".$rx->dataCompressed."\n";
 //    echo "Payload uncompressed: ".$rx->dataXmlSigned."\n";
