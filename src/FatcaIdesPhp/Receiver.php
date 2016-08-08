@@ -15,21 +15,17 @@ var $tf1;
 var $tf2;
 var $tf3;
 var $tf4;
-var $aesEncrypted;
 var $ts;
 var $file_name;
 
-var $from;
-var $to;
-
 // config: php array
 // tf4: temp file?
-function __construct($conMan,$am,$tf4=false) {
+function __construct($conMan,$rm,$tf4=false) {
   $this->tf4=$tf4;
   assert($conMan instanceOf ConfigManager);
   $this->conMan=$conMan;
-  assert($am instanceOf AesManager);
-  $this->am=$am;
+  assert($rm instanceOf RsaManager);
+  $this->rm=$rm;
 }
 
 function start() {
@@ -67,44 +63,22 @@ function fromZip($filename) {
 	$xx=scandir($this->tf4);
 	$this->files["payload"]=array_values(preg_grep("/.*_Payload/",$xx));
 	$this->files["payload"]=$this->files["payload"][0];
-	$this->from=preg_replace("/(.*)_Payload/","$1",$this->files["payload"]);
+	$this->rm->from=preg_replace("/(.*)_Payload/","$1",$this->files["payload"]);
 	$this->files["key"]=array_values(preg_grep("/.*_Key/",$xx));
 	$this->files["key"]=$this->files["key"][0];
-	$this->to  =preg_replace("/(.*)_Key/","$1",$this->files["key"]);
+	$this->rm->to  =preg_replace("/(.*)_Key/","$1",$this->files["key"]);
 
 	  $fp=fopen($this->tf4."/".$this->files["key"],"r");
-	  $this->aesEncrypted=fread($fp,8192);
+	  $this->rm->aesEncrypted=fread($fp,8192);
 	  fclose($fp);
 }
-
-	function decryptAesKey() {
-		$aesIvConcatenated="";
-		if(!openssl_private_decrypt( $this->aesEncrypted , $aesIvConcatenated , $this->readFfaPrivateKey() )) throw new \Exception("Could not decrypt aes key");
-		if($aesIvConcatenated=="") throw new \Exception("Failed to decrypt AES key");
-
-    $this->am->setAesIv($aesIvConcatenated);
-	}
-
-	function readFfaPrivateKey($returnResource=true) {
-	  $kk=($this->from==$this->conMan->config["ffaidReceiver"]?$this->conMan->config["FatcaKeyPrivate"]:($this->from==$this->conMan->config["ffaid"]?$this->conMan->config["FatcaIrsPublic"]:die("WTF")));
-	  $fp=fopen($kk,"r");
-	  $priv_key_string=fread($fp,8192);
-	  fclose($fp);
-	  if($returnResource) {
-		$priv_key="";
-		$priv_key=openssl_get_privatekey($priv_key_string); 
-		return $priv_key;
-	  } else {
-		return $priv_key_string;
-	  }
-	}
 
 	function fromEncrypted() {
 		$fp=fopen($this->tf4."/".$this->files["payload"],"r");
 		$this->dataEncrypted=fread($fp,8192);
 		fclose($fp);
 
-    $this->dataCompressed = $this->am->decrypt($this->dataEncrypted);
+    $this->dataCompressed = $this->rm->am->decrypt($this->dataEncrypted);
 	}
 
 	function fromCompressed() {
@@ -127,6 +101,7 @@ function fromZip($filename) {
     $dm = new Downloader(null,$LOG_LEVEL);
     $cm = new ConfigManager($config,$dm,$LOG_LEVEL);
 		$am=new AesManager();
+    $rm = new RsaManager($cm,$am);
 
     if(is_null($zipFn)) {
       assert(is_array($credentials) && array_key_exists("username",$credentials) && array_key_exists("password",$credentials));
@@ -153,10 +128,10 @@ function fromZip($filename) {
 
     }
 
-    $rx=new Receiver($cm,$am);
+    $rx=new Receiver($cm,$rm);
     $rx->start();
     $rx->fromZip($zipFn);
-    $rx->decryptAesKey();
+    $rx->rm->decryptAesKey();
     $rx->fromEncrypted();
     $rx->fromCompressed();
     return $rx;

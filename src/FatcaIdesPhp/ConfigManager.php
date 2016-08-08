@@ -93,9 +93,13 @@ class ConfigManager {
     }
     $this->dlm->setDlFolder($dlFolder);
     $this->dlm->download();
+    $atc=$this->dlm->asTransmitterConfig();
+    // drop from atc any already set keys
+    $atc = array_diff_key($atc,$this->config);
+    // merge
     $this->config = array_merge(
       $this->config,
-      $this->dlm->asTransmitterConfig());
+      $atc);
   }
 
 }

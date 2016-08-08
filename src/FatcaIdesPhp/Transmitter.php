@@ -15,12 +15,15 @@ class Transmitter {
 	var $diDigest;
 	var $tf3;
 	var $tf4;
-	var $aesEncrypted;
 	var $file_name;
 
-	function __construct($fdi,$conMan,$am,$LOG_LEVEL=Logger::WARNING) {
-	// fdi: object of type implementing FatcaDataInterface
-  // conMan: object of type ConfigManager
+	/*
+   * fdi: object of type implementing FatcaDataInterface
+   * conMan: object of type ConfigManager
+   * rm: RsaManager
+   */
+
+	function __construct($fdi,$conMan,$rm,$LOG_LEVEL=Logger::WARNING) {
 
     $gcf=get_class($fdi);
     $cig=class_implements($gcf);
@@ -33,9 +36,6 @@ class Transmitter {
     assert($conMan instanceOf ConfigManager);
     $this->conMan=$conMan;
 
-    assert($am instanceOf AesManager);
-    $this->am=$am;
-
 		// reserving some filenames
 		$this->tf3=tempnam("/tmp","");
 		$this->tf4=tempnam("/tmp","");
@@ -46,6 +46,10 @@ class Transmitter {
     $this->LOG_LEVEL=$LOG_LEVEL;
 
 		$this->file_name = strftime("%Y%m%d%H%M%S00%Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
+
+    assert($rm instanceOf RsaManager);
+    $this->rm=$rm;
+
   }
 
   function start() {
@@ -105,38 +109,7 @@ class Transmitter {
 	}
 
 	function toEncrypted() {
-		$this->dataEncrypted=$this->am->encrypt($this->dataCompressed);
-	}
-
-	function readIrsPublicKey($returnResource=true) {
-	  $fp=fopen($this->conMan->config["FatcaIrsPublic"],"r");
-	  $pub_key_string=fread($fp,8192);
-	  fclose($fp);
-	  if($returnResource) {
-		$pub_key="";
-		$pub_key=openssl_get_publickey($pub_key_string); 
-		return $pub_key;
-	  } else {
-		return $pub_key_string;
-	  }
-	}
-
-	function encryptAesKeyFile() {
-		$this->aesEncrypted="";
-		if(!openssl_public_encrypt (
-        $this->am->getAesIv(),
-        $this->aesEncrypted,
-        $this->readIrsPublicKey() )) {
-      throw new \Exception("Did not encrypt aes key");
-    }
-		if($this->aesEncrypted=="") throw new \Exception("Failed to encrypt AES key");
-	}
-
-	function verifyAesKeyFileEncrypted() {
-		$pubk=$this->readIrsPublicKey(true);
-		$decrypted="";
-		if(!openssl_public_decrypt( $this->aesEncrypted , $decrypted , $pubk )) throw new \Exception("Failed to decrypt aes key for verification purposes");
-		return($decrypted==$this->am->getAesIv());
+		$this->dataEncrypted=$this->rm->am->encrypt($this->dataCompressed);
 	}
 
 	function getMetadata() {
@@ -185,7 +158,7 @@ class Transmitter {
       $this->dataEncrypted);
 		$zip->addFromString(
       $this->getGiinReceiver()."_Key",
-      $this->aesEncrypted);
+      $this->rm->aesEncrypted);
 		$zip->addFromString(
       $this->fdi->getGiinSender()."_Metadata.xml",
       $this->getMetadata());
@@ -327,8 +300,9 @@ class Transmitter {
     $dm = new Downloader(null,$LOG_LEVEL);
     $conMan = new ConfigManager($config,$dm,$LOG_LEVEL);
 		$am=new AesManager($fdi->getIsTest()?"CBC":"ECB"); // as of 2016-06-27, the production server still uses ECB
+    $rm = new RsaManager($conMan,$am);
 
-    $tmtr=new Transmitter($fdi,$conMan,$am,$LOG_LEVEL);
+    $tmtr=new Transmitter($fdi,$conMan,$rm,$LOG_LEVEL);
     $tmtr->start();
     $tmtr->toXml(); # convert to xml 
 
@@ -352,8 +326,8 @@ class Transmitter {
 
     $tmtr->toCompressed();
     $tmtr->toEncrypted();
-    $tmtr->encryptAesKeyFile();
-    //	if(!$tmtr->verifyAesKeyFileEncrypted()) die("Verification of aes key encryption failed");
+    $tmtr->rm->encryptAesKeyFile();
+    //	if(!$tmtr->rm->verifyAesKeyFileEncrypted()) die("Verification of aes key encryption failed");
     $tmtr->toZip(true);
     if(array_key_exists("ZipBackupFolder",$config)) {
       $fnDest=$config["ZipBackupFolder"]."/includeUnencrypted_".$tmtr->file_name;

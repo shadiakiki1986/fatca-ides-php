@@ -20,6 +20,7 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
     $fdot = new FatcaDataOecdTest();
     $fdot->setUp();
     $fdot->oecd->MessageSpec->Timestamp=$ts2;
+
     // no need to pass in GuidManager here because the dummy fixture doesnt use a random DocRefId field
     $fdo=new FatcaDataOecd($fdot->oecd);
 
@@ -46,6 +47,7 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
       # # copy($tmtr->tf4,$expected);
       # $this->assertEquals(md5_file($tmtr->tf4),md5_file($expected));
     }
+
   }
 
   public function testToEmail() {
