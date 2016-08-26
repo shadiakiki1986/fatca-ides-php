@@ -1,4 +1,5 @@
 language: php
+php: 7.0
 before_install:
   - pecl channel-update pecl.php.net
   - pecl install yaml < /dev/null
