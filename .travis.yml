@@ -2,7 +2,7 @@ language: php
 php: 7.0
 before_install:
   - pecl channel-update pecl.php.net
-  - pecl install yaml < /dev/null
+  - pecl install yaml_beta < /dev/null # use yaml_beta until bug is fixed, then revert back to yaml
   - composer install
 script:
   - composer run-script test
