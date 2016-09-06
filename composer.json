@@ -20,7 +20,7 @@
     ],
     "require":{
         "php":">=5.3.5",
-        "monolog/monolog": "^1.19",
+        "monolog/monolog": "^1.21",
         "phpseclib/phpseclib": "*",
         "robrichards/xmlseclibs":"*",
         "shadiakiki1986/XSD-to-PHP": "dev-master",
