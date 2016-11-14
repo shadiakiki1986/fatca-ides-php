@@ -24,7 +24,7 @@
         "phpseclib/phpseclib": "*",
         "robrichards/xmlseclibs":"*",
         "shadiakiki1986/XSD-to-PHP": "dev-master",
-        "shadiakiki1986/swiftmailer-wrapper": "dev-master"
+        "shadiakiki1986/swiftmailer-wrapper": "^0.2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
