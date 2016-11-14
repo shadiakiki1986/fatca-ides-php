@@ -22,7 +22,7 @@ class Downloader {
         "url"=>"https://www.irs.gov/pub/fatca/SenderMetadatav1.1.zip",
       ),
       "irsCrt"=> array(
-        "url"=>"https://ides-support.com/Downloads/encryption-service_services_irs_gov.crt"
+        "url"=>"https://www.ides-support.com/Downloads/encryption-service_services_irs_gov.crt"
       )
     );
     $this->checkedAvailable=false;

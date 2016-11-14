@@ -17,7 +17,7 @@ class DownloaderTest extends \PHPUnit_Framework_TestCase {
                 $z->addFromString("FATCA XML Schema v1.1/FatcaXML_v1.1.xsd","bla");
                 $z->close();
                 break;
-             case "https://ides-support.com/Downloads/encryption-service_services_irs_gov.crt":
+             case "https://www.ides-support.com/Downloads/encryption-service_services_irs_gov.crt":
                file_put_contents($cache,"test");
                break;
              case "https://www.irs.gov/pub/fatca/SenderMetadatav1.1.zip":
