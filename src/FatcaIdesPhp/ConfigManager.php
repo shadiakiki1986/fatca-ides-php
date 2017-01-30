@@ -20,7 +20,7 @@ class ConfigManager {
 
   function prefixIfNeeded($prefix) {
     // if path strings do not start with "/", then prefix with ROOT_IDES_DATA/
-    $keysToPrefix=array("FatcaCrt","FatcaKeyPrivate","FatcaKeyPublic","downloadFolder","ZipBackupFolder");
+    $keysToPrefix=array("FatcaCrt","FatcaKeyPrivate","FatcaKeyPublic","ZipBackupFolder");
     $keysToPrefix=array_intersect(array_keys($this->config),$keysToPrefix);
     $keysToPrefix=array_filter($keysToPrefix,function($x) {
       return !preg_match("/^\//",$this->config[$x]);
@@ -67,7 +67,6 @@ class ConfigManager {
   function getPublic() {
     $dlFolder = __DIR__."/../../assets";
     $atc = array(
-      "downloadFolder"=>$dlFolder,
       "FatcaIrsPublic"=>$dlFolder."/encryption-service_services_irs_gov.crt",
       "FatcaXsd"=>$dlFolder."/fatcaxml/FatcaXML.xsd",
       "MetadataXsd"=>$dlFolder."/SenderMetadata/FATCA IDES SENDER FILE METADATA XML LIBRARY/FATCA-IDES-SenderFileMetadata-1.1.xsd"

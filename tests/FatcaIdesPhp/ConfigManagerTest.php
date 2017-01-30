@@ -9,9 +9,9 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetPublic() {
-      $cm=new ConfigManager(array(),$this->dm);
+      $cm=new ConfigManager(array());
       $cm->getPublic();
-      $this->assertEquals(count($cm->config),4);
+      $this->assertEquals(3,count($cm->config));
     }
 
     public function testPrefixIfNeeded() {

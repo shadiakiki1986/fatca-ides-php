@@ -16,10 +16,14 @@ wget $URL -O $BASE/fatcaxml.zip
 mkdir -p $BASE/fatcaxml
 unzip $BASE/fatcaxml.zip -d $BASE/fatcaxml
 rm $BASE/fatcaxml.zip
-mv $BASE/fatcaxml/FatcaXML_v2.0.xsd $BASE/fatcaxml/FatcaXML.xsd
+mv $BASE/fatcaxml/FatcaXML_v2.0.xsd      $BASE/fatcaxml/FatcaXML.xsd
 mv $BASE/fatcaxml/isofatcatypes_v1.1.xsd $BASE/fatcaxml/isofatcatypes.xsd
-mv $BASE/fatcaxml/oecdtypes_v4.2.xsd $BASE/fatcaxml/oecdtypes.xsd
+mv $BASE/fatcaxml/oecdtypes_v4.2.xsd     $BASE/fatcaxml/oecdtypes.xsd
 mv $BASE/fatcaxml/stffatcatypes_v2.0.xsd $BASE/fatcaxml/stffatcatypes.xsd
+# keep symbolic links for internal references in xml files
+ln -s $BASE/fatcaxml/isofatcatypes.xsd $BASE/fatcaxml/isofatcatypes_v1.1.xsd
+ln -s $BASE/fatcaxml/stffatcatypes.xsd $BASE/fatcaxml/stffatcatypes_v2.0.xsd
+ln -s $BASE/fatcaxml/oecdtypes.xsd     $BASE/fatcaxml/oecdtypes_v4.2.xsd
 
 # Meta schema
 URL="https://www.irs.gov/pub/fatca/SenderMetadatav1.1.zip"

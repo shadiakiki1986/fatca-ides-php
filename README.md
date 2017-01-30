@@ -70,9 +70,6 @@ $config = array(
   # public key extracted out of private key above
   "FatcaKeyPublic" => "/var/lib/IDES/keys/institution-fatca-public.pem",
 
-  # download folder for IRS public key and schema files
-  "downloadFolder" => '/var/lib/IDES/downloads/',
-
   # Fatca Sender GIIN
   "ffaid" => 'A1BBCD.00000.XY.123',
   # Fatca Receiver GIIN, e.g. IRS
