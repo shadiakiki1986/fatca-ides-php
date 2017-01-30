@@ -7,8 +7,8 @@ namespace oecd\ties\isofatcatypes\v1;
  * @xmlName currCode_Type
  * @var oecd\ties\isofatcatypes\v1\currCode_Type
  * @xmlDefinition 
-			The appropriate currency code from the ISO 4217 three-byte alpha version for the currency in which a monetary amount is expressed. 
---- The former DEM - Germany, Deutsche Mark - was temporarily added to allow data from earlier years still to be transmitted ---
+			The appropriate three-byte alpha currency code from ISO 4217 list to express currency for monetary amount. 
+The former DEM - Germany, Deutsche Mark - was temporarily added to allow data from earlier years still to be transmitted.
 			
  */
 class currCode_Type

@@ -6,7 +6,6 @@
  * @xmlName FatcaPaymentType_EnumType
  * @var FatcaPaymentType_EnumType
  * @xmlDefinition The code describing the nature of the payments used in FATCA
-			
  */
 class FatcaPaymentType_EnumType
 	{

@@ -1,6 +1,6 @@
 <?php namespace FatcaXsdPhp;
 
-/**
+/*
  * @xmlNamespace 
  * @xmlType 
  * @xmlName ReportingGroup

@@ -5,6 +5,7 @@
  * @xmlType 
  * @xmlName Fatca_Type
  * @var Fatca_Type
+ * @xmlDefinition Type that contains details about FATCA report
  */
 class Fatca_Type
 	{
@@ -13,18 +14,17 @@ class Fatca_Type
 	/**
 	 * @Definition Reporting financial institution
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
+	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlName ReportingFI
-	 * @var oecd\ties\fatca\v1\CorrectableOrganisationParty_Type
+	 * @var oecd\ties\fatca\v2\CorrectableReportOrganisation_Type
 	 */
 	public $ReportingFI;
 	/**
 	 * @Definition Group that wraps the details for a financial institution FATCA report
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
+	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlMaxOccurs unbounded
 	 * @xmlName ReportingGroup
-	 * @var oecd\ties\fatca\v1\ReportingGroup
 	 */
 	public $ReportingGroup;
 
