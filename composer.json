@@ -27,7 +27,8 @@
         "shadiakiki1986/swiftmailer-wrapper": "^0.2.0",
         "ext-dom": "*",
         "ext-mbstring": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-mcrypt": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
@@ -53,12 +54,6 @@
         "test": [
             "parallel-lint . --exclude vendor",
             "phpunit"
-        ],
-        "post-install-cmd": [
-          "php composerDownload.php"
-        ],
-        "updateXsd": [
-           "php updateXsd.php"
         ]
     }
 }

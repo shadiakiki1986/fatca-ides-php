@@ -7,12 +7,10 @@ use Monolog\Handler\StreamHandler;
 
 class ConfigManager {
 
-  function __construct($config,$dlm,$LOG_LEVEL=Logger::WARNING) {
+  function __construct($config,$LOG_LEVEL=Logger::WARNING) {
     $this->config=$config;
     $this->checked=false;
     $this->msgs=array();
-    assert($dlm instanceof Downloader);
-    $this->dlm = $dlm;
     $this->shouldExist = array("FatcaXsd","MetadataXsd","FatcaCrt","ZipBackupFolder");
 
     $this->log = new Logger('ConfigManager');
@@ -36,21 +34,8 @@ class ConfigManager {
     if($this->checked) return;
     $this->log->debug("Checking config");//,$this->config);
 
-    // check if public files not in config, then download
-    $needDownload = array_diff(
-      $this->shouldExist,
-      array_keys($this->config));
-    if(count($needDownload)>0) {
-      $this->log->debug(
-        "config entries before downloader: ".
-        implode(",",array_keys($this->config)));
-      $this->runDownloader();
-      $this->log->debug(
-        "config entries after downloader: ".
-        implode(",",array_keys($this->config)));
-    } else {
-      $this->log->debug("No need to download anything");
-    }
+    // get names of public files
+    $this->getPublic();
 
     $this->checkCompulsory();
     $this->checkExist();
@@ -79,21 +64,14 @@ class ConfigManager {
     }
   }
 
-  function runDownloader() {
-    $this->log->debug("Running the downloader");
-    $dlFolder=null;
-    if(array_key_exists("downloadFolder",$this->config)) {
-      //throw new \Exception("Please define 'downloadFolder' in your config");
-      $this->log->debug("Checking that the download folder '".$this->config["downloadFolder"]."' is a directory");
-      if(is_dir($this->config["downloadFolder"])) {
-        $dlFolder=$this->config["downloadFolder"];
-      } else {
-        throw new \Exception("It seems that the download folder '".$this->config["downloadFolder"]."' is not a directory");
-      }
-    }
-    $this->dlm->setDlFolder($dlFolder);
-    $this->dlm->download();
-    $atc=$this->dlm->asTransmitterConfig();
+  function getPublic() {
+    $dlFolder = __DIR__."/../../assets";
+    $atc = array(
+      "downloadFolder"=>$dlFolder,
+      "FatcaIrsPublic"=>$dlFolder."/encryption-service_services_irs_gov.crt",
+      "FatcaXsd"=>$dlFolder."/fatcaxml/FatcaXML.xsd",
+      "MetadataXsd"=>$dlFolder."/SenderMetadata/FATCA IDES SENDER FILE METADATA XML LIBRARY/FATCA-IDES-SenderFileMetadata-1.1.xsd"
+    );
     // drop from atc any already set keys
     $atc = array_diff_key($atc,$this->config);
     // merge

@@ -14,9 +14,13 @@ class Downloader {
     $this->uo = $uo;
 
     $this->setDlFolder($dlFolder);
+
+    # Links below from
+    # https://www.irs.gov/businesses/corporations/fatca-xml-schemas-and-business-rules-for-form-8966
     $this->links = array(
       "schema_main"=>array(
-        "url"=>"https://www.irs.gov/pub/fatca/FATCAXMLSchemav1.zip"
+        # https://www.irs.gov/pub/fatca/FATCAXMLSchemav1.zip
+        "url"=>"https://www.irs.gov/pub/fatca/fatcaxml_v2.0.zip"
       ),
       "schema_meta"=>array(
         "url"=>"https://www.irs.gov/pub/fatca/SenderMetadatav1.1.zip",
