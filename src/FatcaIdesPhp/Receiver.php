@@ -98,8 +98,7 @@ function fromZip($filename) {
 
     assert(is_null($zipFn) xor is_null($credentials));
 
-    $dm = new Downloader(null,$LOG_LEVEL);
-    $cm = new ConfigManager($config,$dm,$LOG_LEVEL);
+    $cm = new ConfigManager($config,$LOG_LEVEL);
 		$am=new AesManager();
     $rm = new RsaManager($cm,$am);
 

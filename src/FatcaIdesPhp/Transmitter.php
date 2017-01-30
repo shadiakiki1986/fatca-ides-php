@@ -297,8 +297,7 @@ class Transmitter {
 
   // Shortcut that takes input for FatcaDataArray + Transmitter
   public static function shortcut($fdi,$format,$emailTo,$config,$LOG_LEVEL=Logger::WARNING) {
-    $dm = new Downloader(null,$LOG_LEVEL);
-    $conMan = new ConfigManager($config,$dm,$LOG_LEVEL);
+    $conMan = new ConfigManager($config,$LOG_LEVEL);
 		$am=new AesManager($fdi->getIsTest()?"CBC":"ECB"); // as of 2016-06-27, the production server still uses ECB
     $rm = new RsaManager($conMan,$am);
 
