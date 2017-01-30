@@ -92,19 +92,24 @@ composer install
 composer run-script test
 ```
 
-# Developer notes
-`src/FatcaXsdPhp` is the PHP-equivalent of the Fatca main schema.
-* It is generateid after a `composer run-script updateXsd`
-* I moderate the updates and commit them to the repo if suitable
+## Updating schema versions
+The schema files and IRS public key are committed to this repo in `assets`.
 
-Open issues:
-* I currently fix the below issues manually after the update
-* There seems to be a problem in `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/Address_Type.php` by having two AddressFree fields
-* `@xmlNamespace urn:oecd:ties:fatca:v1` is missing from `src/FatcaXsdPhp/FATCA_OECD` pending https://github.com/moyarada/XSD-to-PHP/issues/36
-* The AddressFree field has the wrong namespace: should be urn:oecd:ties:stffatcatypes:v1 instead of `urn:oecd:ties:fatca:v1`
-* ReportingGroup.php is not generated + its `@var` is missing
-* `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/NamePerson_Type.php`
- * @xmlNamespace urn:oecd:ties:fatca:v1
- * changed manually to
- * @xmlNamespace urn:oecd:ties:stffatcatypes:v1
+To update them, run the following two scripts:
+1. `./assets/update.sh`: Downloads files from IRS website
+  * Note that the URL's in the script may need to be updated because newer versions are usually uploaded to new endpoints
+  * Note also that there are some file renaming lines in the script so that I can diff versions
+    * e.g. `git diff ba722d8bcda61f657529a67cdbec873a29dc7d70 5f9545b565ddf0d41997b29c704c3990813f4bb8` will diff version 1.1 and 2.0
 
+2. `php updateXsd.php`: converts the schema files to PHP classes in `src/FatcaXsdPhp`
+  * I moderate the updates and commit them to the repo if suitable
+  * Open issues on these are:
+    * I currently fix the below issues manually after the update
+    * There seems to be a problem in `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/Address_Type.php` by having two AddressFree fields
+    * `@xmlNamespace urn:oecd:ties:fatca:v1` is missing from `src/FatcaXsdPhp/FATCA_OECD` pending https://github.com/moyarada/XSD-to-PHP/issues/36
+    * The AddressFree field has the wrong namespace: should be urn:oecd:ties:stffatcatypes:v1 instead of `urn:oecd:ties:fatca:v1`
+    * ReportingGroup.php is not generated + its `@var` is missing
+    * `src/FatcaXsdPhp/oecd/ties/stffatcatypes/v1/NamePerson_Type.php`
+      * @xmlNamespace urn:oecd:ties:fatca:v1
+      * changed manually to
+      * @xmlNamespace urn:oecd:ties:stffatcatypes:v1
