@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Marita Thuer (Bundesamt fuer Finanzen) -->
-<xsd:schema xmlns:iso="urn:oecd:ties:isofatcatypes:v1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oecd:ties:isofatcatypes:v1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
-	<!--  ISO 3166 alpha 2 Country Code -->
+<xsd:schema xmlns:iso="urn:oecd:ties:isofatcatypes:v1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oecd:ties:isofatcatypes:v1" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1">
+	<!--  ISO 3166 alpha 2 Country Code extended -->
 	<xsd:simpleType name="CountryCode_Type">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">ISO-3166 Alpha 2 country codes</xsd:documentation>
@@ -592,6 +592,11 @@
 					<xsd:documentation>KIRIBATI</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
+			<xsd:enumeration value="XK">
+				<xsd:annotation>
+					<xsd:documentation>KOSOVO</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
 			<xsd:enumeration value="KP">
 				<xsd:annotation>
 					<xsd:documentation>KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF</xsd:documentation>
@@ -854,7 +859,7 @@
 			</xsd:enumeration>
 			<xsd:enumeration value="PS">
 				<xsd:annotation>
-					<xsd:documentation>PALESTINE, STATE OF</xsd:documentation>
+					<xsd:documentation>WEST BANK AND GAZA</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
 			<xsd:enumeration value="PA">
@@ -1258,8 +1263,8 @@
 	<xsd:simpleType name="currCode_Type">
 		<xsd:annotation>
 			<xsd:documentation xml:lang="en">
-			The appropriate currency code from the ISO 4217 three-byte alpha version for the currency in which a monetary amount is expressed. 
---- The former DEM - Germany, Deutsche Mark - was temporarily added to allow data from earlier years still to be transmitted ---
+			The appropriate three-byte alpha currency code from ISO 4217 list to express currency for monetary amount. 
+The former DEM - Germany, Deutsche Mark - was temporarily added to allow data from earlier years still to be transmitted.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:restriction base="xsd:string">
@@ -1505,7 +1510,7 @@
 			</xsd:enumeration>
 			<xsd:enumeration value="EUR">
 				<xsd:annotation>
-					<xsd:documentation>Euro: ALAND ISLANDS; ANDORRA; AUSTRIA; BELGIUM; CYPRUS; ESTONIA; EUROPEAN UNION; FINLAND; FRANCE; FRENCH GUIANA; FRENCH SOUTHERN TERRITORIES; GERMANY; GREECE; GUADELOUPE; HOLY SEE (VATICAN CITY STATE); IRELAND; ITALY; LUXEMBOURG; MALTA; MARTINIQUE; MAYOTTE; MONACO; MONTENEGRO; NETHERLANDS; PORTUGAL; REUNION; SAINT BARTHELEMY; SAINT MARTIN (FRENCH PART); SAINT PIERRE AND MIQUELON; SAN MARINO; SLOVAKIA; SLOVENIA; SPAIN; Vatican City State (HOLY SEE)</xsd:documentation>
+					<xsd:documentation>Euro: ALAND ISLANDS; ANDORRA; AUSTRIA; BELGIUM; CYPRUS; ESTONIA; EUROPEAN UNION; FINLAND; FRANCE; FRENCH GUIANA; FRENCH SOUTHERN TERRITORIES; GERMANY; GREECE; GUADELOUPE; HOLY SEE (VATICAN CITY STATE); IRELAND; ITALY; KOSOVO; LUXEMBOURG; MALTA; MARTINIQUE; MAYOTTE; MONACO; MONTENEGRO; NETHERLANDS; PORTUGAL; REUNION; SAINT BARTHELEMY; SAINT MARTIN (FRENCH PART); SAINT PIERRE AND MIQUELON; SAN MARINO; SLOVAKIA; SLOVENIA; SPAIN; Vatican City State (HOLY SEE)</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
 			<xsd:enumeration value="FJD">
@@ -1650,7 +1655,7 @@
 			</xsd:enumeration>
 			<xsd:enumeration value="KPW">
 				<xsd:annotation>
-					<xsd:documentation>North Korean Won: KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF</xsd:documentation>
+					<xsd:documentation>North Korean Won: KOREA, DEMOCRATIC PEOPLE’S REPUBLIC OF</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
 			<xsd:enumeration value="KRW">
@@ -1675,7 +1680,7 @@
 			</xsd:enumeration>
 			<xsd:enumeration value="LAK">
 				<xsd:annotation>
-					<xsd:documentation>Kip: LAO PEOPLE'S DEMOCRATIC REPUBLIC</xsd:documentation>
+					<xsd:documentation>Kip: LAO PEOPLE’S DEMOCRATIC REPUBLIC</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
 			<xsd:enumeration value="LBP">
@@ -1980,7 +1985,7 @@
 			</xsd:enumeration>
 			<xsd:enumeration value="TOP">
 				<xsd:annotation>
-					<xsd:documentation>Pa'anga: TONGA</xsd:documentation>
+					<xsd:documentation>Pa’anga: TONGA</xsd:documentation>
 				</xsd:annotation>
 			</xsd:enumeration>
 			<xsd:enumeration value="TRY">

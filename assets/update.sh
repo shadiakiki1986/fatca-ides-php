@@ -7,6 +7,7 @@ set -e
 
 # save in temporary folder
 BASE=`mktemp -d`
+ROOT=`dirname "$0"`
 
 # FATCA main schema
 #URL=https://www.irs.gov/pub/fatca/FATCAXMLSchemav1.zip
@@ -14,12 +15,11 @@ URL="https://www.irs.gov/pub/fatca/fatcaxml_v2.0.zip"
 wget $URL -O $BASE/fatcaxml.zip
 mkdir -p $BASE/fatcaxml
 unzip $BASE/fatcaxml.zip -d $BASE/fatcaxml
-mv $BASE/"FATCA XML Schema v1.1/FatcaXML_v1.1.xsd" $BASE/FatcaXML.xsd
-mv $BASE/"FATCA XML Schema v1.1/isofatcatypes_v1.0.xsd" $BASE/isofatcatypes.xsd
-mv $BASE/"FATCA XML Schema v1.1/oecdtypes_v4.1.xsd" $BASE/oecdtypes.xsd
-mv $BASE/"FATCA XML Schema v1.1/stffatcatypes_v1.1.xsd" $BASE/stffatcatypes.xsd
-
 rm $BASE/fatcaxml.zip
+mv $BASE/fatcaxml/FatcaXML_v2.0.xsd $BASE/fatcaxml/FatcaXML.xsd
+mv $BASE/fatcaxml/isofatcatypes_v1.1.xsd $BASE/fatcaxml/isofatcatypes.xsd
+mv $BASE/fatcaxml/oecdtypes_v4.2.xsd $BASE/fatcaxml/oecdtypes.xsd
+mv $BASE/fatcaxml/stffatcatypes_v2.0.xsd $BASE/fatcaxml/stffatcatypes.xsd
 
 # Meta schema
 URL="https://www.irs.gov/pub/fatca/SenderMetadatav1.1.zip"
@@ -34,4 +34,7 @@ wget $URL -O $BASE/encryption-service_services_irs_gov.crt
 
 #
 rm -rf fatcaxml fatcaxml.zip SenderMetadata sender.zip encryption-service_services_irs_gov.crt
-mv $BASE/* .
+
+# move
+rm -rf $ROOT/{fatcaxml,SenderMetadata}
+mv $BASE/* $ROOT/
