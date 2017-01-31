@@ -30,7 +30,10 @@ php -r "unlink('composer-setup.php');"
 
 Install php extensions
 ```bash
-sudo apt-get install php7.0-xml php-mbstring php-zip
+sudo apt-get install php7.0-xml php-mbstring php-zip php-mcrypt php-pear libyaml-dev php-dev
+sudo pecl install yaml-2.0.0
+sudo echo "extension=yaml.so" > /etc/php/7.0/mods-available/yaml.ini
+sudo ln -s /etc/php/7.0/mods-available/yaml.ini /etc/php/7.0/cli/conf.d/20-yaml.ini
 
 composer require shadiakiki1986/fatca-ides-php
 composer require swiftmailer/swiftmailer # To enable sending emails

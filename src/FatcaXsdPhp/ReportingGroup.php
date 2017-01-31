@@ -29,7 +29,7 @@ class ReportingGroup
 	public $Intermediary;
 	/**
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
+	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlName AccountReport
 	 * @xmlMinOccurs 0
 	 * @xmlMaxOccurs unbounded

@@ -4,7 +4,36 @@ namespace FatcaIdesPhp;
 
 class TransmitterTest extends \PHPUnit_Framework_TestCase {
 
-  public function testMocked() {
+  /**
+   * @dataProvider testMockedProvider
+   */
+  public function testMocked($v,$config,$k) {
+      $tmtr=Transmitter::shortcut($v,"html","",$config);
+
+      $expected=__DIR__."/data/testMocked_${k}_payload_unsigned.xml";
+      # file_put_contents($expected,$tmtr->dataXml);
+      $this->assertXmlStringEqualsXmlFile(
+        $expected,
+        $tmtr->dataXml,
+        $expected
+      );
+
+      # The below will fail because I do not inject the signing manager
+      # signed xml
+      # $expected=__DIR__."/data/testMocked_${k}_payload_signed.xml";
+      # # file_put_contents($expected,$tmtr->dataXmlSigned);
+      # $this->assertXmlStringEqualsXmlFile(
+      #   $expected,
+      #   $tmtr->dataXmlSigned);
+
+      # zip file
+      # $expected=__DIR__."/data/testMocked_$k.zip";
+      # # copy($tmtr->tf4,$expected);
+      # $this->assertEquals(md5_file($tmtr->tf4),md5_file($expected));
+
+  }
+
+  public function testMockedProvider() {
     $fdat = new FatcaDataArrayTest();
     $fdat->setUp();
 
@@ -24,29 +53,10 @@ class TransmitterTest extends \PHPUnit_Framework_TestCase {
     // no need to pass in GuidManager here because the dummy fixture doesnt use a random DocRefId field
     $fdo=new FatcaDataOecd($fdot->oecd);
 
-    $input = array("array"=>$fda,"oecd"=>$fdo);
-    foreach($input as $k=>$v) {
-      $tmtr=Transmitter::shortcut($v,"html","",$fdat->conMan->config);
-
-      $expected=__DIR__."/data/testMocked_${k}_payload_unsigned.xml";
-      # file_put_contents($expected,$tmtr->dataXml);
-      $this->assertXmlStringEqualsXmlFile(
-        $expected,
-        $tmtr->dataXml);
-
-      # The below will fail because I do not inject the signing manager
-      # signed xml
-      # $expected=__DIR__."/data/testMocked_${k}_payload_signed.xml";
-      # # file_put_contents($expected,$tmtr->dataXmlSigned);
-      # $this->assertXmlStringEqualsXmlFile(
-      #   $expected,
-      #   $tmtr->dataXmlSigned);
-
-      # zip file
-      # $expected=__DIR__."/data/testMocked_$k.zip";
-      # # copy($tmtr->tf4,$expected);
-      # $this->assertEquals(md5_file($tmtr->tf4),md5_file($expected));
-    }
+    return [
+      [$fda,$fdat->conMan->config,'array'],
+      [$fdo,$fdat->conMan->config,'oecd'],
+    ];
 
   }
 

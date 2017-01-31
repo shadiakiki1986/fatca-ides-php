@@ -23,14 +23,7 @@ class Transmitter {
    * rm: RsaManager
    */
 
-	function __construct($fdi,$conMan,$rm,$LOG_LEVEL=Logger::WARNING) {
-
-    $gcf=get_class($fdi);
-    $cig=class_implements($gcf);
-    $tobe="FatcaIdesPhp\FatcaDataInterface";
-    assert(
-      in_array($tobe, $cig),
-      "Input type test failed. Class ".$gcf." implements ".implode(", ",$cig)." but not ".$tobe);
+	function __construct(\FatcaIdesPhp\FatcaDataInterface $fdi, $conMan, $rm, $LOG_LEVEL=Logger::WARNING) {
 		$this->fdi=$fdi;
 
     assert($conMan instanceOf ConfigManager);

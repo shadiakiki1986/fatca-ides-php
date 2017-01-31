@@ -36,7 +36,7 @@ class NamePerson_Type
 	/**
 	 * @Definition First name of the person
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v2
+	 * @xmlNamespace urn:oecd:ties:stffatcatypes:v2
 	 * @xmlName FirstName
 	 */
 	public $FirstName;
@@ -60,7 +60,7 @@ class NamePerson_Type
 	/**
 	 * @Definition Represents the position of the name in a name string. Can be given name, forename, Christian name, surname, family name, etc. Use the attribute NameType to define the type of name, such as a  company name. 
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v2
+	 * @xmlNamespace urn:oecd:ties:stffatcatypes:v2
 	 * @xmlName LastName
 	 */
 	public $LastName;

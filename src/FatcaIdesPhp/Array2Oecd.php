@@ -27,7 +27,7 @@ class Array2Oecd {
     $rfi = new \FatcaXsdPhp\CorrectableOrganisationParty_Type();
     $rfi->Name = new \oecd\ties\stffatcatypes\v1\NameOrganisation_Type();
     $rfi->Name->value = "FFA Private Bank";
-    $rfi->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
+    $rfi->Address = new \oecd\ties\stffatcatypes\v2\Address_Type();
     $rfi->Address->CountryCode = new \oecd\ties\isofatcatypes\v1\CountryCode_Type();
     $rfi->Address->CountryCode->value = "LB";
     $rfi->Address->AddressFree = "Foch street";
@@ -61,7 +61,7 @@ class Array2Oecd {
   }
 
   function getTin($tin,$issuer) {
-    $TIN = new \oecd\ties\stffatcatypes\v1\TIN_Type();
+    $TIN = new \oecd\ties\stffatcatypes\v2\TIN_Type();
     $TIN->value=$tin;
     $TIN->issuedBy=is_null($issuer)?"US":$issuer;
     return $TIN;
@@ -74,23 +74,23 @@ class Array2Oecd {
   }
 
   function getIndividual($x) {
-    $ind = new \oecd\ties\stffatcatypes\v1\PersonParty_Type();
+    $ind = new \oecd\ties\stffatcatypes\v2\PersonParty_Type();
     $ind->TIN = $this->getTinWrapper($x);
 
-    $ind->Name = new \oecd\ties\stffatcatypes\v1\NamePerson_Type();
+    $ind->Name = new \oecd\ties\stffatcatypes\v2\NamePerson_Type();
     $ind->Name->FirstName = $x['ENT_FIRSTNAME'];
     $ind->Name->LastName = $x['ENT_LASTNAME'];
-    $ind->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
+    $ind->Address = new \oecd\ties\stffatcatypes\v2\Address_Type();
     $ind->Address->CountryCode = $x['ResidenceCountry'];
     $ind->Address->AddressFree = Utils::cleanAddress($x['ENT_ADDRESS']);
     return $ind;
   }
 
   function getOrganisation($x) {
-    $org = new \oecd\ties\stffatcatypes\v1\OrganisationParty_Type();
+    $org = new \oecd\ties\stffatcatypes\v2\OrganisationParty_Type();
     $org->Name = new \oecd\ties\stffatcatypes\v1\NameOrganisation_Type();
     $org->Name->value = $x['ENT_FIRSTNAME'];
-    $org->Address = new \oecd\ties\stffatcatypes\v1\Address_Type();
+    $org->Address = new \oecd\ties\stffatcatypes\v2\Address_Type();
     $org->Address->CountryCode = $x['ResidenceCountry'];
     $org->Address->AddressFree = Utils::cleanAddress($x['ENT_ADDRESS']);
     $org->TIN = $this->getTinWrapper($x);
@@ -156,7 +156,9 @@ class Array2Oecd {
 
         $substOwns = array();
         foreach($x["SubstantialOwner"] as $so) {
-          array_push($substOwns,$this->getIndividual($so));
+          $subst = new \FatcaXsdPhp\SubstantialOwner_Type();
+          $subst->Individual = $this->getIndividual($so);
+          array_push($substOwns,$subst);
         }
         if(count($substOwns)>0) $ar->SubstantialOwner = $substOwns;
       }

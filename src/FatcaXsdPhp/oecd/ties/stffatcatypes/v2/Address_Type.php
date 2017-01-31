@@ -15,7 +15,7 @@ class Address_Type
 	/**
 	 * @Definition 2-character code for the country in the address
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:isofatcatypes:v1
+	 * @xmlNamespace urn:oecd:ties:stffatcatypes:v2
 	 * @xmlName CountryCode
 	 * @var oecd\ties\isofatcatypes\v1\CountryCode_Type
 	 */

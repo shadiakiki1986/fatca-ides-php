@@ -141,8 +141,8 @@ class FatcaDataArray implements FatcaDataInterface {
 	    $diXml=sprintf("
 		<ftc:FATCA_OECD version='1.1'
 		    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-		    xmlns:sfa='urn:oecd:ties:stffatcatypes:v1'
-		    xmlns:ftc='urn:oecd:ties:fatca:v1'>
+		    xmlns:sfa='urn:oecd:ties:stffatcatypes:v2'
+		    xmlns:ftc='urn:oecd:ties:fatca:v2'>
 		    <ftc:MessageSpec>
 			<sfa:SendingCompanyIN>".$this->conMan->config["ffaid"]."</sfa:SendingCompanyIN>
 			<sfa:TransmittingCountry>LB</sfa:TransmittingCountry>

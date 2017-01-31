@@ -5,10 +5,7 @@ namespace FatcaIdesPhp;
 // Implementation of FatcaDataInterface that is suitable for institutions that have only a flat array of individuals with reportable accounts
 class FatcaDataOecd implements FatcaDataInterface {
 
-	function __construct($oecd) {
-	// oecd: php object of type FatcaXsdPhp\FATCA_OECD
-
-    assert($oecd instanceOf \FatcaXsdPhp\FATCA_OECD,"Test that ".get_class($oecd)." is of class \FatcaXsdPhp\FATCA_OECD: ");
+	function __construct(\FatcaXsdPhp\FATCA_OECD $oecd) {
     $this->oecd=$oecd;
   }
 
@@ -89,10 +86,12 @@ class FatcaDataOecd implements FatcaDataInterface {
 
         if(!!$ar->SubstantialOwner) {
           foreach($ar->SubstantialOwner as $so) {
+            $type = property_exists($so,"Individual") ? "Individual" : "Organisation";
+            $so = ((array)$so)[$type];
             $row = $dom->createElement('tr');
             $row->appendChild($dom->createElement('td',$ar->AccountNumber));
-            $row->appendChild($dom->createElement('td','{Substantial Owner}'));
-            $row = FatcaDataOecd::toHtmlIndividual($row,$dom,$so);
+            $row->appendChild($dom->createElement('td','{Substantial Owner: '.$type.'}'));
+            $row = $type=="Individual" ? FatcaDataOecd::toHtmlIndividual($row,$dom,$so) : FatcaDataOecd::toHtmlOrganisation($row,$dom,$so);
             $table->appendChild($row);
           }
         }
