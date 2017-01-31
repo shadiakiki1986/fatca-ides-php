@@ -37,15 +37,6 @@ class Address_Type
 	 */
 	public $AddressFix;
 	/**
-	 * @Definition Additionally to address in fix format a part that is presented in free text format.
-	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v2
-	 * @xmlMinOccurs 0
-	 * @xmlName AddressFree
-	 * @var oecd\ties\stffatcatypes\v2\StringMax4000_Type
-	 */
-	public $AddressFree;
-	/**
 	 * @Definition Type of the address (e.g. residential, business)
 	 * @xmlType attribute
 	 * @xmlName legalAddressType

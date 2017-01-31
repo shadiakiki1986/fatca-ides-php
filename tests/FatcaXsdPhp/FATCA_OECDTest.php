@@ -55,7 +55,7 @@ class FATCA_OECDTest extends \PHPUnit_Framework_TestCase {
       $doc = new \DOMDocument();
       $xmlDom=$doc->loadXML($xml);
       $this->assertTrue($xmlDom, sprintf("Invalid XML: %s",$xml));
-      $xsd=__DIR__."/../../cache/FATCA XML Schema v1.1/FatcaXML_v1.1.xsd";
+      $xsd=__DIR__."/../../assets/fatcaxml/FatcaXML.xsd";
       $this->assertTrue($doc->schemaValidate($xsd));
     }
 

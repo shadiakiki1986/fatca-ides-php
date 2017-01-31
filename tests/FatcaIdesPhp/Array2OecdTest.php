@@ -11,7 +11,7 @@ class Array2OecdTest extends \PHPUnit_Framework_TestCase {
   }
 
   function assertSchemaValidate($xml) {
-    $xsd=__DIR__."/../../cache/FATCA XML Schema v1.1/FatcaXML_v1.1.xsd";
+    $xsd=__DIR__."/../../assets/fatcaxml/FatcaXML.xsd";
     $doc = new \DOMDocument();
     $xmlDom=$doc->loadXML($xml);
     $this->assertTrue($doc->schemaValidate($xsd));
