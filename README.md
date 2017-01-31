@@ -20,7 +20,18 @@ For other language implementations, please check the [IRS github page](https://g
 * Private and public keys used to get the SSL certificate
 
 # Installation instructions
+Install [composer](https://getcomposer.org/download/)
 ```bash
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '55d6ead61b29c7bdee5cccfb50076874187bd9f21f65d8991d46ec5cc90518f447387fb9f76ebae1fbbacf329e583e30') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+```
+
+Install php extensions
+```bash
+sudo apt-get install php7.0-xml php-mbstring php-zip
+
 composer require shadiakiki1986/fatca-ides-php
 composer require swiftmailer/swiftmailer # To enable sending emails
 composer install
