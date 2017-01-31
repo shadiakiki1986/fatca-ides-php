@@ -28,7 +28,8 @@
         "ext-dom": "*",
         "ext-mbstring": "*",
         "ext-zip": "*",
-        "ext-mcrypt": "*"
+        "ext-mcrypt": "*",
+        "ext-bcmath": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
