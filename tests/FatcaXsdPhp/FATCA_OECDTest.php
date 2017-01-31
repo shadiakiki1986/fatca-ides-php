@@ -47,7 +47,7 @@ class FATCA_OECDTest extends \PHPUnit_Framework_TestCase {
       $expFn = __DIR__."/expected1.xml";
       //file_put_contents($expFn,$xml);
       //var_dump($xml);
-      $this->assertEquals($xml,file_get_contents($expFn));
+      $this->assertEquals(file_get_contents($expFn),$xml);
     }
 
     public function test2() {

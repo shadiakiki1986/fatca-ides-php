@@ -14,7 +14,7 @@ class CorrectableOrganisationParty_Type
 	
 	/**
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
+	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlName DocSpec
 	 * @var oecd\ties\fatca\v1\DocSpec_Type
 	 */
