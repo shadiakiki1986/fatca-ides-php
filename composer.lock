@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c20c584257972dcb98ce500696a7fcb9",
+    "content-hash": "370b8d76fd49f1c8f52317b6cb93c3dd",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -292,46 +292,6 @@
             "time": "2016-09-08T13:15:00+00:00"
         },
         {
-            "name": "shadiakiki1986/XSD-to-PHP",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/shadiakiki1986/XSD-to-PHP",
-                "reference": "dff116a5f76d9b4bdfa177e2a9625ca623d4fd6d"
-            },
-            "require": {
-                "zendframework/zend-console": "*",
-                "zendframework/zend-log": "*"
-            },
-            "require-dev": {
-                "jakub-onderka/php-parallel-lint": "^0.9",
-                "phpunit/phpunit": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "com\\mikebevz\\xsd2php\\": "test/",
-                    "": [
-                        "test/data/expected/ContactCompany/",
-                        "test/data/expected/ubl2.0"
-                    ]
-                }
-            },
-            "scripts": {
-                "test": [
-                    "parallel-lint . --exclude vendor --exclude resources --exclude test/data",
-                    "phpunit -c test/phpunit.xml"
-                ]
-            },
-            "description": "Legko XML: compile XSD schema to PHP, XML marshalling/unmashalling http://mikebevz.com/xsd-to-php-tool/",
-            "time": "2016-06-23 14:40:44"
-        },
-        {
             "name": "shadiakiki1986/swiftmailer-wrapper",
             "version": "0.2",
             "source": {
@@ -376,6 +336,38 @@
                 "swiftmailer"
             ],
             "time": "2016-10-13T08:12:51+00:00"
+        },
+        {
+            "name": "shadiakiki1986/xsd-to-php",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shadiakiki1986/XSD-to-PHP.git",
+                "reference": "ef4e373ffe80ce4b7a4b417ed729ba8bfd2d7add"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shadiakiki1986/XSD-to-PHP/zipball/ef4e373ffe80ce4b7a4b417ed729ba8bfd2d7add",
+                "reference": "ef4e373ffe80ce4b7a4b417ed729ba8bfd2d7add",
+                "shasum": ""
+            },
+            "require": {
+                "zendframework/zend-console": "*",
+                "zendframework/zend-log": "*"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^0.9",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Legko XML: compile XSD schema to PHP, XML marshalling/unmashalling http://mikebevz.com/xsd-to-php-tool/",
+            "time": "2017-01-31T18:15:46+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2020,9 +2012,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "shadiakiki1986/xsd-to-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

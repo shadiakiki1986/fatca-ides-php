@@ -12,18 +12,12 @@
         }
     ],
     "minimum-stability": "stable",
-    "repositories": [
-      { 
-        "url": "https://github.com/shadiakiki1986/XSD-to-PHP",
-        "type": "git"
-      }
-    ],
     "require":{
         "php":">=5.3.5",
         "monolog/monolog": "^1.21",
         "phpseclib/phpseclib": "*",
         "robrichards/xmlseclibs":"*",
-        "shadiakiki1986/XSD-to-PHP": "dev-master",
+        "shadiakiki1986/xsd-to-php": "^0.1",
         "shadiakiki1986/swiftmailer-wrapper": "^0.2.0",
         "ext-dom": "*",
         "ext-mbstring": "*",
