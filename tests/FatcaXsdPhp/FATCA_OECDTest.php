@@ -1,10 +1,10 @@
 <?php
 
 namespace FatcaXsdPhp;
-use oecd\ties\stffatcatypes\v1\MessageSpec_Type;
+use oecd\ties\stffatcatypes\v2\MessageSpec_Type;
 use oecd\ties\isofatcatypes\v1\CountryCode_Type;
-use oecd\ties\stffatcatypes\v1\Address_Type;
-use oecd\ties\stffatcatypes\v1\NameOrganisation_Type;
+use oecd\ties\stffatcatypes\v2\Address_Type;
+use oecd\ties\stffatcatypes\v2\NameOrganisation_Type;
 //use oecd\ties\fatca\v1\ReportingGroup;
 use com\mikebevz\xsd2php;
 
@@ -43,6 +43,7 @@ class FATCA_OECDTest extends \PHPUnit_Framework_TestCase {
 
     public function test1() {
       $php2xml = new xsd2php\Php2Xml();
+
       $xml = $php2xml->getXml($this->oecd);
       $expFn = __DIR__."/expected1.xml";
       //file_put_contents($expFn,$xml);

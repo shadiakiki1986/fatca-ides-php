@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns0:FATCA_OECD xmlns:ns0="urn:oecd:ties:fatca:v2" xmlns:ns1="urn:oecd:ties:stffatcatypes:v1" version="1.1">
+<ns0:FATCA_OECD xmlns:ns0="urn:oecd:ties:fatca:v2" xmlns:ns1="urn:oecd:ties:stffatcatypes:v2" xmlns:ns2="urn:oecd:ties:isofatcatypes:v1" version="1.1">
   <ns0:MessageSpec>
     <ns1:SendingCompanyIN>ABC123.DEF45.GH.678</ns1:SendingCompanyIN>
     <ns1:TransmittingCountry>LB</ns1:TransmittingCountry>
@@ -13,7 +13,7 @@
     <ns0:ReportingFI>
       <ns1:Name>FFA Private Bank</ns1:Name>
       <ns1:Address>
-        <ns1:CountryCode>LB</ns1:CountryCode>
+        <ns2:CountryCode>LB</ns2:CountryCode>
         <ns1:AddressFree>Foch street</ns1:AddressFree>
       </ns1:Address>
       <ns0:DocSpec>

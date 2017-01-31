@@ -11,7 +11,7 @@ class Array2Oecd {
   }
 
   function getMessageSpec() {
-    $ms = new \oecd\ties\stffatcatypes\v1\MessageSpec_Type();
+    $ms = new \oecd\ties\stffatcatypes\v2\MessageSpec_Type();
     $ms->SendingCompanyIN = $this->fda->conMan->config["ffaid"];
     $ms->TransmittingCountry = "LB";
     $ms->ReceivingCountry = "US";

@@ -1,6 +1,6 @@
 <?php namespace FatcaXsdPhp;
 
-use oecd\ties\stffatcatypes\v1;
+use oecd\ties\stffatcatypes\v2;
 /**
  * @xmlNamespace 
  * @xmlType OrganisationParty_Type
@@ -8,7 +8,7 @@ use oecd\ties\stffatcatypes\v1;
  * @var CorrectableOrganisationParty_Type
  */
 class CorrectableOrganisationParty_Type
-	extends v1\OrganisationParty_Type
+	extends v2\OrganisationParty_Type
 	{
 
 	
@@ -16,7 +16,7 @@ class CorrectableOrganisationParty_Type
 	 * @xmlType element
 	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlName DocSpec
-	 * @var oecd\ties\fatca\v1\DocSpec_Type
+	 * @var oecd\ties\fatca\v2\DocSpec_Type
 	 */
 	public $DocSpec;
 
