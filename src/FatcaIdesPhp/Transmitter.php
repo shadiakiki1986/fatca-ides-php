@@ -181,7 +181,11 @@ class Transmitter {
   public static function verifySwiftmailerConfig($smc) {        
     assert(is_array($smc)); 
     $fields = array("host","port","username","password","name","reply");
-    foreach($fields as $fx) assert(array_key_exists($fx,$smc),"swiftmailer field in config missing field: ".$fx); 
+    foreach($fields as $fx) {
+      if(!array_key_exists($fx,$smc)) {
+        throw new \Exception("swiftmailer field in config missing field: ".$fx);
+      }
+    }
   }
 
   public function toEmail($emailTo,$swiftmailerConfig) {
