@@ -103,8 +103,19 @@ composer install
 composer run-script test
 ```
 
-## Updating schema versions
+# Schema versions
+## Current state
 The schema files and IRS public key are committed to this repo in `assets`.
+
+The committed versions are the 2.0 versions.
+
+This package was tested succesfully against the IDES test gateway on Jan 31, 2017.
+The test included
+* submitting test data to the server via SFTP using the [IDES-Data-Preparation-Php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php) package
+* receiving an ACK for the submission via email
+* receiving a response from the IRS using the [IDES-Data-Preparation-Php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php) package
+
+## Updating
 
 To update them, run the following two scripts:
 1. `./assets/update.sh`: Downloads files from IRS website
