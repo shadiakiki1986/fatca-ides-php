@@ -9,7 +9,7 @@ use oecd\ties\stffatcatypes\v2\NameOrganisation_Type;
 use com\mikebevz\xsd2php;
 
 
-class FATCA_OECDTest extends \PHPUnit_Framework_TestCase {
+class FATCA_OECDTest extends \PHPUnit\Framework\TestCase {
 
     public function setUp() {
       $root=new FATCA_OECD();

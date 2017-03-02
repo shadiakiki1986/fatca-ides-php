@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class SigningManagerTest extends \PHPUnit_Framework_TestCase {
+class SigningManagerTest extends \PHPUnit\Framework\TestCase {
 
   public function setUp() {
     $conMan = $this->getMockBuilder('\FatcaIdesPhp\ConfigManager')

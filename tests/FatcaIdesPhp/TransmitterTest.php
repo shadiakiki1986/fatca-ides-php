@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class TransmitterTest extends \PHPUnit_Framework_TestCase {
+class TransmitterTest extends \PHPUnit\Framework\TestCase {
 
   /**
    * @dataProvider testMockedProvider

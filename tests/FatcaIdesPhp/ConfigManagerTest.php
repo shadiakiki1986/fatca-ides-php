@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class ConfigManagerTest extends \PHPUnit_Framework_TestCase {
+class ConfigManagerTest extends \PHPUnit\Framework\TestCase {
 
     public function testCheck() {
       $this->markTestIncomplete("TBD");

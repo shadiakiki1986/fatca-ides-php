@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class FatcaDataOecdTest extends \PHPUnit_Framework_TestCase {
+class FatcaDataOecdTest extends \PHPUnit\Framework\TestCase {
 
   function setUp() {
     $fot = new \FatcaXsdPhp\FATCA_OECDTest();

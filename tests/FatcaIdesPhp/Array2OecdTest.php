@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class Array2OecdTest extends \PHPUnit_Framework_TestCase {
+class Array2OecdTest extends \PHPUnit\Framework\TestCase {
 
   function setUp() {
     $fdat = new FatcaDataArrayTest();

@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class SftpWrapperTest extends \PHPUnit_Framework_TestCase {
+class SftpWrapperTest extends \PHPUnit\Framework\TestCase {
 
     public function setUp() {
       $sftp = $this->getMockBuilder('\phpseclib\Net\SFTP')

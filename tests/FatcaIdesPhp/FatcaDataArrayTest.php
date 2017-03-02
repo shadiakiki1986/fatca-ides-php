@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class FatcaDataArrayTest extends \PHPUnit_Framework_TestCase {
+class FatcaDataArrayTest extends \PHPUnit\Framework\TestCase {
 
   public function setUp() {
     $this->di= \yaml_parse_file(__DIR__.'/fdatIndividual.yml');

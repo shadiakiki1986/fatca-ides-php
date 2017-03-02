@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class ReceiverTest extends \PHPUnit_Framework_TestCase {
+class ReceiverTest extends \PHPUnit\Framework\TestCase {
 
   public function setUp() {
     $this->conMan = $this->getMockBuilder('\FatcaIdesPhp\ConfigManager')

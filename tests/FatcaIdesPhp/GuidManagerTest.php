@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class GuidManagerTest extends \PHPUnit_Framework_TestCase {
+class GuidManagerTest extends \PHPUnit\Framework\TestCase {
 
     public function testNoDuplicates() {
       $gm=new GuidManager();

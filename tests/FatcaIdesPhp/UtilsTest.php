@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class UtilsTest extends \PHPUnit_Framework_TestCase {
+class UtilsTest extends \PHPUnit\Framework\TestCase {
 
   public function testNewGuid() {
     $ga = array_map(function() { return Utils::newGuid(); },range(1,100));
