@@ -18,6 +18,7 @@
         "phpseclib/phpseclib": "*",
         "robrichards/xmlseclibs":"*",
         "shadiakiki1986/swiftmailer-wrapper": "^0.2.0",
+        "shadiakiki1986/xsd-to-php": "^0.1",
         "ext-dom": "*",
         "ext-mbstring": "*",
         "ext-zip": "*",
@@ -26,7 +27,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "shadiakiki1986/xsd-to-php": "^0.1",
         "jakub-onderka/php-parallel-lint": "^0.9"
     },
     "suggest": {
