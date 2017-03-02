@@ -17,7 +17,6 @@
         "monolog/monolog": "^1.21",
         "phpseclib/phpseclib": "*",
         "robrichards/xmlseclibs":"*",
-        "shadiakiki1986/xsd-to-php": "^0.1",
         "shadiakiki1986/swiftmailer-wrapper": "^0.2.0",
         "ext-dom": "*",
         "ext-mbstring": "*",
@@ -27,6 +26,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "*",
+        "shadiakiki1986/xsd-to-php": "^0.1",
         "jakub-onderka/php-parallel-lint": "^0.9"
     },
     "suggest": {
