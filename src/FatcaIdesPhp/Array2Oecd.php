@@ -152,7 +152,7 @@ class Array2Oecd {
       $ar->AccountHolder = $this->getAccountHolder($x);
 
       if(array_key_exists("SubstantialOwner",$x)) {
-        if($x["ENT_TYPE"]!="Corporate") throw new Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
+        if($x["ENT_TYPE"]!="Corporate") throw new \Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
 
         $substOwns = array();
         foreach($x["SubstantialOwner"] as $so) {
