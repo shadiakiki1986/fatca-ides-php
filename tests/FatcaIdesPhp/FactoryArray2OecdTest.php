@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-class Array2OecdTest extends \PHPUnit\Framework\TestCase {
+class FactoryArray2OecdTest extends \PHPUnit\Framework\TestCase {
 
   function setUp() {
     $fdat = new FatcaDataArrayTest();
@@ -22,9 +22,9 @@ class Array2OecdTest extends \PHPUnit\Framework\TestCase {
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
     $fda->start();
 
-    $a2o = new Array2Oecd($fda);
-    $a2o->convert();
-    $this->assertSchemaValidate($a2o->fdo->toXml());
+    $factory = new Factory();
+    $fdo = $factory->array2oecd($fda);
+    $this->assertSchemaValidate($fdo->toXml());
   }
 
   public function testOrganisationOk() {
@@ -32,9 +32,9 @@ class Array2OecdTest extends \PHPUnit\Framework\TestCase {
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
     $fda->start();
 
-    $a2o = new Array2Oecd($fda);
-    $a2o->convert();
-    $this->assertSchemaValidate($a2o->fdo->toXml());
+    $factory = new Factory();
+    $fdo = $factory->array2oecd($fda);
+    $this->assertSchemaValidate($fdo->toXml());
   }
 
   public function testWrongType() {
@@ -43,9 +43,9 @@ class Array2OecdTest extends \PHPUnit\Framework\TestCase {
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
     $fda->start();
 
-    $a2o = new Array2Oecd($fda);
+    $factory = new Factory();
     try {
-      $a2o->convert();
+      $fdo = $factory->array2oecd($fda);
       $this->assertTrue(false);
     } catch(\Exception $e) {
       $this->assertTrue(true);

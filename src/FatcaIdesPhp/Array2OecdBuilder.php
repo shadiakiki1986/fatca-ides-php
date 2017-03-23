@@ -3,14 +3,14 @@
 namespace FatcaIdesPhp;
 
 // Converter from FatcaDataArray to FatcaDataOecd
-class Array2Oecd {
+// Builder design pattern
+class Array2OecdBuilder {
 
-  function __construct($fda) {
-    assert($fda instanceof FatcaDataArray);
+  public function __construct(FatcaDataArray $fda) {
     $this->fda=$fda;
   }
 
-  function getMessageSpec() {
+  public function getMessageSpec() {
     $ms = new \oecd\ties\stffatcatypes\v2\MessageSpec_Type();
     $ms->SendingCompanyIN = $this->fda->conMan->config["ffaid"];
     $ms->TransmittingCountry = "LB";
@@ -23,7 +23,7 @@ class Array2Oecd {
     return $ms;
   }
 
-  function getReportingFI() {
+  public function getReportingFI() {
     $rfi = new \FatcaXsdPhp\CorrectableOrganisationParty_Type();
     $rfi->Name = new \oecd\ties\stffatcatypes\v1\NameOrganisation_Type();
     $rfi->Name->value = "FFA Private Bank";
@@ -43,7 +43,7 @@ class Array2Oecd {
     return $rfi;
   }
 
-  function getAccountHolder($x) {
+  public function getAccountHolder(array $x) {
       $ah = new \FatcaXsdPhp\AccountHolder_Type();
       switch($x["ENT_TYPE"]) {
         case "Individual":
@@ -60,20 +60,20 @@ class Array2Oecd {
       return $ah;
   }
 
-  function getTin($tin,$issuer) {
+  public function getTin(string $tin, string $issuer) {
     $TIN = new \oecd\ties\stffatcatypes\v2\TIN_Type();
     $TIN->value=$tin;
     $TIN->issuedBy=is_null($issuer)?"US":$issuer;
     return $TIN;
   }
 
-  function getTinWrapper($x) {
+  public function getTinWrapper($x) {
     return $this->getTin(
       Utils::cleanTin($x['ENT_FATCA_ID']),
       array_key_exists("ENT_FATCA_ID_ISSUER",$x)?$x["ENT_FATCA_ID_ISSUER"]:null);
   }
 
-  function getIndividual($x) {
+  public function getIndividual(array $x) {
     $ind = new \oecd\ties\stffatcatypes\v2\PersonParty_Type();
     $ind->TIN = $this->getTinWrapper($x);
 
@@ -86,7 +86,7 @@ class Array2Oecd {
     return $ind;
   }
 
-  function getOrganisation($x) {
+  public function getOrganisation(array $x) {
     $org = new \oecd\ties\stffatcatypes\v2\OrganisationParty_Type();
     $org->Name = new \oecd\ties\stffatcatypes\v1\NameOrganisation_Type();
     $org->Name->value = $x['ENT_FIRSTNAME'];
@@ -98,7 +98,7 @@ class Array2Oecd {
     return $org;
   }
 
-  function getPayment_Type($type,$currCode,$value) {
+  public function getPayment_Type(string $type, string $currCode, float $value) {
     $pay = new \FatcaXsdPhp\Payment_Type();
     $pay->Type = $type;
     $pay->PaymentAmnt = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
@@ -107,7 +107,7 @@ class Array2Oecd {
     return $pay;
   }
 
-  function getPayments($x) {
+  public function getPayments(array $x) {
       $payments=array();
       if(array_key_exists('dvdCur',$x)) {
         $pay = $this->getPayment_Type(
@@ -125,57 +125,6 @@ class Array2Oecd {
         array_push($payments,$pay);
       }
       return $payments;
-  }
-
-  function convert() {
-    // convert to FATCA_OECD and return FatcaDataOecd
-    // much of this is inspired from fatca-ides-php/src/FatcaIdesPhp/FataDataArray
-    $this->oecd=new \FatcaXsdPhp\FATCA_OECD();
-    $this->oecd->version="1.1";
-    $this->oecd->MessageSpec = $this->getMessageSpec();
-
-    $this->oecd->FATCA=new \FatcaXsdPhp\Fatca_Type();
-    $this->oecd->FATCA->ReportingFI = $this->getReportingFI();
-
-    $this->oecd->FATCA->ReportingGroup = new \FatcaXsdPhp\ReportingGroup();
-
-    // gather account reports
-    $accountReports = array();
-    foreach($this->fda->data as $x) {
-      $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
-      $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
-      $ar->DocSpec->DocTypeIndic=$this->fda->docType;
-      $ar->DocSpec->DocRefId=$this->fda->guidManager->get();
-
-      $ar->AccountNumber = $x['Compte'];
-
-      $ar->AccountHolder = $this->getAccountHolder($x);
-
-      if(array_key_exists("SubstantialOwner",$x)) {
-        if($x["ENT_TYPE"]!="Corporate") throw new \Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
-
-        $substOwns = array();
-        foreach($x["SubstantialOwner"] as $so) {
-          $subst = new \FatcaXsdPhp\SubstantialOwner_Type();
-          $subst->Individual = $this->getIndividual($so);
-          array_push($substOwns,$subst);
-        }
-        if(count($substOwns)>0) $ar->SubstantialOwner = $substOwns;
-      }
-
-
-      $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
-      $ar->AccountBalance->currCode = $x['cur'];
-      $ar->AccountBalance->value = $x['posCur'];
-
-      $payments=$this->getPayments($x);
-      if(count($payments)>0) $ar->Payment = $payments;
-      array_push($accountReports,$ar);
-   }
-
-    if(count($accountReports)>0) $this->oecd->FATCA->ReportingGroup->AccountReport = $accountReports;
-
-    $this->fdo = new FatcaDataOecd($this->oecd);
   }
 
 } //end class
