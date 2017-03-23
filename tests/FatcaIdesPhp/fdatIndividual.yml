@@ -25,5 +25,7 @@ AccountReports:
 PoolReports:
   - AccountCount: 2
     AccountPoolReportType: FATCA201
-    PoolBalance: 1000
+    PoolBalance:
+      posCur: 1000
+      cur: USD
 ...

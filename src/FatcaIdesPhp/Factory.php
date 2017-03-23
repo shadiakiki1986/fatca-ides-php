@@ -22,8 +22,8 @@ class Factory {
     $oecd->FATCA->ReportingGroup = new \FatcaXsdPhp\ReportingGroup();
 
     // gather account reports
-    $accountReports = array();
     if(array_key_exists("AccountReports", $a2o->fda->data)) {
+      $accountReports = array();
       foreach($a2o->fda->data["AccountReports"] as $x) {
         $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
         $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
@@ -54,9 +54,32 @@ class Factory {
         if(count($payments)>0) $ar->Payment = $payments;
         array_push($accountReports,$ar);
       }
+      if(count($accountReports)>0) {
+        $oecd->FATCA->ReportingGroup->AccountReport = $accountReports;
+      }
     }
 
-    if(count($accountReports)>0) $oecd->FATCA->ReportingGroup->AccountReport = $accountReports;
+    // add pool reports
+    if(array_key_exists("PoolReports", $a2o->fda->data)) {
+      $poolReports = array();
+      foreach($a2o->fda->data["PoolReports"] as $x) {
+        $ar = new \FatcaXsdPhp\CorrectablePoolReport_Type();
+        $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
+        $ar->DocSpec->DocTypeIndic=$a2o->fda->docType;
+        $ar->DocSpec->DocRefId=$a2o->fda->guidManager->get();
+
+        $ar->AccountCount = $x['AccountCount'];
+	$ar->AccountPoolReportType = new \FatcaXsdPhp\FatcaAcctPoolReportType_EnumType();
+	$ar->AccountPoolReportType->value = $x['AccountPoolReportType'];
+
+        $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
+        $ar->AccountBalance->currCode = $x['PoolBalance']['cur'];
+        $ar->AccountBalance->value = $x['PoolBalance']['posCur'];
+      }
+      if(count($poolReports)>0) {
+        $oecd->FATCA->ReportingGroup->PoolReport = $poolReports;
+      }
+    }
 
     return new FatcaDataOecd($oecd);
   }
