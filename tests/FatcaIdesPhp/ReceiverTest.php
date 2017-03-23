@@ -36,6 +36,8 @@ class ReceiverTest extends \PHPUnit\Framework\TestCase {
     $fdot->setUp();
     $fdot->conMan->config["FatcaIrsPublic"] = $fdot->conMan->config["FatcaKeyPublic"];
 
+    $factory = new Factory();
+
     if(false) {
       // generate zip file and save
       $ts1 = strtotime("2010-10-05 04:03:02");
@@ -47,12 +49,11 @@ class ReceiverTest extends \PHPUnit\Framework\TestCase {
 
       $fdo=new FatcaDataOecd($fdot->oecd);
 
-      $factory = new Factory();
       $tmtr=$factory->transmitter($fdo,"html","",$fdot->conMan->config);
       copy($tmtr->tf4,$zip);
     }
 
-    $rx=Receiver::shortcut($fdot->conMan->config,$zip);
+    $rx=$factory->receiver($fdot->conMan->config,$zip);
 
     $this->assertEquals("CBC",$rx->rm->am->algoS);
     $this->assertEquals(256,strlen($rx->rm->aesEncrypted));

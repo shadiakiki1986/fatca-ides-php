@@ -1,7 +1,6 @@
 <?php
 
 namespace FatcaIdesPhp;
-use Monolog\Logger;
 
 class Receiver {
 
@@ -93,47 +92,5 @@ function fromZip($filename) {
 		    throw new \Exception('failed to read compressed data');
 		}
 	}
-
-  public static function shortcut($config,$zipFn=null,$credentials=null,$idesServer=null,$LOG_LEVEL=Logger::WARNING) {
-
-    assert(is_null($zipFn) xor is_null($credentials));
-
-    $cm = new ConfigManager($config,$LOG_LEVEL);
-		$am=new AesManager();
-    $rm = new RsaManager($cm,$am);
-
-    if(is_null($zipFn)) {
-      assert(is_array($credentials) && array_key_exists("username",$credentials) && array_key_exists("password",$credentials));
-      assert(!is_null($idesServer) && in_array($idesServer,array("live","test")));
-      $sftp = SftpWrapper::getSFTP($idesServer);
-      $sw = new SftpWrapper($sftp,$LOG_LEVEL);
-
-      $err = $sw->login($credentials["username"],$credentials["password"]);
-      if(!!$err) throw new \Exception($err);
-
-      $remote = $sw->listLatest();
-      if(array_key_exists("ZipBackupFolder",$cm->config)) {
-        $zipFn=$cm->config["ZipBackupFolder"]."/".$remote;
-      } else {
-        $zipFn = Utils::myTempnam("zip");
-        unlink($zipFn);
-      }
-
-      if(!file_exists($zipFn)) {
-        $sw->get($remote,$zipFn);
-      } else {
-        $sw->log->debug("Using cached file '".$zipFn."'");
-      }
-
-    }
-
-    $rx=new Receiver($cm,$rm);
-    $rx->start();
-    $rx->fromZip($zipFn);
-    $rx->rm->decryptAesKey();
-    $rx->fromEncrypted();
-    $rx->fromCompressed();
-    return $rx;
-  }
 
 } // end class
