@@ -3,6 +3,7 @@
   ENT_FIRSTNAME: Clyde
   ENT_LASTNAME: Barrow
   ENT_FATCA_ID: 123-1234-123
+  ENT_FATCA_ID_ISSUER: US
   ENT_ADDRESS: Some street somewhere
   ResidenceCountry: US
   posCur: 100000000
@@ -12,6 +13,7 @@
   ENT_FIRSTNAME: Bonnie
   ENT_LASTNAME: Parker
   ENT_FATCA_ID: 456-1234-123
+  ENT_FATCA_ID_ISSUER: US
   ENT_ADDRESS: Dallas, Texas
   ResidenceCountry: US
   posCur: 100
@@ -31,11 +33,13 @@
     - ENT_FIRSTNAME: Clark
       ENT_LASTNAME: Kent
       ENT_FATCA_ID: 888-1234-123
+      ENT_FATCA_ID_ISSUER: US
       ENT_ADDRESS: Krypton
       ResidenceCountry: US
     - ENT_FIRSTNAME: Tony
       ENT_LASTNAME: Stark
       ENT_FATCA_ID: 666-1234-123
+      ENT_FATCA_ID_ISSUER: US
       ENT_ADDRESS: Hollywood
       ResidenceCountry: US
 ...

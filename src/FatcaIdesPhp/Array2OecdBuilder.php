@@ -70,7 +70,8 @@ class Array2OecdBuilder {
   public function getTinWrapper($x) {
     return $this->getTin(
       Utils::cleanTin($x['ENT_FATCA_ID']),
-      array_key_exists("ENT_FATCA_ID_ISSUER",$x)?$x["ENT_FATCA_ID_ISSUER"]:null);
+      $x["ENT_FATCA_ID_ISSUER"]
+    );
   }
 
   public function getIndividual(array $x) {
