@@ -46,6 +46,9 @@ class FatcaDataOecd implements FatcaDataInterface {
     $border->value=1;
     $table->appendChild($border);
 
+    $caption = $dom->createElement('caption', 'Account Reports');
+    $table->appendChild($caption);
+
     if(!!$this->oecd->FATCA->ReportingGroup->AccountReport) {
       $arar = $this->oecd->FATCA->ReportingGroup->AccountReport;
       if(!is_array($arar)) $arar=array($arar);
@@ -101,6 +104,29 @@ class FatcaDataOecd implements FatcaDataInterface {
 
     $dom->appendChild($table);
 
+    // ---------------------------------
+    // pool reports
+    $table = $dom->createElement('table');
+
+    $border = $dom->createAttribute('border');
+    $border->value=1;
+    $table->appendChild($border);
+
+    $caption = $dom->createElement('caption', 'Pool Reports');
+    $table->appendChild($caption);
+
+    if(!!$this->oecd->FATCA->ReportingGroup->PoolReport) {
+      $arar = $this->oecd->FATCA->ReportingGroup->PoolReport;
+      foreach($arar as $ar) {
+        $row = $dom->createElement('tr');
+        $row->appendChild($dom->createElement('td',$ar->AccountPoolReportType->value));
+        $row->appendChild($dom->createElement('td',$ar->AccountCount));
+        $row->appendChild($dom->createElement('td',$ar->AccountBalance->value));
+        $row->appendChild($dom->createElement('td',$ar->AccountBalance->currCode));
+      }
+    }
+
+    // ---------------------------------
     // pretty print html
     $dom->preserveWhiteSpace = true;
     $dom->formatOutput = true;//false;

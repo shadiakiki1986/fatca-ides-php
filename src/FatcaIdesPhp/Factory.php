@@ -69,8 +69,8 @@ class Factory {
         $ar->DocSpec->DocRefId=$a2o->fda->guidManager->get();
 
         $ar->AccountCount = $x['AccountCount'];
-	$ar->AccountPoolReportType = new \FatcaXsdPhp\FatcaAcctPoolReportType_EnumType();
-	$ar->AccountPoolReportType->value = $x['AccountPoolReportType'];
+        $ar->AccountPoolReportType = new \FatcaXsdPhp\FatcaAcctPoolReportType_EnumType();
+        $ar->AccountPoolReportType->value = $x['AccountPoolReportType'];
 
         $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
         $ar->AccountBalance->currCode = $x['PoolBalance']['cur'];
