@@ -2,7 +2,7 @@
 
 namespace FatcaIdesPhp;
 
-// Implementation of FatcaDataInterface that is suitable for institutions that have only a flat array of individuals with reportable accounts
+// Adapter that can take data in an array in preparation for conversion to FatcaDataOecd
 class FatcaDataArray {
 
   var $data; // php data with fatca information
