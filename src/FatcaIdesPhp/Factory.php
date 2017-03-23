@@ -24,7 +24,7 @@ class Factory {
     // gather account reports
     $accountReports = array();
     if(array_key_exists("AccountReports", $a2o->fda->data)) {
-      foreach($a2o->fda->data as $x) {
+      foreach($a2o->fda->data["AccountReports"] as $x) {
         $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
         $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
         $ar->DocSpec->DocTypeIndic=$a2o->fda->docType;
