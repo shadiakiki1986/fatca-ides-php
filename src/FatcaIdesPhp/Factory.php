@@ -24,37 +24,36 @@ class Factory {
     // gather account reports
     $accountReports = array();
     if(array_key_exists("AccountReports", $a2o->fda->data)) {
-    foreach($a2o->fda->data as $x) {
-      $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
-      $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
-      $ar->DocSpec->DocTypeIndic=$a2o->fda->docType;
-      $ar->DocSpec->DocRefId=$a2o->fda->guidManager->get();
+      foreach($a2o->fda->data as $x) {
+        $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
+        $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
+        $ar->DocSpec->DocTypeIndic=$a2o->fda->docType;
+        $ar->DocSpec->DocRefId=$a2o->fda->guidManager->get();
 
-      $ar->AccountNumber = $x['Compte'];
+        $ar->AccountNumber = $x['Compte'];
 
-      $ar->AccountHolder = $a2o->getAccountHolder($x);
+        $ar->AccountHolder = $a2o->getAccountHolder($x);
 
-      if(array_key_exists("SubstantialOwner",$x)) {
-        if($x["ENT_TYPE"]!="Corporate") throw new \Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
+        if(array_key_exists("SubstantialOwner",$x)) {
+          if($x["ENT_TYPE"]!="Corporate") throw new \Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
 
-        $substOwns = array();
-        foreach($x["SubstantialOwner"] as $so) {
-          $subst = new \FatcaXsdPhp\SubstantialOwner_Type();
-          $subst->Individual = $a2o->getIndividual($so);
-          array_push($substOwns,$subst);
+          $substOwns = array();
+          foreach($x["SubstantialOwner"] as $so) {
+            $subst = new \FatcaXsdPhp\SubstantialOwner_Type();
+            $subst->Individual = $a2o->getIndividual($so);
+            array_push($substOwns,$subst);
+          }
+          if(count($substOwns)>0) $ar->SubstantialOwner = $substOwns;
         }
-        if(count($substOwns)>0) $ar->SubstantialOwner = $substOwns;
+
+        $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
+        $ar->AccountBalance->currCode = $x['cur'];
+        $ar->AccountBalance->value = $x['posCur'];
+
+        $payments=$a2o->getPayments($x);
+        if(count($payments)>0) $ar->Payment = $payments;
+        array_push($accountReports,$ar);
       }
-
-
-      $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
-      $ar->AccountBalance->currCode = $x['cur'];
-      $ar->AccountBalance->value = $x['posCur'];
-
-      $payments=$a2o->getPayments($x);
-      if(count($payments)>0) $ar->Payment = $payments;
-      array_push($accountReports,$ar);
-    }
     }
 
     if(count($accountReports)>0) $oecd->FATCA->ReportingGroup->AccountReport = $accountReports;
@@ -70,7 +69,7 @@ class Factory {
 
     $tmtr=new Transmitter($fdi,$conMan,$rm,$LOG_LEVEL);
     $tmtr->start();
-    $tmtr->toXml(); # convert to xml 
+    $tmtr->toXml(); # convert to xml
 
     if($format!="xml") {
       $exitCond=in_array($format,array("email","emailAndUpload","upload","zip"));
