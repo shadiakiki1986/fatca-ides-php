@@ -7,6 +7,3 @@ before_install:
 script:
   - composer run-script test
 sudo: false
-branches:
-  only:
-  - master
