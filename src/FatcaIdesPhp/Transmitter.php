@@ -23,7 +23,7 @@ class Transmitter {
    * rm: RsaManager
    */
 
-	function __construct(\FatcaIdesPhp\FatcaDataInterface $fdi, $conMan, $rm, $LOG_LEVEL=Logger::WARNING) {
+	function __construct(FatcaDataInterface $fdi, $conMan, $rm, $LOG_LEVEL=Logger::WARNING) {
 		$this->fdi=$fdi;
 
     assert($conMan instanceOf ConfigManager);
@@ -289,53 +289,6 @@ class Transmitter {
         $swiftmailerConfig);
     }
     $this->log->info($msg);
-  }
-
-
-  // Shortcut that takes input for FatcaDataArray + Transmitter
-  public static function shortcut($fdi,$format,$emailTo,$config,$LOG_LEVEL=Logger::WARNING) {
-    $conMan = new ConfigManager($config,$LOG_LEVEL);
-		$am=new AesManager($fdi->getIsTest()?"CBC":"ECB"); // as of 2016-06-27, the production server still uses ECB
-    $rm = new RsaManager($conMan,$am);
-
-    $tmtr=new Transmitter($fdi,$conMan,$rm,$LOG_LEVEL);
-    $tmtr->start();
-    $tmtr->toXml(); # convert to xml 
-
-    if($format!="xml") {
-      $exitCond=in_array($format,array("email","emailAndUpload","upload","zip"));
-      if(!$tmtr->validateXml("payload")) {# validate
-        $msg = 'Payload xml did not pass its xsd validation';
-        if($exitCond) { throw new \Exception($msg); } else { print $msg; }
-        Utils::libxml_display_errors();
-      }
-
-      if(!$tmtr->validateXml("metadata")) {# validate
-          $msg = 'Metadata xml did not pass its xsd validation';
-          if($exitCond) { throw new \Exception($msg); } else { print $msg; }
-          Utils::libxml_display_errors();
-      }
-    }
-
-    $tmtr->toXmlSigned();
-    if(!$tmtr->verifyXmlSigned()) die("Verification of signature failed");
-
-    $tmtr->toCompressed();
-    $tmtr->toEncrypted();
-    $tmtr->rm->encryptAesKeyFile();
-    //	if(!$tmtr->rm->verifyAesKeyFileEncrypted()) die("Verification of aes key encryption failed");
-    $tmtr->toZip(true);
-    if(array_key_exists("ZipBackupFolder",$config)) {
-      $fnDest=$config["ZipBackupFolder"]."/includeUnencrypted_".$tmtr->file_name;
-      copy($tmtr->tf4,$fnDest);
-    }
-    $tmtr->toZip(false);
-    if(array_key_exists("ZipBackupFolder",$config)) {
-      $fnDest=$config["ZipBackupFolder"]."/submitted_".$tmtr->file_name;
-      copy($tmtr->tf4,$fnDest);
-    }
-
-    return $tmtr;
   }
 
   function getGiinReceiver() { return $this->conMan->config["ffaidReceiver"]; }

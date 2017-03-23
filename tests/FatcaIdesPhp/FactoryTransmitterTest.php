@@ -2,13 +2,14 @@
 
 namespace FatcaIdesPhp;
 
-class TransmitterTest extends \PHPUnit\Framework\TestCase {
+class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
 
   /**
    * @dataProvider testMockedProvider
    */
   public function testMocked($v,$config,$k) {
-      $tmtr=Transmitter::shortcut($v,"html","",$config);
+      $factory = new Factory();
+      $tmtr=$factory->transmitter($v,"html","",$config);
 
       $expected=__DIR__."/data/testMocked_${k}_payload_unsigned.xml";
       # file_put_contents($expected,$tmtr->dataXml);

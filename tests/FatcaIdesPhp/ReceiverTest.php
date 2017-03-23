@@ -47,7 +47,8 @@ class ReceiverTest extends \PHPUnit\Framework\TestCase {
 
       $fdo=new FatcaDataOecd($fdot->oecd);
 
-      $tmtr=Transmitter::shortcut($fdo,"html","",$fdot->conMan->config);
+      $factory = new Factory();
+      $tmtr=$factory->transmitter($fdo,"html","",$fdot->conMan->config);
       copy($tmtr->tf4,$zip);
     }
 

@@ -89,8 +89,8 @@ $config = array(
 
 );
 
-
-$fca=Transmitter::shortcut($di,false,null,$taxYear,"zip","",$config);
+$factory = new \FatcaIdesPhp\Factory();
+$fca=$factory->transmitter($di,false,null,$taxYear,"zip","",$config);
 $fca->getZip();
 ```
 
