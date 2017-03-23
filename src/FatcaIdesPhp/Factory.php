@@ -23,6 +23,7 @@ class Factory {
 
     // gather account reports
     $accountReports = array();
+    if(array_key_exists("AccountReports", $a2o->fda->data)) {
     foreach($a2o->fda->data as $x) {
       $ar = new \FatcaXsdPhp\CorrectableAccountReport_Type();
       $ar->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
@@ -53,7 +54,8 @@ class Factory {
       $payments=$a2o->getPayments($x);
       if(count($payments)>0) $ar->Payment = $payments;
       array_push($accountReports,$ar);
-   }
+    }
+    }
 
     if(count($accountReports)>0) $oecd->FATCA->ReportingGroup->AccountReport = $accountReports;
 
