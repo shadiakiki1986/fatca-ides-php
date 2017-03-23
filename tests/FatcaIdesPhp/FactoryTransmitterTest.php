@@ -47,6 +47,10 @@ class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
     $fda=new FatcaDataArray($fdat->di,false,"",2014,$fdat->conMan,$guidMan);
     $fda->ts=$ts1;
 
+    // note cannot move factory to setUp because the dataProvider doesn't call setUp
+    $factory = new Factory();
+    $fdao = $factory->array2oecd($fda);
+
     $fdot = new FatcaDataOecdTest();
     $fdot->setUp();
     $fdot->oecd->MessageSpec->Timestamp=$ts2;
@@ -55,8 +59,8 @@ class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
     $fdo=new FatcaDataOecd($fdot->oecd);
 
     return [
-      [$fda,$fdat->conMan->config,'array'],
-      [$fdo,$fdat->conMan->config,'oecd'],
+      [$fdao, $fdat->conMan->config, 'array'],
+      [$fdo,  $fdat->conMan->config, 'oecd'],
     ];
 
   }
