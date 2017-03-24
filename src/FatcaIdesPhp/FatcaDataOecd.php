@@ -158,7 +158,9 @@ class FatcaDataOecd implements FatcaDataInterface {
 
   function getTsBase() {
     $ts3 = $this->oecd->MessageSpec->Timestamp;
-    assert(preg_match("/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/",$ts3));
+    if(!preg_match("/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/",$ts3)) {
+      throw new \Exception(sprintf("Timestamp format mismatch: '%s'",$ts3));
+    }
     return strtotime($ts3);
   }
 

@@ -1,78 +1,78 @@
 <?xml version="1.0"?>
-<ftc:FATCA_OECD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sfa="urn:oecd:ties:stffatcatypes:v2" xmlns:ftc="urn:oecd:ties:fatca:v2" version="1.1">
-  <ftc:MessageSpec>
-    <sfa:SendingCompanyIN>A1BBCD.00000.XY.123</sfa:SendingCompanyIN>
-    <sfa:TransmittingCountry>LB</sfa:TransmittingCountry>
-    <sfa:ReceivingCountry>US</sfa:ReceivingCountry>
-    <sfa:MessageType>FATCA</sfa:MessageType>
-    <sfa:Warning/>
-    <sfa:MessageRefId>1</sfa:MessageRefId>
-    <sfa:ReportingPeriod>2014-12-31</sfa:ReportingPeriod>
-    <sfa:Timestamp>2010-10-05T04:03:02</sfa:Timestamp>
-  </ftc:MessageSpec>
-  <ftc:FATCA>
-    <ftc:ReportingFI>
-      <sfa:Name>FFA Private Bank</sfa:Name>
-      <sfa:Address>
-        <sfa:CountryCode>LB</sfa:CountryCode>
-        <sfa:AddressFree>Foch street</sfa:AddressFree>
-      </sfa:Address>
-      <ftc:DocSpec>
-        <ftc:DocTypeIndic>FATCA1</ftc:DocTypeIndic>
-        <ftc:DocRefId>2</ftc:DocRefId>
-      </ftc:DocSpec>
-    </ftc:ReportingFI>
-    <ftc:ReportingGroup>
-      <ftc:AccountReport>
-        <ftc:DocSpec>
-          <ftc:DocTypeIndic>FATCA1</ftc:DocTypeIndic>
-          <ftc:DocRefId>3</ftc:DocRefId>
-        </ftc:DocSpec>
-        <ftc:AccountNumber>1234</ftc:AccountNumber>
-        <ftc:AccountHolder>
-          <ftc:Individual>
-            <sfa:TIN>1231234123</sfa:TIN>
-            <sfa:Name>
-              <sfa:FirstName>Clyde</sfa:FirstName>
-              <sfa:LastName>Barrow</sfa:LastName>
-            </sfa:Name>
-            <sfa:Address>
-              <sfa:CountryCode>US</sfa:CountryCode>
-              <sfa:AddressFree>Some street somewhere</sfa:AddressFree>
-            </sfa:Address>
-          </ftc:Individual>
-        </ftc:AccountHolder>
-        <ftc:AccountBalance currCode="USD">100000000</ftc:AccountBalance>
-      </ftc:AccountReport>
-      <ftc:AccountReport>
-        <ftc:DocSpec>
-          <ftc:DocTypeIndic>FATCA1</ftc:DocTypeIndic>
-          <ftc:DocRefId>4</ftc:DocRefId>
-        </ftc:DocSpec>
-        <ftc:AccountNumber>5678</ftc:AccountNumber>
-        <ftc:AccountHolder>
-          <ftc:Individual>
-            <sfa:TIN>4561234123</sfa:TIN>
-            <sfa:Name>
-              <sfa:FirstName>Bonnie</sfa:FirstName>
-              <sfa:LastName>Parker</sfa:LastName>
-            </sfa:Name>
-            <sfa:Address>
-              <sfa:CountryCode>US</sfa:CountryCode>
-              <sfa:AddressFree>Dallas Texas</sfa:AddressFree>
-            </sfa:Address>
-          </ftc:Individual>
-        </ftc:AccountHolder>
-        <ftc:AccountBalance currCode="LBP">100</ftc:AccountBalance>
-        <ftc:Payment>
-          <ftc:Type>FATCA501</ftc:Type>
-          <ftc:PaymentAmnt currCode="LBP">100</ftc:PaymentAmnt>
-        </ftc:Payment>
-        <ftc:Payment>
-          <ftc:Type>FATCA502</ftc:Type>
-          <ftc:PaymentAmnt currCode="LBP">100</ftc:PaymentAmnt>
-        </ftc:Payment>
-      </ftc:AccountReport>
-    </ftc:ReportingGroup>
-  </ftc:FATCA>
-</ftc:FATCA_OECD>
+<ns0:FATCA_OECD xmlns:ns0="urn:oecd:ties:fatca:v2" xmlns:ns1="urn:oecd:ties:stffatcatypes:v2" version="1.1">
+  <ns0:MessageSpec>
+    <ns1:SendingCompanyIN>A1BBCD.00000.XY.123</ns1:SendingCompanyIN>
+    <ns1:TransmittingCountry>LB</ns1:TransmittingCountry>
+    <ns1:ReceivingCountry>US</ns1:ReceivingCountry>
+    <ns1:MessageType>FATCA</ns1:MessageType>
+    <ns1:MessageRefId>1</ns1:MessageRefId>
+    <ns1:ReportingPeriod>2014-12-31</ns1:ReportingPeriod>
+    <ns1:Timestamp>2010-10-05T04:03:02</ns1:Timestamp>
+  </ns0:MessageSpec>
+  <ns0:FATCA>
+    <ns0:ReportingFI>
+      <ns1:TIN issuedBy="US">A1BBCD.00000.XY.123</ns1:TIN>
+      <ns1:Name>FFA Private Bank</ns1:Name>
+      <ns1:Address>
+        <ns1:CountryCode>LB</ns1:CountryCode>
+        <ns1:AddressFree>Foch street</ns1:AddressFree>
+      </ns1:Address>
+      <ns0:DocSpec>
+        <ns0:DocTypeIndic>FATCA1</ns0:DocTypeIndic>
+        <ns0:DocRefId>2</ns0:DocRefId>
+      </ns0:DocSpec>
+    </ns0:ReportingFI>
+    <ns0:ReportingGroup>
+      <ns0:AccountReport>
+        <ns0:DocSpec>
+          <ns0:DocTypeIndic>FATCA1</ns0:DocTypeIndic>
+          <ns0:DocRefId>3</ns0:DocRefId>
+        </ns0:DocSpec>
+        <ns0:AccountNumber>1234</ns0:AccountNumber>
+        <ns0:AccountHolder>
+          <ns0:Individual>
+            <ns1:TIN issuedBy="US">1231234123</ns1:TIN>
+            <ns1:Name>
+              <ns1:FirstName>Clyde</ns1:FirstName>
+              <ns1:LastName>Barrow</ns1:LastName>
+            </ns1:Name>
+            <ns1:Address>
+              <ns1:CountryCode>US</ns1:CountryCode>
+              <ns1:AddressFree>Some street somewhere</ns1:AddressFree>
+            </ns1:Address>
+          </ns0:Individual>
+        </ns0:AccountHolder>
+        <ns0:AccountBalance currCode="USD">100000000</ns0:AccountBalance>
+      </ns0:AccountReport>
+      <ns0:AccountReport>
+        <ns0:DocSpec>
+          <ns0:DocTypeIndic>FATCA1</ns0:DocTypeIndic>
+          <ns0:DocRefId>4</ns0:DocRefId>
+        </ns0:DocSpec>
+        <ns0:AccountNumber>5678</ns0:AccountNumber>
+        <ns0:AccountHolder>
+          <ns0:Individual>
+            <ns1:TIN issuedBy="US">4561234123</ns1:TIN>
+            <ns1:Name>
+              <ns1:FirstName>Bonnie</ns1:FirstName>
+              <ns1:LastName>Parker</ns1:LastName>
+            </ns1:Name>
+            <ns1:Address>
+              <ns1:CountryCode>US</ns1:CountryCode>
+              <ns1:AddressFree>Dallas Texas</ns1:AddressFree>
+            </ns1:Address>
+          </ns0:Individual>
+        </ns0:AccountHolder>
+        <ns0:AccountBalance currCode="LBP">100</ns0:AccountBalance>
+        <ns0:Payment>
+          <ns0:Type>FATCA501</ns0:Type>
+          <ns0:PaymentAmnt currCode="LBP">100</ns0:PaymentAmnt>
+        </ns0:Payment>
+        <ns0:Payment>
+          <ns0:Type>FATCA502</ns0:Type>
+          <ns0:PaymentAmnt currCode="LBP">100</ns0:PaymentAmnt>
+        </ns0:Payment>
+      </ns0:AccountReport>
+    </ns0:ReportingGroup>
+  </ns0:FATCA>
+</ns0:FATCA_OECD>

@@ -25,7 +25,6 @@ class FatcaDataArrayTest extends \PHPUnit\Framework\TestCase {
   public function testToXml() {
 
     $fda=new FatcaDataArray($this->di,false,"",2014,$this->conMan);
-    $fda->start();
     $diXml1=$fda->toXml(false); # convert to xml 
     $fda->guidManager->guidCount=0;
     $diXml2=$fda->toXml(true); # use utf8
@@ -38,7 +37,6 @@ class FatcaDataArrayTest extends \PHPUnit\Framework\TestCase {
 
   public function testToHtml() {
     $fda=new FatcaDataArray($this->di,false,"",2014,$this->conMan);
-    $fda->start();
     $html=$fda->toHtml();
     $this->assertTrue(true);
   }
@@ -46,7 +44,6 @@ class FatcaDataArrayTest extends \PHPUnit\Framework\TestCase {
   public function testOrganisation() {
     $di=\yaml_parse_file(__DIR__.'/fdatOrganisation.yml');
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
-    $fda->start();
     try {
       $html=$fda->toHtml();
       $this->assertTrue(false);

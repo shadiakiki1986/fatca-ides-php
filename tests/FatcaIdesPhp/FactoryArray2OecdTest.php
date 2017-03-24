@@ -20,7 +20,6 @@ class FactoryArray2OecdTest extends \PHPUnit\Framework\TestCase {
   public function testIndividual() {
     $di=\yaml_parse_file(__DIR__.'/fdatIndividual.yml');
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
-    $fda->start();
 
     $factory = new Factory();
     $fdo = $factory->array2oecd($fda);
@@ -30,7 +29,6 @@ class FactoryArray2OecdTest extends \PHPUnit\Framework\TestCase {
   public function testOrganisationOk() {
     $di=\yaml_parse_file(__DIR__.'/fdatOrganisation.yml');
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
-    $fda->start();
 
     $factory = new Factory();
     $fdo = $factory->array2oecd($fda);
@@ -41,7 +39,6 @@ class FactoryArray2OecdTest extends \PHPUnit\Framework\TestCase {
     $di=\yaml_parse_file(__DIR__.'/fdatIndividual.yml');
     $di[0]["ENT_TYPE"]="inexistant";
     $fda=new FatcaDataArray($di,false,"",2014,$this->conMan);
-    $fda->start();
 
     $factory = new Factory();
     try {

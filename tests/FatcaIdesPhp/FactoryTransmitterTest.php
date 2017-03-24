@@ -43,9 +43,7 @@ class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
     $guidMan->guidPrepd = range(1,count($guidMan->guidPrepd));
 
     $ts1 = strtotime("2010-10-05 04:03:02");
-    $ts2 = strftime("%Y-%m-%dT%H:%M:%S",$ts1);
-    $fda=new FatcaDataArray($fdat->di,false,"",2014,$fdat->conMan,$guidMan);
-    $fda->ts=$ts1;
+    $fda=new FatcaDataArray($fdat->di, false, "", 2014, $fdat->conMan, $guidMan, $ts1);
 
     // note cannot move factory to setUp because the dataProvider doesn't call setUp
     $factory = new Factory();
@@ -53,6 +51,7 @@ class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
 
     $fdot = new FatcaDataOecdTest();
     $fdot->setUp();
+    $ts2 = strftime("%Y-%m-%dT%H:%M:%S",$ts1);
     $fdot->oecd->MessageSpec->Timestamp=$ts2;
 
     // no need to pass in GuidManager here because the dummy fixture doesnt use a random DocRefId field

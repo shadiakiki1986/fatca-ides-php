@@ -20,7 +20,7 @@ class FatcaDataArray {
    * guidMan: instance of GuidManager
    */
 
-  function __construct($dd, $isTest, $corrDocRefId, $taxYear, ConfigManager $conMan, GuidManager $guidMan=null) {
+  function __construct($dd, $isTest, $corrDocRefId, $taxYear, ConfigManager $conMan, GuidManager $guidMan=null, string $ts=null) {
 
     $this->conMan=$conMan;
 
@@ -30,7 +30,10 @@ class FatcaDataArray {
     $this->taxYear=$taxYear;
 
     date_default_timezone_set('UTC');
-    $this->ts=time();
+    if(is_null($ts)) {
+      $ts=time();
+    }
+    $this->ts=$ts;
 
     if(is_null($guidMan)) {
       // prepare guids to use
@@ -39,12 +42,14 @@ class FatcaDataArray {
     } else {
       $this->guidManager=$guidMan;
     }
+
+    $this->start();
   }
 
   // This is more of a cleaning function
   // It could have been part of the constructor
   // but the purpose was that the constructor do nothing
-  public function start() {
+  private function start() {
     $this->conMan->check();
 
     $this->docType=sprintf("FATCA%s%s",$this->isTest?"1":"",$this->corrDocRefId?"2":"1");
@@ -59,13 +64,15 @@ class FatcaDataArray {
 
     // following http://www.irs.gov/Businesses/Corporations/FATCA-XML-Schema-Best-Practices-for-Form-8966
     // the hash in an address should be replaced
-    $this->data=array_map(function($x) {
+    if(array_key_exists("AccountReports",$this->data)) {
+    $this->data["AccountReports"]=array_map(function($x) {
       if($x["ENT_TYPE"]!="Individual") return $x;
       $reps=array(":","#",",","-",".","--","/");
       $x['ENT_ADDRESS']=Utils::cleanAddress($x['ENT_ADDRESS']);
       $x['ENT_FATCA_ID']=Utils::cleanTin($x['ENT_FATCA_ID']);
       return $x;
-    }, $this->data);
+    }, $this->data["AccountReports"]);
+    }
 
     //Code playing with timezone
     //    date_default_timezone_set('UTC');
