@@ -2,14 +2,38 @@
 
 namespace FatcaIdesPhp;
 
-class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
+class FactoryTransmitterTest extends BaseTestCase {
 
   /**
-   * @dataProvider testMockedProvider
+   * @dataProvider mockedProvider
    */
-  public function testMocked($v,$config,$k) {
+  public function testMocked($k) {
+      # instead of mocking this simple class, just use it directly and replace its generated IDs
+      $guidMan = new \FatcaIdesPhp\GuidManager();
+      $guidMan->guidPrepd = range(1,count($guidMan->guidPrepd));
+
       $factory = new Factory();
-      $tmtr=$factory->transmitter($v,"html","",$config);
+
+      $v=null;
+      $ts1 = strtotime("2010-10-05 04:03:02");
+      switch($k) {
+        case "array":
+          $fda=new FatcaDataArray($this->di, false, "", 2014, $this->conMan, $guidMan, $ts1);
+
+          $v = $factory->array2oecd($fda);
+          break;
+        case "oecd":
+          $ts2 = strftime("%Y-%m-%dT%H:%M:%S",$ts1);
+          $this->oecd->MessageSpec->Timestamp=$ts2;
+
+          // no need to pass in GuidManager here because the dummy fixture doesnt use a random DocRefId field
+          $v=new FatcaDataOecd($this->oecd);
+          break;
+        default:
+          throw new \Exception("What is this target?");
+      }
+
+      $tmtr=$factory->transmitter($v,"html","",$this->conMan->config);
 
       $expected=__DIR__."/data/testMocked_${k}_payload_unsigned.xml";
       # file_put_contents($expected,$tmtr->dataXml);
@@ -34,32 +58,10 @@ class FactoryTransmitterTest extends \PHPUnit\Framework\TestCase {
 
   }
 
-  public function testMockedProvider() {
-    $fdat = new FatcaDataArrayTest();
-    $fdat->setUp();
-
-    # instead of mocking this simple class, just use it directly and replace its generated IDs
-    $guidMan = new \FatcaIdesPhp\GuidManager();
-    $guidMan->guidPrepd = range(1,count($guidMan->guidPrepd));
-
-    $ts1 = strtotime("2010-10-05 04:03:02");
-    $fda=new FatcaDataArray($fdat->di, false, "", 2014, $fdat->conMan, $guidMan, $ts1);
-
-    // note cannot move factory to setUp because the dataProvider doesn't call setUp
-    $factory = new Factory();
-    $fdao = $factory->array2oecd($fda);
-
-    $fdot = new FatcaDataOecdTest();
-    $fdot->setUp();
-    $ts2 = strftime("%Y-%m-%dT%H:%M:%S",$ts1);
-    $fdot->oecd->MessageSpec->Timestamp=$ts2;
-
-    // no need to pass in GuidManager here because the dummy fixture doesnt use a random DocRefId field
-    $fdo=new FatcaDataOecd($fdot->oecd);
-
+  public function mockedProvider() {
     return [
-      [$fdao, $fdat->conMan->config, 'array'],
-      [$fdo,  $fdat->conMan->config, 'oecd'],
+      ['array'],
+      ['oecd'],
     ];
 
   }

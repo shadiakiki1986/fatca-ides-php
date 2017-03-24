@@ -38,18 +38,16 @@ class FatcaDataOecd implements FatcaDataInterface {
   }
 
 
-	function toHtml() {
-    $dom = new \DOMDocument('1.0', 'utf-8');
-    $table = $dom->createElement('table');
+  private function toHtmlAccountReport($dom) {
+      $table = $dom->createElement('table');
 
-    $border = $dom->createAttribute('border');
-    $border->value=1;
-    $table->appendChild($border);
+      $border = $dom->createAttribute('border');
+      $border->value=1;
+      $table->appendChild($border);
 
-    $caption = $dom->createElement('caption', 'Account Reports');
-    $table->appendChild($caption);
+      $caption = $dom->createElement('caption', 'Account Reports');
+      $table->appendChild($caption);
 
-    if(!!$this->oecd->FATCA->ReportingGroup->AccountReport) {
       $arar = $this->oecd->FATCA->ReportingGroup->AccountReport;
       if(!is_array($arar)) $arar=array($arar);
       foreach($arar as $ar) {
@@ -100,30 +98,51 @@ class FatcaDataOecd implements FatcaDataInterface {
         }
 
       }
+
+      return $table;
+  }
+
+
+	public function toHtml() {
+    $dom = new \DOMDocument('1.0', 'utf-8');
+
+    if(!!$this->oecd->FATCA->ReportingGroup->AccountReport) {
+      $table = $this->toHtmlAccountReport($dom);
+      $dom->appendChild($table);
+    } else {
+      $p = $dom->createElement('p', 'No account reports');
+      $dom->appendChild($p);
     }
 
-    $dom->appendChild($table);
+    $br = $dom->createElement('br');
+    $dom->appendChild($br);
 
     // ---------------------------------
     // pool reports
-    $table = $dom->createElement('table');
-
-    $border = $dom->createAttribute('border');
-    $border->value=1;
-    $table->appendChild($border);
-
-    $caption = $dom->createElement('caption', 'Pool Reports');
-    $table->appendChild($caption);
-
     if(!!$this->oecd->FATCA->ReportingGroup->PoolReport) {
+      $table = $dom->createElement('table');
+
+      $border = $dom->createAttribute('border');
+      $border->value=1;
+      $table->appendChild($border);
+
+      $caption = $dom->createElement('caption', 'Pool Reports');
+      $table->appendChild($caption);
+
       $arar = $this->oecd->FATCA->ReportingGroup->PoolReport;
       foreach($arar as $ar) {
         $row = $dom->createElement('tr');
         $row->appendChild($dom->createElement('td',$ar->AccountPoolReportType->value));
         $row->appendChild($dom->createElement('td',$ar->AccountCount));
-        $row->appendChild($dom->createElement('td',$ar->AccountBalance->value));
-        $row->appendChild($dom->createElement('td',$ar->AccountBalance->currCode));
+        $row->appendChild($dom->createElement('td',$ar->PoolBalance->value));
+        $row->appendChild($dom->createElement('td',$ar->PoolBalance->currCode));
+
+        $table->appendChild($row);
       }
+      $dom->appendChild($table);
+    } else {
+      $p = $dom->createElement('p', 'No pool reports'); 
+      $dom->appendChild($p);
     }
 
     // ---------------------------------
