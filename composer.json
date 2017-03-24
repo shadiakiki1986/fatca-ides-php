@@ -22,7 +22,7 @@
         "ext-dom": "*",
         "ext-mbstring": "*",
         "ext-zip": "*",
-        "ext-mcrypt": "*",
+        "ext-libsodium": "*",
         "ext-bcmath": "*"
     },
     "require-dev": {

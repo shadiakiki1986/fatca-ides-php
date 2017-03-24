@@ -30,16 +30,15 @@ php -r "unlink('composer-setup.php');"
 
 Install php extensions
 ```bash
-sudo apt-get install php7.0-xml php-mbstring php-zip php-mcrypt php-pear libyaml-dev php-dev php-bcmath
-sudo pecl install yaml-2.0.0
-sudo echo "extension=yaml.so" > /etc/php/7.0/mods-available/yaml.ini
-sudo ln -s /etc/php/7.0/mods-available/yaml.ini /etc/php/7.0/cli/conf.d/20-yaml.ini
+sudo apt-get install php7.0-xml php-mbstring php-zip php-pear libyaml-dev php-dev php-bcmath libsodium-dev
+sudo pecl install yaml-2.0.0 libsodium
+echo "extension=yaml.so"      | sudo tee /etc/php/7.0/mods-available/yaml.ini
+echo "extension=libsodium.so" | sudo tee /etc/php/7.0/mods-available/libsodium.ini
+sudo phpenmod -s ALL yaml libsodium
 
 composer require shadiakiki1986/fatca-ides-php
 composer require swiftmailer/swiftmailer # To enable sending emails
 composer install
-[sudo] apt-get install php5-mcrypt
-[sudo] php5enmod mcrypt
 [sudo] service apache2 restart # needed for web applications served with apache
 ```
 
