@@ -38,7 +38,7 @@ class ReportingGroup
 	public $AccountReport;
 	/**
 	 * @xmlType element
-	 * @xmlNamespace urn:oecd:ties:fatca:v1
+	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlName PoolReport
 	 * @xmlMinOccurs 0
 	 * @xmlMaxOccurs unbounded

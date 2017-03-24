@@ -73,6 +73,15 @@
           <ns0:PaymentAmnt currCode="LBP">100</ns0:PaymentAmnt>
         </ns0:Payment>
       </ns0:AccountReport>
+      <ns0:PoolReport>
+        <ns0:DocSpec>
+          <ns0:DocTypeIndic>FATCA1</ns0:DocTypeIndic>
+          <ns0:DocRefId>5</ns0:DocRefId>
+        </ns0:DocSpec>
+        <ns0:AccountCount>2</ns0:AccountCount>
+        <ns0:AccountPoolReportType>FATCA201</ns0:AccountPoolReportType>
+        <ns0:PoolBalance currCode="USD">1000</ns0:PoolBalance>
+      </ns0:PoolReport>
     </ns0:ReportingGroup>
   </ns0:FATCA>
 </ns0:FATCA_OECD>

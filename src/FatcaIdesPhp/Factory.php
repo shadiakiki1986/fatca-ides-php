@@ -72,9 +72,10 @@ class Factory {
         $ar->AccountPoolReportType = new \FatcaXsdPhp\FatcaAcctPoolReportType_EnumType();
         $ar->AccountPoolReportType->value = $x['AccountPoolReportType'];
 
-        $ar->AccountBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
-        $ar->AccountBalance->currCode = $x['PoolBalance']['cur'];
-        $ar->AccountBalance->value = $x['PoolBalance']['posCur'];
+        $ar->PoolBalance = new \oecd\ties\stffatcatypes\v1\MonAmnt_Type();
+        $ar->PoolBalance->currCode = $x['PoolBalance']['cur'];
+        $ar->PoolBalance->value = $x['PoolBalance']['posCur'];
+        array_push($poolReports,$ar);
       }
       if(count($poolReports)>0) {
         $oecd->FATCA->ReportingGroup->PoolReport = $poolReports;
