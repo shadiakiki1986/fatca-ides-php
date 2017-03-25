@@ -120,6 +120,22 @@ class FatcaDataOecd implements FatcaDataInterface {
     // ---------------------------------
     // pool reports
     if(!!$this->oecd->FATCA->ReportingGroup->PoolReport) {
+      $table = $this->toHtmlPoolReport($dom);
+      $dom->appendChild($table);
+    } else {
+      $p = $dom->createElement('p', 'No pool reports');
+      $dom->appendChild($p);
+    }
+
+    // ---------------------------------
+    // pretty print html
+    $dom->preserveWhiteSpace = true;
+    $dom->formatOutput = true;//false;
+    $html=$dom->saveHTML();
+    return $html;
+	}
+
+  private function toHtmlPoolReport($dom) {
       $table = $dom->createElement('table');
 
       $border = $dom->createAttribute('border');
@@ -146,19 +162,8 @@ class FatcaDataOecd implements FatcaDataInterface {
 
         $table->appendChild($row);
       }
-      $dom->appendChild($table);
-    } else {
-      $p = $dom->createElement('p', 'No pool reports'); 
-      $dom->appendChild($p);
-    }
-
-    // ---------------------------------
-    // pretty print html
-    $dom->preserveWhiteSpace = true;
-    $dom->formatOutput = true;//false;
-    $html=$dom->saveHTML();
-    return $html;
-	}
+      return $table;
+  }
 
 	function toXml($utf8=false) {
       $php2xml = new \com\mikebevz\xsd2php\Php2Xml();
