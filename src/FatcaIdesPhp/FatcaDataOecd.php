@@ -129,6 +129,13 @@ class FatcaDataOecd implements FatcaDataInterface {
       $caption = $dom->createElement('caption', 'Pool Reports');
       $table->appendChild($caption);
 
+      $row = $dom->createElement('tr');
+      $row->appendChild($dom->createElement('th','Report type'));
+      $row->appendChild($dom->createElement('th','Number of accounts'));
+      $row->appendChild($dom->createElement('th','Balance value'));
+      $row->appendChild($dom->createElement('th','Balance currency'));
+      $table->appendChild($row);
+
       $arar = $this->oecd->FATCA->ReportingGroup->PoolReport;
       foreach($arar as $ar) {
         $row = $dom->createElement('tr');
