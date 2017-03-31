@@ -88,7 +88,9 @@ class Factory {
   // get transmitter that allows to send data to IRS
   public function transmitter(FatcaDataInterface $fdi, string $format,$emailTo,$config,$LOG_LEVEL=Logger::WARNING) {
     $conMan = new ConfigManager($config,$LOG_LEVEL);
-		$am=new AesManager($fdi->getIsTest()?"CBC":"ECB"); // as of 2016-06-27, the production server still uses ECB
+    // as of 2016-06-27, the production server still uses ECB
+    // as of 2017-03-31, the production server uses CBC
+		$am=new AesManager("CBC");
     $rm = new RsaManager($conMan,$am);
 
     $tmtr=new Transmitter($fdi,$conMan,$rm,$LOG_LEVEL);
