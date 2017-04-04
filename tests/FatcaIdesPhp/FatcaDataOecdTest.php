@@ -4,11 +4,15 @@ namespace FatcaIdesPhp;
 
 class FatcaDataOecdTest extends BaseTestCase {
 
+  public function setUp() {
+    parent::setUp();
+    $this->fdo = new FatcaDataOecd($this->oecd);
+  }
+
   public function testToXml() {
-    $fdo=new FatcaDataOecd($this->oecd);
-    $fdo->start();
-    $diXml1=$fdo->toXml(false); # convert to xml 
-    $diXml2=$fdo->toXml(true); # use utf8
+    $this->fdo->start();
+    $diXml1=$this->fdo->toXml(false); # convert to xml 
+    $diXml2=$this->fdo->toXml(true); # use utf8
 
     $this->assertTrue($diXml1==$diXml2); # else print 'UTF8 changed';
 
@@ -17,9 +21,8 @@ class FatcaDataOecdTest extends BaseTestCase {
   }
 
   public function testToHtmlBuilt() {
-    $fdo=new FatcaDataOecd($this->oecd);
-    $fdo->start();
-    $html=$fdo->toHtml();
+    $this->fdo->start();
+    $html=$this->fdo->toHtml();
     $this->assertTrue(!!$html);
   }
 

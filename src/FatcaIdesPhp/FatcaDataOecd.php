@@ -5,11 +5,11 @@ namespace FatcaIdesPhp;
 // Implementation of FatcaDataInterface that is suitable for institutions that have only a flat array of individuals with reportable accounts
 class FatcaDataOecd implements FatcaDataInterface {
 
-	function __construct(\FatcaXsdPhp\FATCA_OECD $oecd) {
+	public function __construct(\FatcaXsdPhp\FATCA_OECD $oecd) {
     $this->oecd=$oecd;
   }
 
-  function start() {
+  public function start() {
     ; // do nothing
 	}
 
@@ -46,29 +46,29 @@ class FatcaDataOecd implements FatcaDataInterface {
     return $html;
 	}
 
-	function toXml($utf8=false) {
+	public function toXml($utf8=false) {
       $php2xml = new \com\mikebevz\xsd2php\Php2Xml();
       return $php2xml->getXml($this->oecd);
 	}
 
-  function getIsTest() {
+  public function getIsTest() {
     $re = "/FATCA1[1-4]/";
     return preg_match(
       $re,
-      $this->oecd->FATCA->ReportingFI->DocSpec->DocTypeIndic);
+      $this->oecd->FATCA->ReportingFI->DocSpec->DocTypeIndic)==1;
   }
 
-  function getGiinSender() {
+  public function getGiinSender() {
     return $this->oecd->MessageSpec->SendingCompanyIN;
   }
 
-  function getTaxYear() {
+  public function getTaxYear() {
     return substr(
       $this->oecd->MessageSpec->ReportingPeriod,
       0,4);
   }
 
-  function getTsBase() {
+  public function getTsBase() {
     $ts3 = $this->oecd->MessageSpec->Timestamp;
     if(!preg_match("/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/",$ts3)) {
       throw new \Exception(sprintf("Timestamp format mismatch: '%s'",$ts3));
