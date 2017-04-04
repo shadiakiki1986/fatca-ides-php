@@ -90,9 +90,20 @@ $config = array(
 );
 
 $factory = new \FatcaIdesPhp\Factory();
-$fca=$factory->transmitter($di,false,null,$taxYear,"zip","",$config);
-$fca->getZip();
+
+$fda = new \FatcaIdesPhp\FatcaDataArray($di);
+$fdo = $factory->array2oecd($fda); // , false, null, $taxYear, "zip", "", $config
+$tmtr=$factory->transmitter($fdo);
+$tmtr->getZip();
 ```
+
+To submit a correction XML file, as above, but use
+```php
+$sxe = simplexml_load_file("path/to/xml");
+$fdx = new \FatcaIdesPhp\FatcaDataXml($sxe);
+$tmtr=$factory->transmitter($fdx);
+```
+
 
 # License
 Please check [[LICENSE]]
