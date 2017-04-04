@@ -13,7 +13,7 @@ class Factory {
     // convert to FATCA_OECD and return FatcaDataOecd
     // much of this is inspired from fatca-ides-php/src/FatcaIdesPhp/FataDataArray
     $oecd=new \FatcaXsdPhp\FATCA_OECD();
-    $oecd->version="1.1";
+    $oecd->version="2.0";
     $oecd->MessageSpec = $a2o->getMessageSpec();
 
     $oecd->FATCA=new \FatcaXsdPhp\Fatca_Type();
