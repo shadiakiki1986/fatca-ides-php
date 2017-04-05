@@ -146,3 +146,10 @@ To update them, run the following two scripts:
       * @xmlNamespace urn:oecd:ties:fatca:v1
       * changed manually to
       * @xmlNamespace urn:oecd:ties:stffatcatypes:v1
+
+## Manual validation
+The validation of an existing xml file can be done manually against the schema on ubuntu using
+```bash
+sudo apt-get install libxml2-utils
+xmllint --noout --schema assets/fatcaxml/FatcaXML.xsd path/to/file.xml
+```
