@@ -49,7 +49,9 @@ Next, download the financial institution's ssl certificate, private key, and pub
 Note that the public key can be extracted from the certificate (on the TODO to be implied without the need for the user to specify it)
 
 # Examples
-For a complete example of how to use this library, please check [IDES-Data-Preparation-Php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php). Here I just list an example of how to generate a FATCA zip file for submission on the IDES gateway
+For a complete example of how to use this library, please check [IDES-Data-Preparation-Php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php).
+
+## Example 1: generate ZIP file for submission on the IDES gateway
 
 ```php
 require __DIR__.'/vendor/autoload.php';
@@ -97,12 +99,14 @@ $tmtr=$factory->transmitter($fdo);
 $tmtr->getZip();
 ```
 
-To submit a correction XML file, as above, but use
+## Example 2: To submit a correction XML file
+Use the same code as above, but use
 ```php
 $sxe = simplexml_load_file("path/to/xml");
 $fdx = new \FatcaIdesPhp\FatcaDataXml($sxe);
 $tmtr=$factory->transmitter($fdx);
 ```
+Also, check the [correction.php](https://github.com/shadiakiki1986/IDES-Data-Preparation-Php/blob/master/www/correction.php) command-line utility from the `IDES-Data-Preparation-PHP` project
 
 
 # License
