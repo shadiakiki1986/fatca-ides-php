@@ -7,7 +7,7 @@ class GuidManager {
 var $guidPrepd;
 var $guidCount;
 
-function __construct($prefix="",$N=100) {
+function __construct($prefix="",$N=300) {
 	// prepare guids to use
 	$this->guidPrepd=array();
 	for($i=0;$i<$N;$i++) array_push($this->guidPrepd,Utils::newGuid());
