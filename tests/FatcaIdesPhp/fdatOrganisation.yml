@@ -37,12 +37,14 @@ AccountReports:
         ENT_FATCA_ID_ISSUER: US
         ENT_ADDRESS: Krypton
         ResidenceCountry: US
-      - ENT_FIRSTNAME: Tony
+        ENT_TYPE: Individual
+      - ENT_FIRSTNAME: Stark Industries
         ENT_LASTNAME: Stark
         ENT_FATCA_ID: 666-1234-123
         ENT_FATCA_ID_ISSUER: US
         ENT_ADDRESS: Hollywood
         ResidenceCountry: US
+        ENT_TYPE: Corporate
 PoolReports:
   - AccountCount: 2
     AccountPoolReportType: FATCA201
