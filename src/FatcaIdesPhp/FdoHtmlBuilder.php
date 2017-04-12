@@ -83,7 +83,7 @@ class FdoHtmlBuilder {
 
         if(!!$ar->SubstantialOwner) {
           foreach($ar->SubstantialOwner as $so) {
-            $type = property_exists($so,"Individual") ? "Individual" : "Organisation";
+            $type = !!$so->Individual ? "Individual" : "Organisation";
             $so = ((array)$so)[$type];
             $row = $dom->createElement('tr');
             $row->appendChild($dom->createElement('td',$ar->AccountNumber));

@@ -40,7 +40,16 @@ class Factory {
           $substOwns = array();
           foreach($x["SubstantialOwner"] as $so) {
             $subst = new \FatcaXsdPhp\SubstantialOwner_Type();
-            $subst->Individual = $a2o->getIndividual($so);
+            switch($so["ENT_TYPE"]) {
+              case "Individual":
+                $subst->Individual = $a2o->getIndividual($so);
+                break;
+              case "Corporate":
+                $subst->Organisation = $a2o->getOrganisation($so);
+                break;
+              default:
+                throw new \Exception("Unsupported owner type: ".$so["ENT_TYPE"]);
+            }
             array_push($substOwns,$subst);
           }
           if(count($substOwns)>0) $ar->SubstantialOwner = $substOwns;
