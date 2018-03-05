@@ -3,7 +3,7 @@
     "description":"PHP library for generation of FATCA IDES submission files",
     "keywords":["FATCA","IDES","Encryption","Decryption"],
     "type":"library",
-    "license":"CC0 1.0 Universal",
+    "license":"CC0-1.0",
     "homepage": "https://github.com/shadiakiki1986/fatca-ides-php",
     "authors":[
         {
