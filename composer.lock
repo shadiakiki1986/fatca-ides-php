@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "54dd081ba921402561f31531a721cc91",
-    "content-hash": "10dba7585ba870680baaef5b1539a9f6",
+    "hash": "089eaf115fd73baca1ec0c64880d091b",
+    "content-hash": "7128c7c8cf81f13b6d4ac8f86e12df0b",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -347,16 +347,16 @@
         },
         {
             "name": "shadiakiki1986/swiftmailer-wrapper",
-            "version": "0.2",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shadiakiki1986/swiftmailer-wrapper.git",
-                "reference": "9a30738a4a981188040d3aa9c278c0f4f4e1bbc0"
+                "reference": "6ab315f88f785795e43bb20e6ab55d1747a460e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shadiakiki1986/swiftmailer-wrapper/zipball/9a30738a4a981188040d3aa9c278c0f4f4e1bbc0",
-                "reference": "9a30738a4a981188040d3aa9c278c0f4f4e1bbc0",
+                "url": "https://api.github.com/repos/shadiakiki1986/swiftmailer-wrapper/zipball/6ab315f88f785795e43bb20e6ab55d1747a460e1",
+                "reference": "6ab315f88f785795e43bb20e6ab55d1747a460e1",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
             "keywords": [
                 "swiftmailer"
             ],
-            "time": "2016-10-13 08:12:51"
+            "time": "2017-05-30 11:50:40"
         },
         {
             "name": "shadiakiki1986/xsd-to-php",
