@@ -17,6 +17,7 @@
         <ns1:CountryCode>LB</ns1:CountryCode>
         <ns1:AddressFree>Foch street</ns1:AddressFree>
       </ns1:Address>
+      <ns0:FilerCategory>FATCA604</ns0:FilerCategory>
       <ns0:DocSpec>
         <ns0:DocTypeIndic>FATCA1</ns0:DocTypeIndic>
         <ns0:DocRefId>2</ns0:DocRefId>

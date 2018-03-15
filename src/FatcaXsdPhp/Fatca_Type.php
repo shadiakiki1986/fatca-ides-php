@@ -16,7 +16,7 @@ class Fatca_Type
 	 * @xmlType element
 	 * @xmlNamespace urn:oecd:ties:fatca:v2
 	 * @xmlName ReportingFI
-	 * @var oecd\ties\fatca\v2\CorrectableReportOrganisation_Type
+	 * @var CorrectableReportOrganisation_Type
 	 */
 	public $ReportingFI;
 	/**

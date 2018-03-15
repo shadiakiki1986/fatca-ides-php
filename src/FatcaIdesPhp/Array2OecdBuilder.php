@@ -24,7 +24,7 @@ class Array2OecdBuilder {
   }
 
   public function getReportingFI() {
-    $rfi = new \FatcaXsdPhp\CorrectableOrganisationParty_Type();
+    $rfi = new \FatcaXsdPhp\CorrectableReportOrganisation_Type();
     $rfi->Name = new \oecd\ties\stffatcatypes\v1\NameOrganisation_Type();
     $rfi->Name->value = "FFA Private Bank";
     $rfi->Address = new \oecd\ties\stffatcatypes\v2\Address_Type();
