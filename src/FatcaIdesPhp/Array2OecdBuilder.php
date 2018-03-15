@@ -39,7 +39,12 @@ class Array2OecdBuilder {
     $rfi->DocSpec = new \FatcaXsdPhp\DocSpec_Type();
     $rfi->DocSpec->DocTypeIndic=$this->fda->docType;
     $rfi->DocSpec->DocRefId=$this->fda->guidManager->get();
+
+    $rfi->FilerCategory = new \FatcaXsdPhp\FatcaFilerCategory_EnumType();
+    $rfi->FilerCategory->value = "FATCA604";
+
     // corrDocRefId ...
+
     return $rfi;
   }
 
