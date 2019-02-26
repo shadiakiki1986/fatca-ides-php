@@ -35,6 +35,9 @@ class Factory {
         $ar->AccountHolder = $a2o->getAccountHolder($x);
 
         if(array_key_exists("SubstantialOwner",$x)) {
+          # Update 2019-02-26
+          # I don't remember why I had this condition, but an Individual account could have a POA assigned to it
+          # This gets here as "substantial owner", and hence is a valid submission
           if($x["ENT_TYPE"]!="Corporate") throw new \Exception("Cannot have type Individual and substantial owners for: ".$x["Compte"]);
 
           $substOwns = array();

@@ -1,3 +1,6 @@
+2019-02-26
+* remove condition that disallows "individual" account with "substantial owner" (similar to POA)
+
 2016-06-08
 * moving code out of (IDES-Data-Preparation-Php)[https://github.com/shadiakiki1986/IDES-Data-Preparation-Php] to here
  * check there for earlier repo commits
