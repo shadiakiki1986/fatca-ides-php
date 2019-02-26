@@ -1,4 +1,4 @@
-2019-02-26
+Version 0.3.2 (2019-02-26)
 * remove condition that disallows "individual" account with "substantial owner" (similar to POA)
 
 2016-06-08
@@ -22,7 +22,7 @@
 * The people from lbi.fatca.ides@irs.gov were the ones who pointed out that my problem was with the signing
 
 2015-06-26
-* refactored ENT_COD to Compte and accountsTotalUsd to posCur
+* refactored `ENT_COD` to Compte and accountsTotalUsd to posCur
 * had forgotten to include currency .. fixed
 
 2015-06-12
