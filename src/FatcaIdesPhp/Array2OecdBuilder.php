@@ -130,6 +130,15 @@ class Array2OecdBuilder {
           floor($x['intCur']));
         array_push($payments,$pay);
       }
+      if(array_key_exists('grossProceed',$x)) {
+        $pay = $this->getPayment_Type(
+          'FATCA503',
+          $x['cur'],
+          floor($x['grossProceed']));
+        array_push($payments,$pay);
+      }
+  
+
       return $payments;
   }
 

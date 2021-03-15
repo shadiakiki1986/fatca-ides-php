@@ -38,8 +38,8 @@ class Transmitter {
     $this->log->pushHandler(new StreamHandler('php://stdout', $LOG_LEVEL)); // <<< uses a stream
     $this->LOG_LEVEL=$LOG_LEVEL;
 
-		$this->file_name = strftime("%Y%m%d%H%M%S000%Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
-
+#		$this->file_name = strftime("%Y%m%d%H%M%S000%Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
+    $this->file_name = strftime("%Y%m%dT%H%M%S000Z",$this->fdi->getTsBase())."_".$this->fdi->getGiinSender().".zip";
     assert($rm instanceOf RsaManager);
     $this->rm=$rm;
 
